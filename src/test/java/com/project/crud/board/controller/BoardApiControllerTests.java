@@ -87,8 +87,8 @@ public class BoardApiControllerTests {
         Board board2 = boardRepository.save(new Board("제목2", "내용2", "작성자2"));
 
         List<BoardResponseDto> expectList = new ArrayList<>();
-        expectList.add(new BoardResponseDto(board1.getId(), board1.getTitle(), board1.getContent(), board1.getWriter()));
-        expectList.add(new BoardResponseDto(board2.getId(), board2.getTitle(), board2.getContent(), board2.getWriter()));
+        expectList.add(new BoardResponseDto(board1.getId(), board1.getTitle(), board1.getContent(), board1.getWriter(), board1.getLikeCount()));
+        expectList.add(new BoardResponseDto(board2.getId(), board2.getTitle(), board2.getContent(), board2.getWriter(), board2.getLikeCount()));
         String expect = objectMapper.writeValueAsString(expectList);
 
         mockMvc.perform(

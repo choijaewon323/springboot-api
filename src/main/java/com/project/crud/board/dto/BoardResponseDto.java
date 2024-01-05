@@ -1,10 +1,8 @@
 package com.project.crud.board.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
+@Builder
 @Setter
 @Getter
 @NoArgsConstructor
@@ -14,4 +12,5 @@ public class BoardResponseDto {
     private String title;
     private String content;
     private String writer;
+    private Long likeCount;
 }

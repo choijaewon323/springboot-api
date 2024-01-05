@@ -40,7 +40,6 @@ public class Board {
         this.writer = writer;
     }
 
-    @Lock(LockModeType.PESSIMISTIC_WRITE)
     public void likeUp() {
         likeCount++;
     }

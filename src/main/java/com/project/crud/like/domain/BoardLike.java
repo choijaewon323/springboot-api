@@ -16,11 +16,11 @@ import lombok.NoArgsConstructor;
 public class BoardLike {
     @Id
     @JoinColumn(name = "BOARD_ID")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
 
     @Id
     @JoinColumn(name = "ACCOUNT_ID")
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     private Account account;
 }

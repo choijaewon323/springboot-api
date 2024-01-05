@@ -36,9 +36,16 @@ public class BoardServiceImpl implements BoardService {
         List<Board> boards = boardRepository.findAll();
         List<BoardResponseDto> results = new ArrayList<>();
 
-        for (Board board : boards) {
-            results.add(new BoardResponseDto(board.getId(), board.getTitle(), board.getContent(), board.getWriter()));
-        }
+        boards.stream().forEach((e) -> {
+            results.add(BoardResponseDto.builder()
+                    .id(e.getId())
+                    .title(e.getTitle())
+                    .content(e.getContent())
+                    .writer(e.getWriter())
+                    .likeCount(e.getLikeCount())
+                    .build()
+            );
+        });
 
         return results;
     }
@@ -49,7 +56,13 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(NoSuchElementException::new);
 
-        return new BoardResponseDto(board.getId(), board.getTitle(), board.getContent(), board.getWriter());
+        return BoardResponseDto.builder()
+                .id(board.getId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .writer(board.getWriter())
+                .likeCount(board.getLikeCount())
+                .build();
     }
 
     @Override

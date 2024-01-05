@@ -48,6 +48,7 @@ public class BoardLikeServiceTest {
 
     @DisplayName("좋아요 정상 동작 테스트")
     @Test
+    @Transactional
     void upTest() throws Exception {
         Board board = boardRepository.save(new Board("제목", "내용", "글쓴이"));
         Account account = accountRepository.save(new Account("유저네임", "패스워드", AccountRole.USER));

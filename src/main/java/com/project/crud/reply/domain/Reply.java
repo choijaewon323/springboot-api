@@ -21,7 +21,7 @@ public class Reply {
     @Column(name = "WRITER")
     private String writer;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "BOARD_ID", nullable = false)
     private Board board;
 
