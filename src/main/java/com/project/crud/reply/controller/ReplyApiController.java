@@ -3,6 +3,8 @@ package com.project.crud.reply.controller;
 import com.project.crud.reply.dto.ReplyRequestDto;
 import com.project.crud.reply.dto.ReplyResponseDto;
 import com.project.crud.reply.service.ReplyService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +22,7 @@ public class ReplyApiController {
     }
 
     @PostMapping("/{boardId}")
-    public ResponseEntity<Void> create(@PathVariable Long boardId, @RequestBody ReplyRequestDto dto) {
+    public ResponseEntity<Void> create(@NotNull @PathVariable Long boardId,@Valid @RequestBody ReplyRequestDto dto) {
         replyService.create(boardId, dto);
 
         return ResponseEntity
@@ -29,7 +31,7 @@ public class ReplyApiController {
     }
 
     @GetMapping("/list/{boardId}")
-    public ResponseEntity<List<ReplyResponseDto>> readAll(@PathVariable Long boardId) {
+    public ResponseEntity<List<ReplyResponseDto>> readAll(@NotNull @PathVariable Long boardId) {
         List<ReplyResponseDto> results = replyService.readAll(boardId);
 
         return ResponseEntity
@@ -38,7 +40,7 @@ public class ReplyApiController {
     }
 
     @GetMapping("/{replyId}")
-    public ResponseEntity<ReplyResponseDto> readOne(@PathVariable Long replyId) {
+    public ResponseEntity<ReplyResponseDto> readOne(@NotNull @PathVariable Long replyId) {
         ReplyResponseDto result = replyService.readOne(replyId);
 
         return ResponseEntity
@@ -47,7 +49,7 @@ public class ReplyApiController {
     }
 
     @PutMapping("/{replyId}")
-    public ResponseEntity<Void> update(@PathVariable Long replyId, @RequestBody ReplyRequestDto dto) {
+    public ResponseEntity<Void> update(@NotNull @PathVariable Long replyId, @Valid @RequestBody ReplyRequestDto dto) {
         replyService.update(replyId, dto);
 
         return ResponseEntity
@@ -56,7 +58,7 @@ public class ReplyApiController {
     }
 
     @DeleteMapping("/{replyId}")
-    public ResponseEntity<Void> delete(@PathVariable Long replyId) {
+    public ResponseEntity<Void> delete(@NotNull @PathVariable Long replyId) {
         replyService.delete(replyId);
 
         return ResponseEntity

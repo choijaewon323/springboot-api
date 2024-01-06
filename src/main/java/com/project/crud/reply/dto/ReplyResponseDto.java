@@ -1,9 +1,11 @@
 package com.project.crud.reply.dto;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@Builder
 @Setter
 @Getter
 @NoArgsConstructor

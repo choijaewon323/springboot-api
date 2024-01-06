@@ -29,7 +29,7 @@ public class ReplyServiceImpl implements ReplyService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(NoSuchElementException::new);
 
-        Reply reply = new Reply(dto.getContent(), dto.getWriter(), board);
+        Reply reply = dto.toEntity(board);
         replyRepository.save(reply);
     }
 
@@ -39,9 +39,7 @@ public class ReplyServiceImpl implements ReplyService {
         List<Reply> replies = replyRepository.findAllByBoard(boardId);
         List<ReplyResponseDto> result = new ArrayList<>();
 
-        for (Reply reply : replies) {
-            result.add(new ReplyResponseDto(reply.getId(), reply.getContent(), reply.getWriter()));
-        }
+        replies.stream().forEach(e -> result.add(e.toDto()));
 
         return result;
     }
@@ -52,7 +50,7 @@ public class ReplyServiceImpl implements ReplyService {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(NoSuchElementException::new);
 
-        return new ReplyResponseDto(reply.getId(), reply.getContent(), reply.getWriter());
+        return reply.toDto();
     }
 
     @Override
@@ -61,7 +59,7 @@ public class ReplyServiceImpl implements ReplyService {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(NoSuchElementException::new);
 
-        reply.update(dto.getContent(), dto.getWriter());
+        reply.update(dto);
     }
 
     @Override

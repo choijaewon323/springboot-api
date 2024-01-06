@@ -1,6 +1,8 @@
 package com.project.crud.reply.domain;
 
 import com.project.crud.board.domain.Board;
+import com.project.crud.reply.dto.ReplyRequestDto;
+import com.project.crud.reply.dto.ReplyResponseDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -34,5 +36,18 @@ public class Reply {
     public void update(String content, String writer) {
         this.content = content;
         this.writer = writer;
+    }
+
+    public void update(ReplyRequestDto dto) {
+        this.content = dto.getContent();
+        this.writer = dto.getWriter();
+    }
+
+    public ReplyResponseDto toDto() {
+        return ReplyResponseDto.builder()
+                .id(id)
+                .content(content)
+                .writer(writer)
+                .build();
     }
 }

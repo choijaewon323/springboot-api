@@ -48,7 +48,7 @@ public class BoardApiController {
     }
 
     @PutMapping("/{boardId}")
-    public ResponseEntity<Void> update(@PathVariable Long boardId, @Valid @RequestBody BoardRequestDto dto) {
+    public ResponseEntity<Void> update(@NotNull @PathVariable Long boardId, @Valid @RequestBody BoardRequestDto dto) {
         boardService.update(boardId, dto);
 
         return ResponseEntity
