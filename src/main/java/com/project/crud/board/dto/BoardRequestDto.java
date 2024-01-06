@@ -1,16 +1,22 @@
 package com.project.crud.board.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import com.project.crud.board.domain.Board;
+import jakarta.validation.constraints.NotBlank;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class BoardRequestDto {
+    @NotBlank
     private String title;
+    @NotBlank
     private String content;
+    @NotBlank
     private String writer;
+
+    public Board toEntity() {
+        return new Board(title, content, writer);
+    }
 }

@@ -3,6 +3,8 @@ package com.project.crud.board.controller;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
 import com.project.crud.board.service.BoardService;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +21,7 @@ public class BoardApiController {
     }
 
     @GetMapping("/{boardId}")
-    public ResponseEntity<BoardResponseDto> findOne(@PathVariable Long boardId) {
+    public ResponseEntity<BoardResponseDto> findOne(@NotNull @PathVariable Long boardId) {
         BoardResponseDto board = boardService.readOne(boardId);
 
         return ResponseEntity
@@ -37,7 +39,7 @@ public class BoardApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@RequestBody BoardRequestDto dto) {
+    public ResponseEntity<Void> create(@Valid @RequestBody BoardRequestDto dto) {
         boardService.create(dto);
 
         return ResponseEntity
@@ -46,7 +48,7 @@ public class BoardApiController {
     }
 
     @PutMapping("/{boardId}")
-    public ResponseEntity<Void> update(@PathVariable Long boardId, @RequestBody BoardRequestDto dto) {
+    public ResponseEntity<Void> update(@PathVariable Long boardId, @Valid @RequestBody BoardRequestDto dto) {
         boardService.update(boardId, dto);
 
         return ResponseEntity
@@ -55,7 +57,7 @@ public class BoardApiController {
     }
 
     @DeleteMapping("/{boardId}")
-    public ResponseEntity<Void> delete(@PathVariable Long boardId) {
+    public ResponseEntity<Void> delete(@NotNull @PathVariable Long boardId) {
         boardService.delete(boardId);
 
         return ResponseEntity

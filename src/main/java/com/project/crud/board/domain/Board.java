@@ -1,9 +1,12 @@
 package com.project.crud.board.domain;
 
+import com.project.crud.board.dto.BoardRequestDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.repository.Lock;
+
+import java.util.Objects;
 
 @NoArgsConstructor
 @Getter
@@ -15,14 +18,14 @@ public class Board {
     @Column(name = "BOARD_ID")
     private Long id;
 
-    @Column(name = "TITLE")
+    @Column(name = "TITLE", nullable = false)
     private String title;
 
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT", nullable = false)
     @Lob
     private String content;
 
-    @Column(name = "WRITER")
+    @Column(name = "WRITER", nullable = false)
     private String writer;
 
     @Column(name = "LIKE_COUNT")
@@ -34,10 +37,10 @@ public class Board {
         this.writer = writer;
     }
 
-    public void update(String title, String content, String writer) {
-        this.title = title;
-        this.content = content;
-        this.writer = writer;
+    public void update(BoardRequestDto dto) {
+        this.title = dto.getTitle();
+        this.content = dto.getContent();
+        this.writer = dto.getWriter();
     }
 
     public void likeUp() {

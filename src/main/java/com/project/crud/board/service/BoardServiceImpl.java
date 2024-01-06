@@ -25,9 +25,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public void create(BoardRequestDto dto) {
-        boardRepository.save(
-                new Board(dto.getTitle(), dto.getContent(), dto.getWriter())
-        );
+        boardRepository.save(dto.toEntity());
     }
 
     @Override
@@ -36,16 +34,7 @@ public class BoardServiceImpl implements BoardService {
         List<Board> boards = boardRepository.findAll();
         List<BoardResponseDto> results = new ArrayList<>();
 
-        boards.stream().forEach((e) -> {
-            results.add(BoardResponseDto.builder()
-                    .id(e.getId())
-                    .title(e.getTitle())
-                    .content(e.getContent())
-                    .writer(e.getWriter())
-                    .likeCount(e.getLikeCount())
-                    .build()
-            );
-        });
+        boards.stream().forEach(e -> results.add(BoardResponseDto.toDto(e)));
 
         return results;
     }
@@ -56,13 +45,7 @@ public class BoardServiceImpl implements BoardService {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(NoSuchElementException::new);
 
-        return BoardResponseDto.builder()
-                .id(board.getId())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .writer(board.getWriter())
-                .likeCount(board.getLikeCount())
-                .build();
+        return BoardResponseDto.toDto(board);
     }
 
     @Override
@@ -71,7 +54,7 @@ public class BoardServiceImpl implements BoardService {
         Board existBoard = boardRepository.findById(boardId)
                 .orElseThrow(NoSuchElementException::new);
 
-        existBoard.update(dto.getTitle(), dto.getContent(), dto.getWriter());
+        existBoard.update(dto);
     }
 
     @Override
