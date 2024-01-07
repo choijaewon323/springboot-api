@@ -1,9 +1,8 @@
 package com.project.crud.board.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.crud.board.controller.BoardApiController;
 import com.project.crud.board.domain.Board;
-import com.project.crud.board.domain.BoardRepository;
+import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
 import com.project.crud.board.service.BoardService;

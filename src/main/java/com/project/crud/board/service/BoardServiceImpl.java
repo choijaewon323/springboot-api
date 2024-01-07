@@ -1,13 +1,10 @@
 package com.project.crud.board.service;
 
 import com.project.crud.board.domain.Board;
-import com.project.crud.board.domain.BoardRepository;
+import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
-import jakarta.persistence.LockModeType;
-import org.springframework.data.jpa.repository.Lock;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;

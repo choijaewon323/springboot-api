@@ -4,6 +4,7 @@ import com.project.crud.board.domain.Board;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
+@Builder
 @Getter
 @Setter
 @NoArgsConstructor

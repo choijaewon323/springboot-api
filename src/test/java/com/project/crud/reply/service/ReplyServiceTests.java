@@ -1,10 +1,9 @@
 package com.project.crud.reply.service;
 
 import com.project.crud.board.domain.Board;
-import com.project.crud.board.domain.BoardRepository;
+import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.reply.domain.Reply;
 import com.project.crud.reply.domain.ReplyRepository;
-import com.project.crud.reply.service.ReplyService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

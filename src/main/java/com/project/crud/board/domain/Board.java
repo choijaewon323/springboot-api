@@ -2,12 +2,14 @@ package com.project.crud.board.domain;
 
 import com.project.crud.board.dto.BoardRequestDto;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.springframework.data.jpa.repository.Lock;
 
 import java.util.Objects;
 
+@AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Entity
@@ -48,6 +50,10 @@ public class Board {
     }
 
     public void likeDown() {
+        if (likeCount == 0L) {
+            throw new IllegalStateException("좋아요 개수는 음수가 될 수 없습니다.");
+        }
+
         likeCount--;
     }
 }

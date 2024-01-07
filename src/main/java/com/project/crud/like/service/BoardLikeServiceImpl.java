@@ -3,7 +3,7 @@ package com.project.crud.like.service;
 import com.project.crud.account.domain.Account;
 import com.project.crud.account.domain.AccountRepository;
 import com.project.crud.board.domain.Board;
-import com.project.crud.board.domain.BoardRepository;
+import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.like.domain.BoardLike;
 import com.project.crud.like.domain.BoardLikeId;
 import com.project.crud.like.domain.BoardLikeRepository;

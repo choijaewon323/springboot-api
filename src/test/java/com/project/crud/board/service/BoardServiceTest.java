@@ -1,86 +1,95 @@
 package com.project.crud.board.service;
 
 import com.project.crud.board.domain.Board;
-import com.project.crud.board.domain.BoardRepository;
+import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.verify;
 
-@SpringBootTest
+@ExtendWith(MockitoExtension.class)
 @ActiveProfiles("test")
 public class BoardServiceTest {
-    @Autowired
-    BoardService boardService;
-    @Autowired
-    BoardRepository boardRepository;
+    @InjectMocks
+    BoardServiceImpl boardService;
 
-    @AfterEach
-    void afterEach() throws Exception {
-        boardRepository.deleteAll();
-    }
+    @Mock
+    BoardRepository boardRepository;
 
     @DisplayName("게시판 등록 테스트")
     @Test
     void create() throws Exception {
-        // test
+        // given
+        Board board = new Board("제목", "내용", "작성자");
+        given(boardRepository.save(any())).willReturn(board);
+
+        // when
         boardService.create(new BoardRequestDto("제목", "내용", "작성자"));
 
-        List<Board> boards = boardRepository.findAll();
-        assertThat(boards.size()).isEqualTo(1);
-        assertThat(boards.get(0).getWriter()).isEqualTo("작성자");
-        assertThat(boards.get(0).getLikeCount()).isEqualTo(0L);
+        // then
+        verify(boardRepository).save(any());
     }
 
     @DisplayName("게시판 수정 테스트")
     @Test
     void update() throws Exception {
+        // given
+        Board board = new Board(0L, "제목", "내용", "작성자", 0L);
+        Long boardId = board.getId();
+        BoardRequestDto dto = BoardRequestDto.builder()
+                                .title("제목2")
+                                .content("내용2")
+                                .writer("작성자2")
+                                .build();
 
-        // pre
-        Board board = boardRepository.save(new Board("제목", "내용", "작성자"));
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
-        // exec
-        boardService.update(board.getId(), new BoardRequestDto("제목1", "내용1", "작성자1"));
+        // when
+        boardService.update(boardId, dto);
 
-        // test
-        Board after = boardRepository.findById(board.getId())
-                .orElseThrow();
-        assertThat(after.getContent()).isEqualTo("내용1");
-        assertThat(after.getLikeCount()).isEqualTo(0L);
+        // then
+        assertThat(board.getContent()).isEqualTo("내용2");
     }
 
     @DisplayName("게시판 삭제 테스트")
     @Test
     void delete() throws Exception {
-        // pre
-        Board board = boardRepository.save(new Board("제목", "내용", "작성자"));
+        // given
+        doNothing().when(boardRepository).deleteById(anyLong());
 
-        // exec
-        boardService.delete(board.getId());
+        // when
+        boardService.delete(0L);
 
-        // test
-        assertThat(boardRepository.findAll().isEmpty()).isTrue();
+        // then
+        verify(boardRepository).deleteById(anyLong());
     }
 
     @DisplayName("게시판 전체 읽어오기 테스트")
     @Test
     void readAll() throws Exception {
-        // pre
+        // given
         List<Board> boards = Arrays.asList(new Board("제목", "내용", "작성자"), new Board("제목1", "내용1", "작성자1"));
-        boards.stream().forEach((e) -> {
-            boardRepository.save(e);
-        });
+        given(boardRepository.findAll()).willReturn(boards);
 
-        // exec
+        // when
         List<BoardResponseDto> results = boardService.readAll();
 
         assertThat(results.size()).isEqualTo(2);
@@ -92,17 +101,33 @@ public class BoardServiceTest {
         })).isTrue();
     }
 
+    @DisplayName("게시판 하나 읽어오기 예외 테스트")
+    @Test
+    void readOneException() throws Exception {
+        // given
+        Long id = 0L;
+        given(boardRepository.findById(id)).willReturn(Optional.empty());
+
+        // when
+        assertThatThrownBy(() -> {
+            BoardResponseDto result = boardService.readOne(id);
+        })
+                // then
+                .isInstanceOf(NoSuchElementException.class);
+    }
+
     @DisplayName("게시판 하나 읽어오기 테스트")
     @Test
-    void readOne() throws Exception {
-        // pre
-        Board board = boardRepository.save(new Board("제목", "내용", "작성자"));
+    void readOne() {
+        // given
+        Board board = new Board("제목", "내용", "작성자");
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
-        // exec
-        BoardResponseDto result = boardService.readOne(board.getId());
+        // when
+        BoardResponseDto dto = boardService.readOne(0L);
 
-        // test
-        assertThat(result.getContent()).isEqualTo(board.getContent());
-        assertThat(result.getWriter()).isEqualTo(board.getWriter());
+        // then
+        assertThat(dto.getLikeCount()).isEqualTo(0L);
+        assertThat(dto.getContent()).isEqualTo("내용");
     }
 }
