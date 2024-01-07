@@ -12,7 +12,6 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/board")
-@CrossOrigin(origins = "http://localhost:3000")
 public class BoardApiController {
     private final BoardService boardService;
 
@@ -20,7 +19,7 @@ public class BoardApiController {
         this.boardService = boardService;
     }
 
-    @GetMapping("/{boardId}")
+    @GetMapping(value = "/{boardId}", produces = "application/json;charset=UTF-8")
     public ResponseEntity<BoardResponseDto> findOne(@NotNull @PathVariable Long boardId) {
         BoardResponseDto board = boardService.readOne(boardId);
 
@@ -29,7 +28,7 @@ public class BoardApiController {
                 .body(board);
     }
 
-    @GetMapping()
+    @GetMapping(produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<BoardResponseDto>> findAll() {
         List<BoardResponseDto> boards = boardService.readAll();
 

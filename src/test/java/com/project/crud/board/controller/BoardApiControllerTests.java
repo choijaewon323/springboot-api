@@ -2,79 +2,90 @@ package com.project.crud.board.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.crud.board.domain.Board;
-import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
 import com.project.crud.board.service.BoardService;
+import com.project.crud.security.config.WebMvcConfig;
+import com.project.crud.security.config.WebSecurityConfig;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(controllers = BoardApiController.class,
+            excludeFilters = {
+                    @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfig.class),
+                    @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfig.class)
+            })
 @ActiveProfiles("test")
+@WithMockUser
 public class BoardApiControllerTests {
-    @Autowired
-    BoardRepository boardRepository;
-    @Autowired
+    @MockBean
     BoardService boardService;
 
+    @Autowired
     MockMvc mockMvc;
 
     @Autowired
     ObjectMapper objectMapper;
 
-    @BeforeEach
-    void setup() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new BoardApiController(boardService))
-                .addFilter(new CharacterEncodingFilter("UTF-8", true))
-                .alwaysDo(print())
-                .build();
-    }
-
-    @AfterEach
-    void deleteAll() throws Exception {
-        boardRepository.deleteAll();
-    }
-
     @DisplayName("게시물 하나 게시하기 테스트")
     @Test
     void createTest() throws Exception {
+        // given
         BoardRequestDto dto = new BoardRequestDto("제목1", "내용1", "작성자1");
+        doNothing().when(boardService).create(dto);
 
         String content = objectMapper.writeValueAsString(dto);
 
+        // when
         mockMvc.perform(post("/api/v1/board")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
-        ).andExpect(status().isOk());
-
-        assertThat(boardRepository.findAll().size()).isEqualTo(1);
+                        .with(csrf())
+        )
+                // then
+                .andExpect(status().isOk());
     }
 
     @DisplayName("게시물 하나 받아오기 테스트")
     @Test
     void readOneTest() throws Exception {
-        Board board = boardRepository.save(new Board("제목1", "내용1", "작성자1"));
-        String expected = objectMapper.writeValueAsString(board);
+        // given
+        BoardResponseDto dto = BoardResponseDto.builder()
+                .id(0L)
+                .title("제목")
+                .content("내용")
+                .writer("작성자")
+                .likeCount(0L)
+                .build();
 
-        mockMvc.perform(get("/api/v1/board/{boardId}", board.getId())
+        given(boardService.readOne(anyLong())).willReturn(dto);
+        String expected = objectMapper.writeValueAsString(dto);
+
+        // when
+        mockMvc.perform(get("/api/v1/board/{boardId}", dto.getId())
                 .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk())
+                        .with(csrf())
+        )
+                // then
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=utf-8"))
                 .andExpect(content().string(expected));
     }
@@ -82,18 +93,18 @@ public class BoardApiControllerTests {
     @DisplayName("게시물 전체 받아오기 테스트")
     @Test
     void readAllTest() throws Exception {
-        Board board1 = boardRepository.save(new Board("제목1", "내용1", "작성자1"));
-        Board board2 = boardRepository.save(new Board("제목2", "내용2", "작성자2"));
+        // given
+        String expect = expectList();
+        given(boardService.readAll()).willReturn(makeDtoList());
 
-        List<BoardResponseDto> expectList = new ArrayList<>();
-        expectList.add(new BoardResponseDto(board1.getId(), board1.getTitle(), board1.getContent(), board1.getWriter(), board1.getLikeCount()));
-        expectList.add(new BoardResponseDto(board2.getId(), board2.getTitle(), board2.getContent(), board2.getWriter(), board2.getLikeCount()));
-        String expect = objectMapper.writeValueAsString(expectList);
-
+        // when
         mockMvc.perform(
                 get("/api/v1/board")
                         .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk())
+                        .with(csrf())
+        )
+                // then
+                .andExpect(status().isOk())
                 .andExpect(content().contentType("application/json;charset=utf-8"))
                 .andExpect(content().string(expect));
     }
@@ -101,28 +112,54 @@ public class BoardApiControllerTests {
     @DisplayName("게시물 수정 테스트")
     @Test
     void updateTest() throws Exception {
-        Board board = boardRepository.save(new Board("제목1", "내용1", "작성자1"));
-
+        // given
         BoardRequestDto dto = new BoardRequestDto("제목2", "내용2", "작성자2");
-
         String content = objectMapper.writeValueAsString(dto);
+        doNothing().when(boardService).update(0L, dto);
 
-        mockMvc.perform(put("/api/v1/board/{boardId}", board.getId())
+        // when
+        mockMvc.perform(put("/api/v1/board/{boardId}", 0L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
-        ).andExpect(status().isOk());
-
-        assertThat(boardRepository.findAll().get(0).getTitle()).isEqualTo("제목2");
+                        .with(csrf())
+        )
+                // then
+                .andExpect(status().isOk());
     }
 
     @DisplayName("게시물 삭제 테스트")
     @Test
     void deleteTest() throws Exception {
-        Board board = boardRepository.save(new Board("제목1", "내용1", "작성자1"));
+        // given
+        doNothing().when(boardService).delete(0L);
 
-        mockMvc.perform(delete("/api/v1/board/{boardId}", board.getId())
-        ).andExpect(status().isOk());
+        // when
+        mockMvc.perform(delete("/api/v1/board/{boardId}", 0L)
+                        .with(csrf())
+        )
+                // then
+                .andExpect(status().isOk());
+    }
 
-        assertThat(boardRepository.findAll().size()).isEqualTo(0);
+    private List<BoardResponseDto> makeDtoList() {
+        List<BoardResponseDto> expectList = new ArrayList<>();
+        expectList.add(makeDto(1L));
+        expectList.add(makeDto(2L));
+
+        return expectList;
+    }
+
+    private String expectList() throws Exception {
+        return objectMapper.writeValueAsString(makeDtoList());
+    }
+
+    private BoardResponseDto makeDto(Long number) {
+        return BoardResponseDto.builder()
+                .id(number)
+                .title("제목" + number)
+                .content("내용" + number)
+                .writer("작성자" + number)
+                .likeCount(0L)
+                .build();
     }
 }
