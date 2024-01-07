@@ -1,21 +1,20 @@
 package com.project.crud.reply.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.crud.board.domain.Board;
-import com.project.crud.board.repository.BoardRepository;
-import com.project.crud.reply.domain.Reply;
-import com.project.crud.reply.domain.ReplyRepository;
 import com.project.crud.reply.dto.ReplyRequestDto;
 import com.project.crud.reply.dto.ReplyResponseDto;
 import com.project.crud.reply.service.ReplyService;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Test;
+import com.project.crud.security.config.WebMvcConfig;
+import com.project.crud.security.config.WebSecurityConfig;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.context.annotation.FilterType;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.CharacterEncodingFilter;
@@ -23,19 +22,23 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.doNothing;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
-@AutoConfigureMockMvc
+@WebMvcTest(controllers = ReplyApiController.class,
+        excludeFilters = {
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfig.class),
+                @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfig.class)
+        })
+@ActiveProfiles("test")
+@WithMockUser
 public class ReplyApiControllerTests {
-    @Autowired
-    BoardRepository boardRepository;
-    @Autowired
-    ReplyRepository replyRepository;
-    @Autowired
+    @MockBean
     ReplyService replyService;
 
     MockMvc mockMvc;
@@ -45,95 +48,105 @@ public class ReplyApiControllerTests {
 
     @BeforeEach
     void setup() {
-        this.mockMvc = MockMvcBuilders.standaloneSetup(new ReplyApiController(replyService))
+        mockMvc = MockMvcBuilders.standaloneSetup(new ReplyApiController(replyService))
                 .addFilter(new CharacterEncodingFilter("UTF-8", true))
                 .alwaysDo(print())
                 .build();
     }
 
-    @AfterEach
-    void afterEach() {
-        replyRepository.deleteAll();
-        boardRepository.deleteAll();
-    }
-
     @DisplayName("댓글 생성 테스트")
     @Test
     void createTest() throws Exception {
-        Board board = boardRepository.save(new Board("제목","내용","작성자"));
+        // given
+        doNothing().when(replyService).create(0L, new ReplyRequestDto("내용", "댓글"));
         ReplyRequestDto replyRequestDto = new ReplyRequestDto("내용1", "작성자1");
         String content = objectMapper.writeValueAsString(replyRequestDto);
 
+        // when
         mockMvc.perform(
-                post("/api/v1/reply/{boardId}", board.getId())
+                post("/api/v1/reply/{boardId}", 0L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(content)
-        ).andExpect(status().isOk());
-
-        assertThat(replyRepository.findAll().size()).isEqualTo(1);
-        assertThat(replyRepository.findAll().get(0).getBoard().getId()).isEqualTo(board.getId());
+                        .with(csrf())
+        )
+                // then
+                .andExpect(status().isOk());
     }
 
     @DisplayName("댓글 하나 읽어오기 테스트")
     @Test
     void readOneTest() throws Exception {
-        Board board = boardRepository.save(new Board("제목","내용","작성자"));
-        Reply reply = replyRepository.save(new Reply("내용1", "작성자1", board));
-        ReplyResponseDto response = new ReplyResponseDto(reply.getId(), reply.getContent(), reply.getWriter());
-        String expect = objectMapper.writeValueAsString(response);
+        // given
+        ReplyResponseDto dto = new ReplyResponseDto(0L, "내용", "작성자");
+        given(replyService.readOne(anyLong())).willReturn(dto);
+        String expect = objectMapper.writeValueAsString(dto);
 
+        // when
         mockMvc.perform(
-                get("/api/v1/reply/{replyId}", reply.getId())
-        ).andExpect(status().isOk())
+                get("/api/v1/reply/{replyId}", 0L)
+                        .with(csrf())
+                )
+                // then
+                .andExpect(status().isOk())
                 .andExpect(content().string(expect));
     }
 
     @DisplayName("댓글 여러개 읽어오기 테스트")
     @Test
     void readAllTest() throws Exception {
-        Board board = boardRepository.save(new Board("제목","내용","작성자"));
-        Reply reply1 = replyRepository.save(new Reply("내용1", "작성자1", board));
-        Reply reply2 = replyRepository.save(new Reply("내용1", "작성자1", board));
+        // given
+        given(replyService.readAll(0L)).willReturn(dtoList());
+        String expect = objectMapper.writeValueAsString(dtoList());
 
-        List<ReplyResponseDto> results = new ArrayList<>();
-        results.add(new ReplyResponseDto(reply1.getId(), reply1.getContent(), reply1.getWriter()));
-        results.add(new ReplyResponseDto(reply2.getId(), reply2.getContent(), reply2.getWriter()));
-        String expect = objectMapper.writeValueAsString(results);
-
+        // when
         mockMvc.perform(
-                get("/api/v1/reply/all/{boardId}", board.getId())
-        ).andExpect(status().isOk())
+                get("/api/v1/reply/list/{boardId}", 0L)
+                        .with(csrf())
+                )
+                // then
+                .andExpect(status().isOk())
                 .andExpect(content().string(expect));
     }
 
     @DisplayName("댓글 수정 테스트")
     @Test
     void updateTest() throws Exception {
-        Board board = boardRepository.save(new Board("제목","내용","작성자"));
-        Reply reply = replyRepository.save(new Reply("내용1", "작성자1", board));
-        ReplyRequestDto requestDto = new ReplyRequestDto("내용2", "작성자2");
-        String content = objectMapper.writeValueAsString(requestDto);
+        // given
+        ReplyRequestDto dto = new ReplyRequestDto("내용2", "작성자2");
+        doNothing().when(replyService).update(0L, dto);
+        String content = objectMapper.writeValueAsString(dto);
 
+        // when
         mockMvc.perform(
-                put("/api/v1/reply/{replyId}", reply.getId())
+                put("/api/v1/reply/{replyId}", 0L)
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(content)
-        ).andExpect(status().isOk());
-
-        assertThat(replyRepository.findAll().size()).isEqualTo(1);
-        assertThat(replyRepository.findAll().get(0).getContent()).isEqualTo("내용2");
+                        .with(csrf())
+        )
+                // then
+                .andExpect(status().isOk());
     }
 
     @DisplayName("댓글 삭제 테스트")
     @Test
     void deleteTest() throws Exception {
-        Board board = boardRepository.save(new Board("제목","내용","작성자"));
-        Reply reply = replyRepository.save(new Reply("내용1", "작성자1", board));
+        // given
+        doNothing().when(replyService).delete(0L);
 
+        // when
         mockMvc.perform(
-                delete("/api/v1/reply/{replyId}", reply.getId())
-        ).andExpect(status().isOk());
+                delete("/api/v1/reply/{replyId}", 0L)
+                        .with(csrf())
+        )
+                // then
+                .andExpect(status().isOk());
+    }
 
-        assertThat(replyRepository.findAll().size()).isEqualTo(0);
+    private List<ReplyResponseDto> dtoList() {
+        List<ReplyResponseDto> results = new ArrayList<>();
+        results.add(new ReplyResponseDto(0L, "내용1", "작성자1"));
+        results.add(new ReplyResponseDto(1L, "내용2", "작성자2"));
+
+        return results;
     }
 }

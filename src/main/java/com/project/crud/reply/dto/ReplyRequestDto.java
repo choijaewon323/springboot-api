@@ -4,12 +4,14 @@ import com.project.crud.board.domain.Board;
 import com.project.crud.reply.domain.Reply;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.Objects;
 
+@Builder
 @Setter
 @Getter
 @NoArgsConstructor

@@ -33,11 +33,6 @@ public class Reply {
         this.board = board;
     }
 
-    public void update(String content, String writer) {
-        this.content = content;
-        this.writer = writer;
-    }
-
     public void update(ReplyRequestDto dto) {
         this.content = dto.getContent();
         this.writer = dto.getWriter();

@@ -3,7 +3,7 @@ package com.project.crud.reply.service;
 import com.project.crud.board.domain.Board;
 import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.reply.domain.Reply;
-import com.project.crud.reply.domain.ReplyRepository;
+import com.project.crud.reply.repository.ReplyRepository;
 import com.project.crud.reply.dto.ReplyRequestDto;
 import com.project.crud.reply.dto.ReplyResponseDto;
 import org.springframework.stereotype.Service;
