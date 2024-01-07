@@ -7,7 +7,7 @@ import com.project.crud.board.domain.BoardRepository;
 import com.project.crud.like.domain.BoardLike;
 import com.project.crud.like.domain.BoardLikeId;
 import com.project.crud.like.domain.BoardLikeRepository;
-import com.project.crud.like.dto.BoardLikeRequest;
+import com.project.crud.like.dto.BoardLikeRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,7 +29,7 @@ public class BoardLikeServiceImpl implements BoardLikeService {
 
     @Override
     @Transactional
-    public void up(BoardLikeRequest request) {
+    public void up(BoardLikeRequestDto request) {
         Board board = boardRepository.pessimisticFindById(request.getBoardId())
                 .orElseThrow(() -> new NoSuchElementException("no such board"));
 
@@ -48,8 +48,8 @@ public class BoardLikeServiceImpl implements BoardLikeService {
 
     @Override
     @Transactional
-    public void down(BoardLikeRequest request) {
-        Board board = boardRepository.findById(request.getBoardId())
+    public void down(BoardLikeRequestDto request) {
+        Board board = boardRepository.pessimisticFindById(request.getBoardId())
                 .orElseThrow(() -> new NoSuchElementException("no such board"));
 
         Account account = accountRepository.findByUsername(request.getUsername())

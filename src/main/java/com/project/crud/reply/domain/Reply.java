@@ -14,13 +14,13 @@ import lombok.NoArgsConstructor;
 public class Reply {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "REPLY_ID")
+    @Column(name = "REPLY_ID", nullable = false)
     private Long id;
 
-    @Column(name = "CONTENT")
+    @Column(name = "CONTENT", nullable = false)
     private String content;
 
-    @Column(name = "WRITER")
+    @Column(name = "WRITER", nullable = false)
     private String writer;
 
     @ManyToOne(fetch = FetchType.LAZY)

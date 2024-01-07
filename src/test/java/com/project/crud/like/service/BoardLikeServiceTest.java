@@ -6,7 +6,7 @@ import com.project.crud.board.domain.Board;
 import com.project.crud.board.domain.BoardRepository;
 import com.project.crud.like.domain.BoardLike;
 import com.project.crud.like.domain.BoardLikeRepository;
-import com.project.crud.like.dto.BoardLikeRequest;
+import com.project.crud.like.dto.BoardLikeRequestDto;
 import com.project.crud.security.enums.AccountRole;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -54,7 +54,7 @@ public class BoardLikeServiceTest {
         Account account = accountRepository.save(new Account("유저네임", "패스워드", AccountRole.USER));
 
         // test
-        boardLikeService.up(new BoardLikeRequest(board.getId(), account.getUsername()));
+        boardLikeService.up(new BoardLikeRequestDto(board.getId(), account.getUsername()));
 
         // then
         List<BoardLike> boardLikes = boardLikeRepository.findAll();
@@ -74,7 +74,7 @@ public class BoardLikeServiceTest {
 
         // test
         assertThatThrownBy(() -> {
-            boardLikeService.up(new BoardLikeRequest(board.getId(), account.getUsername()));
+            boardLikeService.up(new BoardLikeRequestDto(board.getId(), account.getUsername()));
         }).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -85,7 +85,7 @@ public class BoardLikeServiceTest {
         Account account = accountRepository.save(new Account("유저네임", "패스워드", AccountRole.USER));
 
         // test
-        boardLikeService.up(new BoardLikeRequest(board.getId(), account.getUsername()));
+        boardLikeService.up(new BoardLikeRequestDto(board.getId(), account.getUsername()));
 
         Board afterBoard = boardRepository.findById(board.getId())
                 .orElseThrow(NoSuchElementException::new);
@@ -103,7 +103,7 @@ public class BoardLikeServiceTest {
         boardLikeRepository.save(new BoardLike(board, account));
 
         // test
-        boardLikeService.down(new BoardLikeRequest(board.getId(), account.getUsername()));
+        boardLikeService.down(new BoardLikeRequestDto(board.getId(), account.getUsername()));
 
         List<BoardLike> boardLikes = boardLikeRepository.findAll();
         assertThat(boardLikes.isEmpty()).isTrue();
@@ -117,7 +117,7 @@ public class BoardLikeServiceTest {
 
         // test
         assertThatThrownBy(() -> {
-            boardLikeService.down(new BoardLikeRequest(board.getId(), account.getUsername()));
+            boardLikeService.down(new BoardLikeRequestDto(board.getId(), account.getUsername()));
         }).isInstanceOf(IllegalArgumentException.class);
     }
 
@@ -134,7 +134,7 @@ public class BoardLikeServiceTest {
         for (Integer i = 0; i < NUMBER_OF_THREADS; i++) {
             service.execute(() -> {
                 try {
-                    boardLikeService.up(new BoardLikeRequest(board.getId(), account.getUsername()));
+                    boardLikeService.up(new BoardLikeRequestDto(board.getId(), account.getUsername()));
                     latch.countDown();
                 } catch (Exception e) {
                     System.out.println("##############" + e.getMessage() + "#############");

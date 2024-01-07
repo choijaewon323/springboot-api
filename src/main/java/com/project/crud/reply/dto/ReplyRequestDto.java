@@ -2,6 +2,7 @@ package com.project.crud.reply.dto;
 
 import com.project.crud.board.domain.Board;
 import com.project.crud.reply.domain.Reply;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,9 +14,9 @@ import java.util.Objects;
 @Getter
 @NoArgsConstructor
 public class ReplyRequestDto {
-    @NotNull
+    @NotBlank
     private String content;
-    @NotNull
+    @NotBlank
     private String writer;
 
     public ReplyRequestDto(String content, String writer) {
@@ -24,8 +25,6 @@ public class ReplyRequestDto {
     }
 
     public Reply toEntity(Board board) {
-        Objects.requireNonNull(board);
-
         return new Reply(content, writer, board);
     }
 }

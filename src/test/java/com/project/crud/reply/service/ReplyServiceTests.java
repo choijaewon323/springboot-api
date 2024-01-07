@@ -41,4 +41,5 @@ public class ReplyServiceTests {
         assertThat(replyService.readAll(board.getId()).size()).isEqualTo(2);
     }
 
+
 }

@@ -1,8 +1,8 @@
 package com.project.crud.like.service;
 
-import com.project.crud.like.dto.BoardLikeRequest;
+import com.project.crud.like.dto.BoardLikeRequestDto;
 
 public interface BoardLikeService {
-    void up(BoardLikeRequest request);
-    void down(BoardLikeRequest request);
+    void up(BoardLikeRequestDto request);
+    void down(BoardLikeRequestDto request);
 }
