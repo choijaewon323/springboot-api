@@ -1,17 +1,16 @@
 package com.project.crud.like.service;
 
 import com.project.crud.account.domain.Account;
-import com.project.crud.account.domain.AccountRepository;
+import com.project.crud.account.repository.AccountRepository;
 import com.project.crud.board.domain.Board;
 import com.project.crud.board.repository.BoardRepository;
-import com.project.crud.like.domain.AlreadyExistsException;
+import com.project.crud.like.exception.AlreadyExistsException;
 import com.project.crud.like.domain.BoardLike;
 import com.project.crud.like.domain.BoardLikeId;
-import com.project.crud.like.domain.NotExistsException;
+import com.project.crud.like.exception.NotExistsException;
 import com.project.crud.like.repository.BoardLikeRepository;
 import com.project.crud.like.dto.BoardLikeRequestDto;
-import com.project.crud.security.enums.AccountRole;
-import org.junit.jupiter.api.AfterEach;
+import com.project.crud.account.domain.AccountRole;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,17 +18,10 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;

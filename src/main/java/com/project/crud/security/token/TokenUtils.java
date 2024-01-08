@@ -1,8 +1,7 @@
 package com.project.crud.security.token;
 
-import com.project.crud.security.dto.UserTokenRequest;
 import com.project.crud.security.dto.UserTokenResponse;
-import com.project.crud.security.enums.AccountRole;
+import com.project.crud.account.domain.AccountRole;
 import com.project.crud.security.enums.KeyInfo;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;

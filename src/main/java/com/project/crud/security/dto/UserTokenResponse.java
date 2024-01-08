@@ -1,6 +1,6 @@
 package com.project.crud.security.dto;
 
-import com.project.crud.security.enums.AccountRole;
+import com.project.crud.account.domain.AccountRole;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

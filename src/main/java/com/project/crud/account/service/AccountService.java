@@ -1,11 +1,18 @@
 package com.project.crud.account.service;
 
 import com.project.crud.account.domain.Account;
+import com.project.crud.account.dto.AccountRequestDto;
+import com.project.crud.account.dto.AccountResponseDto;
 import com.project.crud.security.dto.UserTokenRequest;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface AccountService {
-    Optional<Account> findByUsername(UserTokenRequest request);
-    Boolean create(UserTokenRequest request);
+    void create(AccountRequestDto dto);
+    List<AccountResponseDto> readAll();
+    AccountResponseDto readOne(Long accountId);
+    void updateUsername(String username);
+    void updatePassword(AccountRequestDto dto);
+    void delete(String username);
 }

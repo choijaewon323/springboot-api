@@ -1,4 +1,4 @@
-package com.project.crud.security.enums;
+package com.project.crud.account.domain;
 
 public enum AccountRole {
     ADMIN, USER

@@ -1,7 +1,7 @@
 package com.project.crud.security.custom;
 
 import com.project.crud.account.domain.Account;
-import com.project.crud.account.domain.AccountRepository;
+import com.project.crud.account.repository.AccountRepository;
 import com.project.crud.security.dto.UserTokenResponse;
 import com.project.crud.security.exception.UserNotFoundException;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;

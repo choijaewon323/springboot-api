@@ -1,5 +1,6 @@
-package com.project.crud.account.domain;
+package com.project.crud.account.repository;
 
+import com.project.crud.account.domain.Account;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

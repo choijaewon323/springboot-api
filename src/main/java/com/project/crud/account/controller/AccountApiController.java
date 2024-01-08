@@ -1,7 +1,9 @@
 package com.project.crud.account.controller;
 
+import com.project.crud.account.dto.AccountRequestDto;
 import com.project.crud.security.dto.UserTokenRequest;
 import com.project.crud.account.service.AccountService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,21 +19,11 @@ public class AccountApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Boolean> create(@RequestBody UserTokenRequest request) {
-        Boolean result = accountService.create(request);
+    public ResponseEntity<Boolean> create(@Valid @RequestBody AccountRequestDto request) {
+        accountService.create(request);
 
-        if (result) {
-            return ResponseEntity
-                    .ok()
-                    .body(result);
-        }
         return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(result);
-    }
-
-    @GetMapping("/{username}")
-    public ResponseEntity<Boolean> findOne(@PathVariable String username) {
-        return ResponseEntity.ok().build();
+                .ok()
+                .build();
     }
 }

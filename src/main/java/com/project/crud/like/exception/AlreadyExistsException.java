@@ -1,4 +1,4 @@
-package com.project.crud.like.domain;
+package com.project.crud.like.exception;
 
 public class AlreadyExistsException extends RuntimeException {
     public AlreadyExistsException() {

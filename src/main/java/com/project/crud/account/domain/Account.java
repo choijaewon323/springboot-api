@@ -1,6 +1,5 @@
 package com.project.crud.account.domain;
 
-import com.project.crud.security.enums.AccountRole;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
