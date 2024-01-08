@@ -13,7 +13,7 @@ public class BoardResponseDto {
     private String title;
     private String content;
     private String writer;
-    private Long likeCount;
+    private long likeCount;
 
     public static BoardResponseDto toDto(Board board) {
         return BoardResponseDto.builder()

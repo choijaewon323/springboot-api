@@ -17,7 +17,7 @@ import java.util.Objects;
 public class Board {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "BOARD_ID")
+    @Column(name = "BOARD_ID", nullable = false)
     private Long id;
 
     @Column(name = "TITLE", nullable = false)
@@ -31,7 +31,7 @@ public class Board {
     private String writer;
 
     @Column(name = "LIKE_COUNT")
-    private Long likeCount = 0L;
+    private long likeCount = 0L;
 
     public Board(String title, String content, String writer) {
         this.title = title;
