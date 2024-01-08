@@ -4,9 +4,11 @@ import com.project.crud.account.domain.Account;
 import com.project.crud.account.domain.AccountRepository;
 import com.project.crud.board.domain.Board;
 import com.project.crud.board.repository.BoardRepository;
+import com.project.crud.like.domain.AlreadyExistsException;
 import com.project.crud.like.domain.BoardLike;
 import com.project.crud.like.domain.BoardLikeId;
-import com.project.crud.like.domain.BoardLikeRepository;
+import com.project.crud.like.domain.NotExistsException;
+import com.project.crud.like.repository.BoardLikeRepository;
 import com.project.crud.like.dto.BoardLikeRequestDto;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -36,11 +38,7 @@ public class BoardLikeServiceImpl implements BoardLikeService {
         Account account = accountRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new NoSuchElementException("no such username"));
 
-        Boolean present = boardLikeRepository.findById(new BoardLikeId(board, account)).isPresent();
-
-        if (present) {
-            throw new IllegalArgumentException("already exist");
-        }
+        checkExists(board, account);
 
         boardLikeRepository.save(new BoardLike(board, account));
         board.likeUp();
@@ -55,14 +53,29 @@ public class BoardLikeServiceImpl implements BoardLikeService {
         Account account = accountRepository.findByUsername(request.getUsername())
                 .orElseThrow(() -> new NoSuchElementException("no such username"));
 
-        BoardLikeId id = new BoardLikeId(board, account);
-        Boolean present = boardLikeRepository.findById(id).isPresent();
+        checkNotExists(board, account);
 
-        if (!present) {
-            throw new IllegalArgumentException("not exist");
-        }
-
-        boardLikeRepository.deleteById(id);
+        boardLikeRepository.deleteById(new BoardLikeId(board, account));
         board.likeDown();
+    }
+
+    private void checkExists(final Board board, final Account account) {
+        BoardLikeId id = new BoardLikeId(board, account);
+
+        Boolean test = boardLikeRepository.findById(id).isPresent();
+
+        if (test) {
+            throw new AlreadyExistsException("이미 존재하는 좋아요입니다.");
+        }
+    }
+
+    private void checkNotExists(final Board board, final Account account) {
+        BoardLikeId id = new BoardLikeId(board, account);
+
+        Boolean test = boardLikeRepository.findById(id).isPresent();
+
+        if (!test) {
+            throw new NotExistsException("존재하지 않는 좋아요입니다.");
+        }
     }
 }

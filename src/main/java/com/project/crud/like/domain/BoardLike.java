@@ -15,12 +15,12 @@ import lombok.NoArgsConstructor;
 @IdClass(BoardLikeId.class)
 public class BoardLike {
     @Id
-    @JoinColumn(name = "BOARD_ID")
+    @JoinColumn(name = "BOARD_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Board board;
 
     @Id
-    @JoinColumn(name = "ACCOUNT_ID")
+    @JoinColumn(name = "ACCOUNT_ID", nullable = false)
     @ManyToOne(fetch = FetchType.LAZY)
     private Account account;
 }
