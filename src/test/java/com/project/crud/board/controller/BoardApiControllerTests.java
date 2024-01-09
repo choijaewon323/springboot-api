@@ -99,7 +99,7 @@ public class BoardApiControllerTests {
 
         // when
         mockMvc.perform(
-                get("/api/v1/board")
+                get("/api/v1/board/list")
                         .accept(MediaType.APPLICATION_JSON)
                         .with(csrf())
         )

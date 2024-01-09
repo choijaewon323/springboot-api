@@ -30,7 +30,7 @@ public class BoardApiController {
                 .body(board);
     }
 
-    @GetMapping(produces = "application/json;charset=UTF-8")
+    @GetMapping(value = "list", produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<BoardResponseDto>> findAll() {
         List<BoardResponseDto> boards = boardService.readAll();
 
@@ -43,24 +43,24 @@ public class BoardApiController {
     public ResponseEntity<Void> create(@Valid @RequestBody BoardRequestDto dto) {
         boardService.create(dto);
 
-        return ResponseEntity
-                .ok()
-                .build();
+        return ok();
     }
 
     @PutMapping("/{boardId}")
     public ResponseEntity<Void> update(@NotNull @PathVariable Long boardId, @Valid @RequestBody BoardRequestDto dto) {
         boardService.update(boardId, dto);
 
-        return ResponseEntity
-                .ok()
-                .build();
+        return ok();
     }
 
     @DeleteMapping("/{boardId}")
     public ResponseEntity<Void> delete(@NotNull @PathVariable Long boardId) {
         boardService.delete(boardId);
 
+        return ok();
+    }
+
+    private ResponseEntity<Void> ok() {
         return ResponseEntity
                 .ok()
                 .build();
