@@ -39,8 +39,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public BoardResponseDto readOne(Long boardId) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(NoSuchElementException::new);
+        Board board = findExistBoard(boardId);
 
         return BoardResponseDto.toDto(board);
     }
@@ -48,8 +47,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional
     public void update(Long boardId, BoardRequestDto dto) {
-        Board existBoard = boardRepository.findById(boardId)
-                .orElseThrow(NoSuchElementException::new);
+        Board existBoard = findExistBoard(boardId);
 
         existBoard.update(dto);
     }
@@ -58,5 +56,12 @@ public class BoardServiceImpl implements BoardService {
     @Transactional
     public void delete(Long boardId) {
         boardRepository.deleteById(boardId);
+    }
+
+    private Board findExistBoard(final Long boardId) {
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(NoSuchElementException::new);
+
+        return board;
     }
 }
