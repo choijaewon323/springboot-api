@@ -39,6 +39,15 @@ public class BoardApiController {
                 .body(boards);
     }
 
+    @GetMapping("/search/content")
+    public ResponseEntity<List<BoardResponseDto>> searchByContent(@RequestParam @NotNull String keyword) {
+        List<BoardResponseDto> boards = boardService.searchByContent(keyword);
+
+        return ResponseEntity
+                .ok()
+                .body(boards);
+    }
+
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody BoardRequestDto dto) {
         boardService.create(dto);

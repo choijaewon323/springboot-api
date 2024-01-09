@@ -16,5 +16,5 @@ public interface BoardService {
 
     void delete(Long boardId);
 
-    BoardResponseDto searchByContent(String keyword);
+    List<BoardResponseDto> searchByContent(String keyword);
 }

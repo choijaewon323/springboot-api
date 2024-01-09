@@ -64,8 +64,10 @@ public class BoardServiceImpl implements BoardService {
 
     @Override
     @Transactional(readOnly = true)
-    public BoardResponseDto searchByContent(String keyword) {
-        return null;
+    public List<BoardResponseDto> searchByContent(String keyword) {
+        List<Board> boards = boardRepository.searchByContent(keyword);
+
+        return makeDtoList(boards);
     }
 
     private List<BoardResponseDto> makeDtoList(List<Board> boards) {
