@@ -6,7 +6,6 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Builder
-@Setter
 @Getter
 @NoArgsConstructor
 public class ReplyResponseDto {

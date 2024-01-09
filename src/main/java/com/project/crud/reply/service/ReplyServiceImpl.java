@@ -27,28 +27,24 @@ public class ReplyServiceImpl implements ReplyService {
     @Transactional
     public void create(Long boardId, ReplyRequestDto dto) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("해당 board가 존재하지 않습니다"));
 
-        Reply reply = dto.toEntity(board);
-        replyRepository.save(reply);
+        replyRepository.save(dto.toEntity(board));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<ReplyResponseDto> readAll(Long boardId) {
         List<Reply> replies = replyRepository.findAllByBoard(boardId);
-        List<ReplyResponseDto> result = new ArrayList<>();
 
-        replies.stream().forEach(e -> result.add(e.toDto()));
-
-        return result;
+        return makeDtoList(replies);
     }
 
     @Override
     @Transactional(readOnly = true)
     public ReplyResponseDto readOne(Long replyId) {
         Reply reply = replyRepository.findById(replyId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("해당 reply이 존재하지 않습니다"));
 
         return reply.toDto();
     }
@@ -57,7 +53,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Transactional
     public void update(Long replyId, ReplyRequestDto dto) {
         Reply reply = replyRepository.findById(replyId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("해당 reply이 존재하지 않습니다"));
 
         reply.update(dto);
     }
@@ -66,5 +62,12 @@ public class ReplyServiceImpl implements ReplyService {
     @Transactional
     public void delete(Long replyId) {
         replyRepository.deleteById(replyId);
+    }
+
+    private List<ReplyResponseDto> makeDtoList(List<Reply> replies) {
+        List<ReplyResponseDto> results = new ArrayList<>();
+
+        replies.stream().forEach(e -> results.add(e.toDto()));
+        return results;
     }
 }

@@ -12,7 +12,6 @@ import lombok.Setter;
 import java.util.Objects;
 
 @Builder
-@Setter
 @Getter
 @NoArgsConstructor
 public class ReplyRequestDto {

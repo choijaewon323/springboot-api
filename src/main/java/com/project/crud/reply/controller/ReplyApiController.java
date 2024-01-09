@@ -25,9 +25,7 @@ public class ReplyApiController {
     public ResponseEntity<Void> create(@NotNull @PathVariable Long boardId,@Valid @RequestBody ReplyRequestDto dto) {
         replyService.create(boardId, dto);
 
-        return ResponseEntity
-                .ok()
-                .build();
+        return ok();
     }
 
     @GetMapping("/list/{boardId}")
@@ -52,18 +50,14 @@ public class ReplyApiController {
     public ResponseEntity<Void> update(@NotNull @PathVariable Long replyId, @Valid @RequestBody ReplyRequestDto dto) {
         replyService.update(replyId, dto);
 
-        return ResponseEntity
-                .ok()
-                .build();
+        return ok();
     }
 
     @DeleteMapping("/{replyId}")
     public ResponseEntity<Void> delete(@NotNull @PathVariable Long replyId) {
         replyService.delete(replyId);
 
-        return ResponseEntity
-                .ok()
-                .build();
+        return ok();
     }
 
     @ExceptionHandler(NoSuchElementException.class)
@@ -71,5 +65,11 @@ public class ReplyApiController {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(exception.getMessage());
+    }
+
+    private ResponseEntity<Void> ok() {
+        return ResponseEntity
+                .ok()
+                .build();
     }
 }
