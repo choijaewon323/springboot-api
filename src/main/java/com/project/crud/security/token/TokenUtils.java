@@ -5,6 +5,7 @@ import com.project.crud.account.domain.AccountRole;
 import com.project.crud.security.enums.KeyInfo;
 import io.jsonwebtoken.*;
 import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.spec.SecretKeySpec;
 import javax.xml.bind.DatatypeConverter;
@@ -14,7 +15,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-@Log4j2
+@Slf4j
 public final class TokenUtils {
     public static String generateJwtToken(UserTokenResponse userToken) {
         JwtBuilder builder = Jwts.builder()
