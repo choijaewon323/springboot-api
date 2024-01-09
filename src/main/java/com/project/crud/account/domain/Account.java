@@ -1,5 +1,7 @@
 package com.project.crud.account.domain;
 
+import com.project.crud.account.dto.AccountResponseDto;
+import com.project.crud.board.dto.BoardResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -32,5 +34,22 @@ public class Account implements Serializable {
         this.username = username;
         this.password = password;
         this.role = role;
+    }
+
+    public void updateUsername(String username) {
+        this.username = username;
+    }
+
+    public void updatePassword(String password) {
+        this.password = password;
+    }
+
+    public AccountResponseDto toResponseDto() {
+        return AccountResponseDto.builder()
+                .id(id)
+                .username(username)
+                .password(password)
+                .role(role)
+                .build();
     }
 }

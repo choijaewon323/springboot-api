@@ -45,6 +45,10 @@ public class Board {
         this.writer = dto.getWriter();
     }
 
+    public void updateWriter(String writer) {
+        this.writer = writer;
+    }
+
     public void likeUp() {
         likeCount++;
     }
