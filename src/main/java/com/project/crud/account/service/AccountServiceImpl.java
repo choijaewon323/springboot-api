@@ -64,8 +64,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional
     public void updateUsername(AccountUsernameUpdateDto dto) {
-        Account account = accountRepository.findByUsername(dto.getBefore())
-                .orElseThrow(UsernameNotFoundException::new);
+        Account account = getExistAccount(dto.getBefore());
 
         checkUsernameAlreadyExist(dto.getAfter());
         account.updateUsername(dto.getAfter());
@@ -93,7 +92,7 @@ public class AccountServiceImpl implements AccountService {
         boolean check = accountRepository.findByUsername(username).isPresent();
 
         if (check) {
-            throw new AccountAlreadyExistException("이미 있는 계정입니다.");
+            throw new IllegalStateException("이미 있는 계정입니다");
         }
     }
 
@@ -107,6 +106,6 @@ public class AccountServiceImpl implements AccountService {
 
     private Account getExistAccount(String username) {
         return accountRepository.findByUsername(username)
-                .orElseThrow(UsernameNotFoundException::new);
+                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 username입니다"));
     }
 }
