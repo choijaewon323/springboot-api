@@ -32,6 +32,22 @@ public class BoardRepositoryTests {
         assertThat(boards.get(0).getContent()).isEqualTo("내용2");
     }
 
+    @DisplayName("작성자 기준 board 삭제 테스트")
+    @Test
+    void deleteByWriter() {
+        // given
+        boardRepository.save(makeBoard(1));
+        boardRepository.save(makeBoard(2));
+
+        // when
+        boardRepository.deleteByWriter("작성자2");
+
+        // then
+        List<Board> boards = boardRepository.findAll();
+        assertThat(boards.size()).isEqualTo(1L);
+        assertThat(boards.get(0).getWriter()).isEqualTo("작성자1");
+    }
+
     private Board makeBoard(int number) {
         return new Board("제목" + number, "내용" + number, "작성자" + number);
     }
