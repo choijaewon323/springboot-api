@@ -15,4 +15,6 @@ public interface BoardService {
     void update(Long boardId, BoardRequestDto dto);
 
     void delete(Long boardId);
+
+    BoardResponseDto searchByContent(String keyword);
 }

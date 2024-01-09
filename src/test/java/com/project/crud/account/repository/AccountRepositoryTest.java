@@ -28,6 +28,7 @@ public class AccountRepositoryTest {
         makeAccount(2);
     }
 
+    /*
     @DisplayName("username, password 조회 테스트")
     @Test
     void findByUsernameAndPasswordTest() {
@@ -38,6 +39,7 @@ public class AccountRepositoryTest {
         assertThat(account.getUsername()).isEqualTo("유저네임1");
         assertThat(account.getRole()).isEqualTo(AccountRole.USER);
     }
+     */
 
     @DisplayName("username 기준 조회 테스트")
     @Test

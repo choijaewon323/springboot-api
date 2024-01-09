@@ -21,8 +21,7 @@ public class BoardRepositoryTests {
     @Test
     void findByWriter() {
         // given
-        boardRepository.save(makeBoard(1));
-        boardRepository.save(makeBoard(2));
+        givenTestBoards();
 
         // when
         List<Board> boards = boardRepository.findByWriter("작성자2");
@@ -36,8 +35,7 @@ public class BoardRepositoryTests {
     @Test
     void deleteByWriter() {
         // given
-        boardRepository.save(makeBoard(1));
-        boardRepository.save(makeBoard(2));
+        givenTestBoards();
 
         // when
         boardRepository.deleteByWriter("작성자2");
@@ -46,6 +44,38 @@ public class BoardRepositoryTests {
         List<Board> boards = boardRepository.findAll();
         assertThat(boards.size()).isEqualTo(1L);
         assertThat(boards.get(0).getWriter()).isEqualTo("작성자1");
+    }
+
+    @DisplayName("내용 기준으로 keyword 검색하기 - 정확히 일치할 경우")
+    @Test
+    void searchByContentTest() {
+        // given
+        givenTestBoards();
+
+        // when
+        List<Board> boards = boardRepository.searchByContent("내용2");
+
+        // then
+        assertThat(boards.size()).isEqualTo(1);
+        assertThat(boards.get(0).getContent()).isEqualTo("내용2");
+    }
+
+    @DisplayName("내용 기준으로 keyword 검색하기 - keyword가 포함된 경우")
+    @Test
+    void searchByContentContainsTest() {
+        // given
+        givenTestBoards();
+
+        // when
+        List<Board> boards = boardRepository.searchByContent("내용");
+
+        // then
+        assertThat(boards.size()).isEqualTo(2);
+    }
+
+    private void givenTestBoards() {
+        boardRepository.save(makeBoard(1));
+        boardRepository.save(makeBoard(2));
     }
 
     private Board makeBoard(int number) {

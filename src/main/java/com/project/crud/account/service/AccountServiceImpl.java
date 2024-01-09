@@ -4,13 +4,9 @@ import com.project.crud.account.domain.Account;
 import com.project.crud.account.dto.AccountRequestDto;
 import com.project.crud.account.dto.AccountResponseDto;
 import com.project.crud.account.dto.AccountUsernameUpdateDto;
-import com.project.crud.account.exception.AccountAlreadyExistException;
-import com.project.crud.account.exception.UsernameNotFoundException;
 import com.project.crud.account.repository.AccountRepository;
 import com.project.crud.board.domain.Board;
-import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.repository.BoardRepository;
-import com.project.crud.security.dto.UserTokenRequest;
 import com.project.crud.account.domain.AccountRole;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -18,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class AccountServiceImpl implements AccountService {
