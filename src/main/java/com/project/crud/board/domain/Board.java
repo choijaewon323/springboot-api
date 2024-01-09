@@ -1,6 +1,7 @@
 package com.project.crud.board.domain;
 
 import com.project.crud.board.dto.BoardRequestDto;
+import com.project.crud.board.dto.BoardResponseDto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -59,5 +60,15 @@ public class Board {
         }
 
         likeCount--;
+    }
+
+    public BoardResponseDto toDto() {
+        return BoardResponseDto.builder()
+                .id(id)
+                .title(title)
+                .content(content)
+                .writer(writer)
+                .likeCount(likeCount)
+                .build();
     }
 }

@@ -29,11 +29,8 @@ public class BoardServiceImpl implements BoardService {
     @Transactional(readOnly = true)
     public List<BoardResponseDto> readAll() {
         List<Board> boards = boardRepository.findAll();
-        List<BoardResponseDto> results = new ArrayList<>();
 
-        boards.stream().forEach(e -> results.add(BoardResponseDto.toDto(e)));
-
-        return results;
+        return makeDtoList(boards);
     }
 
     @Override
@@ -41,7 +38,7 @@ public class BoardServiceImpl implements BoardService {
     public BoardResponseDto readOne(Long boardId) {
         Board board = findExistBoard(boardId);
 
-        return BoardResponseDto.toDto(board);
+        return board.toDto();
     }
 
     @Override
@@ -63,5 +60,12 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(NoSuchElementException::new);
 
         return board;
+    }
+
+    private List<BoardResponseDto> makeDtoList(List<Board> boards) {
+        List<BoardResponseDto> results = new ArrayList<>();
+
+        boards.stream().forEach(e -> results.add(e.toDto()));
+        return results;
     }
 }
