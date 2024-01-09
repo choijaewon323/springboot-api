@@ -23,18 +23,14 @@ public class BoardLikeApiController {
     public ResponseEntity<Void> likeUp(@Valid @RequestBody BoardLikeRequestDto dto) {
         boardLikeService.up(dto);
 
-        return ResponseEntity
-                .ok()
-                .build();
+        return ok();
     }
 
     @DeleteMapping
     public ResponseEntity<Void> likeDown(@Valid @RequestBody BoardLikeRequestDto dto) {
         boardLikeService.down(dto);
 
-        return ResponseEntity
-                .ok()
-                .build();
+        return ok();
     }
 
     @ExceptionHandler(Exception.class)
@@ -42,5 +38,11 @@ public class BoardLikeApiController {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());
+    }
+
+    private ResponseEntity<Void> ok() {
+        return ResponseEntity
+                .ok()
+                .build();
     }
 }

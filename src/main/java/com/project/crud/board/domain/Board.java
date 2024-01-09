@@ -56,7 +56,7 @@ public class Board {
 
     public void likeDown() {
         if (likeCount == 0L) {
-            throw new IllegalStateException("좋아요 개수는 음수가 될 수 없습니다.");
+            throw new IllegalStateException("좋아요 개수는 음수가 될 수 없습니다");
         }
 
         likeCount--;

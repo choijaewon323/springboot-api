@@ -30,11 +30,8 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     @Override
     @Transactional
     public void up(BoardLikeRequestDto request) {
-        Board board = boardRepository.pessimisticFindById(request.getBoardId())
-                .orElseThrow(() -> new NoSuchElementException("해당 board를 찾을 수 없습니다"));
-
-        Account account = accountRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new NoSuchElementException("해당 username을 찾을 수 없습니다"));
+        Board board = findExistBoardPessimistic(request.getBoardId());
+        Account account = findExistAccountByUsername(request.getUsername());
 
         checkExists(board, account);
 
@@ -45,11 +42,8 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     @Override
     @Transactional
     public void down(BoardLikeRequestDto request) {
-        Board board = boardRepository.pessimisticFindById(request.getBoardId())
-                .orElseThrow(() -> new NoSuchElementException("해당 board를 찾을 수 없습니다"));
-
-        Account account = accountRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new NoSuchElementException("해당 username을 찾을 수 없습니다"));
+        Board board = findExistBoardPessimistic(request.getBoardId());
+        Account account = findExistAccountByUsername(request.getUsername());
 
         checkNotExists(board, account);
 
@@ -75,5 +69,19 @@ public class BoardLikeServiceImpl implements BoardLikeService {
         if (!test) {
             throw new IllegalStateException("존재하지 않는 좋아요입니다");
         }
+    }
+
+    private Board findExistBoardPessimistic(final Long boardId) {
+        Board board = boardRepository.pessimisticFindById(boardId)
+                .orElseThrow(() -> new NoSuchElementException("해당 board를 찾을 수 없습니다"));
+
+        return board;
+    }
+
+    private Account findExistAccountByUsername(final String username) {
+        Account account = accountRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("해당 username을 찾을 수 없습니다"));
+
+        return account;
     }
 }
