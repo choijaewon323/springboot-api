@@ -85,7 +85,7 @@ public class BoardLikeServiceTest {
             boardLikeService.up(new BoardLikeRequestDto(board.getId(), account.getUsername()));
         })
                 // then
-                .isInstanceOf(AlreadyExistsException.class);
+                .isInstanceOf(IllegalStateException.class);
     }
 
     @DisplayName("좋아요에 대한 board의 좋아요 수 유효성 검사")
@@ -135,7 +135,7 @@ public class BoardLikeServiceTest {
             boardLikeService.down(new BoardLikeRequestDto(board.getId(), account.getUsername()));
         })
                 // then
-                .isInstanceOf(NotExistsException.class);
+                .isInstanceOf(IllegalStateException.class);
     }
 
     private void commonGiven() {

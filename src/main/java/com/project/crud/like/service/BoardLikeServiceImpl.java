@@ -4,10 +4,8 @@ import com.project.crud.account.domain.Account;
 import com.project.crud.account.repository.AccountRepository;
 import com.project.crud.board.domain.Board;
 import com.project.crud.board.repository.BoardRepository;
-import com.project.crud.like.exception.AlreadyExistsException;
 import com.project.crud.like.domain.BoardLike;
 import com.project.crud.like.domain.BoardLikeId;
-import com.project.crud.like.exception.NotExistsException;
 import com.project.crud.like.repository.BoardLikeRepository;
 import com.project.crud.like.dto.BoardLikeRequestDto;
 import org.springframework.stereotype.Service;
@@ -33,10 +31,10 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     @Transactional
     public void up(BoardLikeRequestDto request) {
         Board board = boardRepository.pessimisticFindById(request.getBoardId())
-                .orElseThrow(() -> new NoSuchElementException("no such board"));
+                .orElseThrow(() -> new NoSuchElementException("해당 board를 찾을 수 없습니다"));
 
         Account account = accountRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new NoSuchElementException("no such username"));
+                .orElseThrow(() -> new NoSuchElementException("해당 username을 찾을 수 없습니다"));
 
         checkExists(board, account);
 
@@ -48,10 +46,10 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     @Transactional
     public void down(BoardLikeRequestDto request) {
         Board board = boardRepository.pessimisticFindById(request.getBoardId())
-                .orElseThrow(() -> new NoSuchElementException("no such board"));
+                .orElseThrow(() -> new NoSuchElementException("해당 board를 찾을 수 없습니다"));
 
         Account account = accountRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new NoSuchElementException("no such username"));
+                .orElseThrow(() -> new NoSuchElementException("해당 username을 찾을 수 없습니다"));
 
         checkNotExists(board, account);
 
@@ -65,7 +63,7 @@ public class BoardLikeServiceImpl implements BoardLikeService {
         Boolean test = boardLikeRepository.findById(id).isPresent();
 
         if (test) {
-            throw new AlreadyExistsException("이미 존재하는 좋아요입니다.");
+            throw new IllegalStateException("이미 존재하는 좋아요입니다");
         }
     }
 
@@ -75,7 +73,7 @@ public class BoardLikeServiceImpl implements BoardLikeService {
         Boolean test = boardLikeRepository.findById(id).isPresent();
 
         if (!test) {
-            throw new NotExistsException("존재하지 않는 좋아요입니다.");
+            throw new IllegalStateException("존재하지 않는 좋아요입니다");
         }
     }
 }
