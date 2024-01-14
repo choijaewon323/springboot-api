@@ -34,6 +34,9 @@ public class Board {
     @Column(name = "LIKE_COUNT")
     private long likeCount = 0L;
 
+    @Column(name = "CNT")
+    private long cnt = 0L;
+
     public Board(String title, String content, String writer) {
         this.title = title;
         this.content = content;
@@ -60,6 +63,10 @@ public class Board {
         }
 
         likeCount--;
+    }
+
+    public void cntUp() {
+        cnt++;
     }
 
     public BoardResponseDto toDto() {

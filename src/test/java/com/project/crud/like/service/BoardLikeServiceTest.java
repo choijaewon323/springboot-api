@@ -46,7 +46,7 @@ public class BoardLikeServiceTest {
 
     @BeforeEach
     void init() {
-        board = new Board(0L, "제목", "내용", "글쓴이", 0L);
+        board = new Board(0L, "제목", "내용", "글쓴이", 0L, 0L);
         account = new Account("유저 이름", "비밀번호", AccountRole.USER);
     }
 
@@ -142,7 +142,7 @@ public class BoardLikeServiceTest {
     }
 
     private Board likeAppliedGiven() {
-        Board board = new Board(0L, "제목", "내용", "작성자", 1L);
+        Board board = new Board(0L, "제목", "내용", "작성자", 1L, 0L);
         given(boardRepository.pessimisticFindById(0L)).willReturn(Optional.of(board));
         given(accountRepository.findByUsername("유저 이름")).willReturn(Optional.of(account));
         return board;

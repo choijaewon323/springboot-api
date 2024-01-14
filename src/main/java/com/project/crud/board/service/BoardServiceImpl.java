@@ -34,9 +34,11 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    @Transactional(readOnly = true)
+    @Transactional
     public BoardResponseDto readOne(Long boardId) {
-        Board board = findExistBoard(boardId);
+        Board board = findExistBoardByPessimistic(boardId);
+
+        board.cntUp();
 
         return board.toDto();
     }
@@ -55,6 +57,14 @@ public class BoardServiceImpl implements BoardService {
         boardRepository.deleteById(boardId);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<BoardResponseDto> searchByContent(String keyword) {
+        List<Board> boards = boardRepository.searchByContent(keyword);
+
+        return makeDtoList(boards);
+    }
+
     private Board findExistBoard(final Long boardId) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(NoSuchElementException::new);
@@ -62,12 +72,11 @@ public class BoardServiceImpl implements BoardService {
         return board;
     }
 
-    @Override
-    @Transactional(readOnly = true)
-    public List<BoardResponseDto> searchByContent(String keyword) {
-        List<Board> boards = boardRepository.searchByContent(keyword);
+    private Board findExistBoardByPessimistic(final Long boardId) {
+        Board board = boardRepository.pessimisticFindById(boardId)
+                .orElseThrow(() -> new NoSuchElementException("해당 게시물이 없습니다"));
 
-        return makeDtoList(boards);
+        return board;
     }
 
     private List<BoardResponseDto> makeDtoList(List<Board> boards) {

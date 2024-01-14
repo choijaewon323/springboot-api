@@ -25,27 +25,21 @@ public class BoardApiController {
     public ResponseEntity<BoardResponseDto> findOne(@NotNull @PathVariable Long boardId) {
         BoardResponseDto board = boardService.readOne(boardId);
 
-        return ResponseEntity
-                .ok()
-                .body(board);
+        return okWithBody(board);
     }
 
     @GetMapping(value = "list", produces = "application/json;charset=UTF-8")
     public ResponseEntity<List<BoardResponseDto>> findAll() {
         List<BoardResponseDto> boards = boardService.readAll();
 
-        return ResponseEntity
-                .ok()
-                .body(boards);
+        return okWithBody(boards);
     }
 
     @GetMapping("/search/content")
     public ResponseEntity<List<BoardResponseDto>> searchByContent(@RequestParam @NotNull String keyword) {
         List<BoardResponseDto> boards = boardService.searchByContent(keyword);
 
-        return ResponseEntity
-                .ok()
-                .body(boards);
+        return okWithBody(boards);
     }
 
     @PostMapping
@@ -73,5 +67,11 @@ public class BoardApiController {
         return ResponseEntity
                 .ok()
                 .build();
+    }
+
+    private <T> ResponseEntity<T> okWithBody(T body) {
+        return ResponseEntity
+                .ok()
+                .body(body);
     }
 }

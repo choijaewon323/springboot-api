@@ -52,7 +52,7 @@ public class BoardServiceTest {
     @Test
     void update() throws Exception {
         // given
-        Board board = new Board(0L, "제목", "내용", "작성자", 0L);
+        Board board = new Board(0L, "제목", "내용", "작성자", 0L, 0L);
         Long boardId = board.getId();
         BoardRequestDto dto = BoardRequestDto.builder()
                                 .title("제목2")

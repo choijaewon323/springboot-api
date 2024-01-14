@@ -32,18 +32,14 @@ public class ReplyApiController {
     public ResponseEntity<List<ReplyResponseDto>> readAll(@NotNull @PathVariable Long boardId) {
         List<ReplyResponseDto> results = replyService.readAll(boardId);
 
-        return ResponseEntity
-                .ok()
-                .body(results);
+        return okWithBody(results);
     }
 
     @GetMapping("/{replyId}")
     public ResponseEntity<ReplyResponseDto> readOne(@NotNull @PathVariable Long replyId) {
         ReplyResponseDto result = replyService.readOne(replyId);
 
-        return ResponseEntity
-                .ok()
-                .body(result);
+        return okWithBody(result);
     }
 
     @PutMapping("/{replyId}")
@@ -71,5 +67,11 @@ public class ReplyApiController {
         return ResponseEntity
                 .ok()
                 .build();
+    }
+
+    private <T> ResponseEntity<T> okWithBody(T body) {
+        return ResponseEntity
+                .ok()
+                .body(body);
     }
 }
