@@ -15,6 +15,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/v1/board")
 public class BoardApiController {
+    private final int PAGING_SIZE = 20;
     private final BoardService boardService;
 
     public BoardApiController(BoardService boardService) {
@@ -33,6 +34,15 @@ public class BoardApiController {
         List<BoardResponseDto> boards = boardService.readAll();
 
         return okWithBody(boards);
+    }
+
+    @GetMapping("/list/{pageIndex}")
+    public ResponseEntity<List<BoardResponseDto>> findAllByPaging(@PathVariable @NotNull Integer pageIndex, @RequestParam(value = "order", required = false) String order) {
+        checkInvalidIndex(pageIndex);
+
+        List<BoardResponseDto> results = boardService.readAllByPagingDesc(pageIndex, PAGING_SIZE);
+
+        return okWithBody(results);
     }
 
     @GetMapping("/search/content")
@@ -73,5 +83,15 @@ public class BoardApiController {
         return ResponseEntity
                 .ok()
                 .body(body);
+    }
+
+    private void checkInvalidIndex(final int index) {
+        if (isNegative(index)) {
+            throw new IllegalArgumentException("페이지 번호는 음수가 될 수 없습니다");
+        }
+    }
+
+    private boolean isNegative(final int number) {
+        return number < 0;
     }
 }

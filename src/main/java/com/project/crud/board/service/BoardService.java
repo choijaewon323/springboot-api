@@ -10,6 +10,8 @@ public interface BoardService {
 
     List<BoardResponseDto> readAll();
 
+    List<BoardResponseDto> readAllByPagingDesc(final int index, final int size);
+
     BoardResponseDto readOne(Long boardId);
 
     void update(Long boardId, BoardRequestDto dto);

@@ -36,6 +36,12 @@ public class BoardRepositoryTests {
     void deleteByWriter() {
         // given
         givenTestBoards();
+        boardRepository.save(Board.builder()
+                        .title("제목")
+                        .content("내용")
+                        .writer("작성자2")
+                .build());
+
 
         // when
         boardRepository.deleteByWriter("작성자2");

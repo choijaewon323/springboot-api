@@ -1,10 +1,10 @@
 package com.project.crud.board.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.project.crud.board.domain.Board;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
 import com.project.crud.board.service.BoardService;
+import com.project.crud.common.ExceptionApiController;
 import com.project.crud.security.config.WebMvcConfig;
 import com.project.crud.security.config.WebSecurityConfig;
 import org.junit.jupiter.api.*;
@@ -18,19 +18,23 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @MockBean(JpaMetamodelMappingContext.class)
-@WebMvcTest(controllers = BoardApiController.class,
+@WebMvcTest(controllers = {BoardApiController.class, ExceptionApiController.class},
             excludeFilters = {
                     @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebSecurityConfig.class),
                     @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = WebMvcConfig.class)
@@ -41,11 +45,18 @@ public class BoardApiControllerTests {
     @MockBean
     BoardService boardService;
 
-    @Autowired
     MockMvc mockMvc;
 
     @Autowired
     ObjectMapper objectMapper;
+
+    @BeforeEach
+    void setup() {
+        mockMvc = MockMvcBuilders.standaloneSetup(new BoardApiController(boardService), new ExceptionApiController())
+                .addFilter(new CharacterEncodingFilter("UTF-8", true))
+                .alwaysDo(print())
+                .build();
+    }
 
     @DisplayName("게시물 하나 게시하기 테스트")
     @Test
@@ -141,6 +152,34 @@ public class BoardApiControllerTests {
         )
                 // then
                 .andExpect(status().isOk());
+    }
+
+    @DisplayName("게시물 페이징 음수 예외 테스트")
+    @Test
+    void readAllByPagingException() throws Exception {
+        // when
+        mockMvc.perform(get("/api/v1/board/list/{pageIndex}", -1)
+                .param("order", "desc")
+                .with(csrf())
+        )
+                // then
+                .andExpect(status().isBadRequest());
+    }
+
+    @DisplayName("게시물 페이징 order null 테스트")
+    @Test
+    void readAllByPagingOrderNull() throws Exception {
+        // given
+        given(boardService.readAllByPagingDesc(anyInt(), anyInt())).willReturn(makeDtoList());
+        String expect = expectList();
+
+        // when
+        mockMvc.perform(get("/api/v1/board/list/{pagingIndex}", 1)
+                .with(csrf())
+        )
+                // then
+                .andExpect(status().isOk())
+                .andExpect(content().string(expect));
     }
 
     private List<BoardResponseDto> makeDtoList() {

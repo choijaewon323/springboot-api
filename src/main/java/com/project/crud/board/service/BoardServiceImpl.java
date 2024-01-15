@@ -4,6 +4,9 @@ import com.project.crud.board.domain.Board;
 import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,6 +34,30 @@ public class BoardServiceImpl implements BoardService {
         List<Board> boards = boardRepository.findAll();
 
         return makeDtoList(boards);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BoardResponseDto> readAllByPagingDesc(final int index, final int size) {
+        PageRequest pageRequest = PageRequest.of(index, size, Sort.by(Sort.Direction.DESC, "created_date"));
+
+        Page<Board> boards = boardRepository.findAll(pageRequest);
+
+        List<BoardResponseDto> results = new ArrayList<>();
+        boards.getContent().stream().forEach(e -> {
+            results.add(BoardResponseDto.builder()
+                            .id(e.getId())
+                            .title(e.getTitle())
+                            .content(e.getContent())
+                            .writer(e.getWriter())
+                            .likeCount(e.getLikeCount())
+                            .cnt(e.getCnt())
+                            .createdDate(e.getCreatedDate())
+                            .modifiedDate(e.getModifiedDate())
+                    .build());
+        });
+
+        return results;
     }
 
     @Override
