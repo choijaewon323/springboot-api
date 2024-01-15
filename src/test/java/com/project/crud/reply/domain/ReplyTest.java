@@ -14,14 +14,22 @@ public class ReplyTest {
 
     @BeforeEach
     void init() {
-        board = new Board("제목", "게시글 내용", "게시글 작성자");
+        board = Board.builder()
+                .title("제목")
+                .content("게시글 내용")
+                .writer("게시글 작성자")
+                .build();
     }
 
     @DisplayName("Reply update 테스트")
     @Test
     void update() {
         // given
-        Reply reply = new Reply("내용", "작성자", board);
+        Reply reply = Reply.builder()
+                .writer("작성자")
+                .content("내용")
+                .board(board)
+                .build();
 
         ReplyRequestDto dto = ReplyRequestDto.builder()
                 .content("내용2")

@@ -79,6 +79,10 @@ public class BoardRepositoryTests {
     }
 
     private Board makeBoard(int number) {
-        return new Board("제목" + number, "내용" + number, "작성자" + number);
+        return Board.builder()
+                .title("제목" + number)
+                .content("내용" + number)
+                .writer("작성자" + number)
+                .build();
     }
 }

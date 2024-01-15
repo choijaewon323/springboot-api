@@ -26,6 +26,10 @@ public class ReplyRequestDto {
     }
 
     public Reply toEntity(Board board) {
-        return new Reply(content, writer, board);
+        return Reply.builder()
+                .content(content)
+                .writer(writer)
+                .board(board)
+                .build();
     }
 }

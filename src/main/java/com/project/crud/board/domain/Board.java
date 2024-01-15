@@ -2,20 +2,15 @@ package com.project.crud.board.domain;
 
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
+import com.project.crud.common.TimeEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import org.springframework.data.jpa.repository.Lock;
+import lombok.*;
 
-import java.util.Objects;
-
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
 @Table(name = "BOARD")
-public class Board {
+public class Board extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "BOARD_ID", nullable = false)
@@ -37,6 +32,7 @@ public class Board {
     @Column(name = "CNT")
     private long cnt = 0L;
 
+    @Builder
     public Board(String title, String content, String writer) {
         this.title = title;
         this.content = content;

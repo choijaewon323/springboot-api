@@ -14,6 +14,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional
 public class ReplyServiceImpl implements ReplyService {
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
@@ -24,7 +25,6 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    @Transactional
     public void create(Long boardId, ReplyRequestDto dto) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new NoSuchElementException("해당 board가 존재하지 않습니다"));
@@ -50,7 +50,6 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    @Transactional
     public void update(Long replyId, ReplyRequestDto dto) {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new NoSuchElementException("해당 reply이 존재하지 않습니다"));
@@ -59,7 +58,6 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    @Transactional
     public void delete(Long replyId) {
         replyRepository.deleteById(replyId);
     }

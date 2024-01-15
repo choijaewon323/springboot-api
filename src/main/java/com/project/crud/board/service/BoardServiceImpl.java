@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional
 public class BoardServiceImpl implements BoardService {
     private final BoardRepository boardRepository;
 
@@ -20,7 +21,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    @Transactional
     public void create(BoardRequestDto dto) {
         boardRepository.save(dto.toEntity());
     }
@@ -34,9 +34,8 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    @Transactional
     public BoardResponseDto readOne(Long boardId) {
-        Board board = findExistBoardByPessimistic(boardId);
+        Board board = findExistBoard(boardId);
 
         board.cntUp();
 
@@ -44,7 +43,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    @Transactional
     public void update(Long boardId, BoardRequestDto dto) {
         Board existBoard = findExistBoard(boardId);
 
@@ -52,7 +50,6 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
-    @Transactional
     public void delete(Long boardId) {
         boardRepository.deleteById(boardId);
     }

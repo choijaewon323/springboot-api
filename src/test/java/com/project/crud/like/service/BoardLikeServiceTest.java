@@ -46,16 +46,26 @@ public class BoardLikeServiceTest {
 
     @BeforeEach
     void init() {
-        board = new Board(0L, "제목", "내용", "글쓴이", 0L, 0L);
-        account = new Account("유저 이름", "비밀번호", AccountRole.USER);
+        board = Board.builder()
+                .title("제목")
+                .content("내용")
+                .writer("글쓴이")
+                .build();
+        account = Account.builder()
+                .username("유저 이름")
+                .password("비밀번호")
+                .role(AccountRole.USER)
+                .build();
     }
 
     @DisplayName("좋아요 정상 동작 테스트")
     @Test
     void upTest() throws Exception {
         // given
-        BoardLike boardLike = new BoardLike(board, account);
-        BoardLikeId id = new BoardLikeId(board, account);
+        BoardLike boardLike = BoardLike.builder()
+                .board(board)
+                .account(account)
+                .build();
 
         commonGiven();
         given(boardLikeRepository.findById(any())).willReturn(Optional.empty());
@@ -72,8 +82,10 @@ public class BoardLikeServiceTest {
     @Test
     void upTestException() throws Exception {
         // given
-        BoardLike boardLike = new BoardLike(board, account);
-        BoardLikeId id = new BoardLikeId(board, account);
+        BoardLike boardLike = BoardLike.builder()
+                .board(board)
+                .account(account)
+                .build();
 
         commonGiven();
         given(boardLikeRepository.findById(any())).willReturn(Optional.of(boardLike));
@@ -90,8 +102,10 @@ public class BoardLikeServiceTest {
     @Test
     void boardLikeCount() throws Exception {
         // given
-        BoardLike boardLike = new BoardLike(board, account);
-        BoardLikeId id = new BoardLikeId(board, account);
+        BoardLike boardLike = BoardLike.builder()
+                .board(board)
+                .account(account)
+                .build();
 
         commonGiven();
         given(boardLikeRepository.findById(any())).willReturn(Optional.empty());
@@ -110,7 +124,10 @@ public class BoardLikeServiceTest {
     void downTest() throws Exception {
         // given
         Board board = likeAppliedGiven();
-        BoardLike boardLike = new BoardLike(board, account);
+        BoardLike boardLike = BoardLike.builder()
+                .board(board)
+                .account(account)
+                .build();
         given(boardLikeRepository.findById(any())).willReturn(Optional.of(boardLike));
         doNothing().when(boardLikeRepository).deleteById(any());
 
@@ -137,13 +154,18 @@ public class BoardLikeServiceTest {
     }
 
     private void commonGiven() {
-        given(boardRepository.pessimisticFindById(0L)).willReturn(Optional.of(board));
+        given(boardRepository.pessimisticFindById(any())).willReturn(Optional.of(board));
         given(accountRepository.findByUsername("유저 이름")).willReturn(Optional.of(account));
     }
 
     private Board likeAppliedGiven() {
-        Board board = new Board(0L, "제목", "내용", "작성자", 1L, 0L);
-        given(boardRepository.pessimisticFindById(0L)).willReturn(Optional.of(board));
+        Board board = Board.builder()
+                .title("제목")
+                .content("내용")
+                .writer("작성자")
+                .build();
+        board.likeUp();
+        given(boardRepository.pessimisticFindById(any())).willReturn(Optional.of(board));
         given(accountRepository.findByUsername("유저 이름")).willReturn(Optional.of(account));
         return board;
     }

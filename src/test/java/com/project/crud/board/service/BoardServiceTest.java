@@ -38,7 +38,11 @@ public class BoardServiceTest {
     @Test
     void create() throws Exception {
         // given
-        Board board = new Board("제목", "내용", "작성자");
+        Board board = Board.builder()
+                        .title("제목")
+                        .content("내용")
+                        .writer("작성자")
+                        .build();
         given(boardRepository.save(any())).willReturn(board);
 
         // when
@@ -52,7 +56,11 @@ public class BoardServiceTest {
     @Test
     void update() throws Exception {
         // given
-        Board board = new Board(0L, "제목", "내용", "작성자", 0L, 0L);
+        Board board = Board.builder()
+                .title("제목")
+                .content("내용")
+                .writer("작성자")
+                .build();
         Long boardId = board.getId();
         BoardRequestDto dto = BoardRequestDto.builder()
                                 .title("제목2")
@@ -60,7 +68,7 @@ public class BoardServiceTest {
                                 .writer("작성자2")
                                 .build();
 
-        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
+        given(boardRepository.findById(any())).willReturn(Optional.of(board));
 
         // when
         boardService.update(boardId, dto);
@@ -86,7 +94,18 @@ public class BoardServiceTest {
     @Test
     void readAll() throws Exception {
         // given
-        List<Board> boards = Arrays.asList(new Board("제목", "내용", "작성자"), new Board("제목1", "내용1", "작성자1"));
+        List<Board> boards = Arrays.asList(
+                Board.builder()
+                        .title("제목")
+                        .content("내용")
+                        .writer("작성자")
+                        .build(),
+                Board.builder()
+                        .title("제목1")
+                        .content("내용1")
+                        .writer("작성자1")
+                        .build()
+                );
         given(boardRepository.findAll()).willReturn(boards);
 
         // when
@@ -106,7 +125,7 @@ public class BoardServiceTest {
     void readOneException() throws Exception {
         // given
         Long id = 0L;
-        given(boardRepository.findById(id)).willReturn(Optional.empty());
+        given(boardRepository.findById(0L)).willReturn(Optional.empty());
 
         // when
         assertThatThrownBy(() -> {
@@ -120,7 +139,11 @@ public class BoardServiceTest {
     @Test
     void readOne() {
         // given
-        Board board = new Board("제목", "내용", "작성자");
+        Board board = Board.builder()
+                .title("제목")
+                .content("내용")
+                .writer("작성자")
+                .build();
         given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
         // when

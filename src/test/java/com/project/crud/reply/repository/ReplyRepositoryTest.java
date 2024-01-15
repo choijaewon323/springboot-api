@@ -29,7 +29,11 @@ public class ReplyRepositoryTest {
 
     @BeforeEach
     void init() {
-        board = new Board("제목", "내용", "작성자");
+        board = Board.builder()
+                .title("제목")
+                .content("내용")
+                .writer("작성자")
+                .build();
         boardRepository.save(board);
     }
 
@@ -37,8 +41,16 @@ public class ReplyRepositoryTest {
     @Test
     void findAllByBoard() {
         // given
-        replyRepository.save(new Reply("댓글 내용1", "작성자", board));
-        replyRepository.save(new Reply("댓글 내용2", "작성자", board));
+        replyRepository.save(Reply.builder()
+                .content("댓글 내용1")
+                .writer("작성자")
+                .board(board)
+                .build());
+        replyRepository.save(Reply.builder()
+                .content("댓글 내용2")
+                .writer("작성자")
+                .board(board)
+                .build());
 
         // when
         List<Reply> results = replyRepository.findAllByBoard(board.getId());

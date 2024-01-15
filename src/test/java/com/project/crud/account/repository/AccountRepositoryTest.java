@@ -28,19 +28,6 @@ public class AccountRepositoryTest {
         makeAccount(2);
     }
 
-    /*
-    @DisplayName("username, password 조회 테스트")
-    @Test
-    void findByUsernameAndPasswordTest() {
-        // when
-        Account account = accountRepository.findByUsernameAndPassword("유저네임1", "비밀번호1");
-
-        // then
-        assertThat(account.getUsername()).isEqualTo("유저네임1");
-        assertThat(account.getRole()).isEqualTo(AccountRole.USER);
-    }
-     */
-
     @DisplayName("username 기준 조회 테스트")
     @Test
     void findByUsernameTest() {
@@ -70,6 +57,10 @@ public class AccountRepositoryTest {
     }
 
     private void makeAccount(int number) {
-        accountRepository.save(new Account("유저네임" + number, "비밀번호" + number, AccountRole.USER));
+        accountRepository.save(Account.builder()
+                        .username("유저네임" + number)
+                        .password("비밀번호" + number)
+                        .role(AccountRole.USER)
+                    .build());
     }
 }

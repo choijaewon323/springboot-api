@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class AccountServiceImpl implements AccountService {
     private final AccountRepository accountRepository;
     private final BCryptPasswordEncoder passwordEncoder;
@@ -30,12 +31,15 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional
     public void create(AccountRequestDto request) {
         checkUsernameAlreadyExist(request.getUsername());
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
-        accountRepository.save(new Account(request.getUsername(), encodedPassword, AccountRole.USER));
+        accountRepository.save(Account.builder()
+                        .username(request.getUsername())
+                        .password(encodedPassword)
+                        .role(AccountRole.USER)
+                .build());
     }
 
     @Override
@@ -57,7 +61,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional
     public void updateUsername(AccountUsernameUpdateDto dto) {
         Account account = getExistAccount(dto.getBefore());
 
@@ -67,7 +70,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional
     public void updatePassword(AccountRequestDto dto) {
         Account account = getExistAccount(dto.getUsername());
 
@@ -75,7 +77,6 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    @Transactional
     public void delete(String username) {
         Account account = getExistAccount(username);
 

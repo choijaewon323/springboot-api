@@ -18,6 +18,10 @@ public class BoardRequestDto {
     private String writer;
 
     public Board toEntity() {
-        return new Board(title, content, writer);
+        return Board.builder()
+                .title(title)
+                .content(content)
+                .writer(writer)
+                .build();
     }
 }

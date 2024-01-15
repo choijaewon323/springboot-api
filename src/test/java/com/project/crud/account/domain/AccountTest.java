@@ -14,7 +14,11 @@ public class AccountTest {
 
     @BeforeEach
     void init() {
-        account = new Account("유저네임", "비밀번호", AccountRole.USER);
+        account = Account.builder()
+                .username("유저네임")
+                .password("비밀번호")
+                .role(AccountRole.USER)
+                .build();
     }
 
     @DisplayName("유저네임 변경 테스트")

@@ -1,17 +1,20 @@
 package com.project.crud.reply.domain;
 
 import com.project.crud.board.domain.Board;
+import com.project.crud.common.TimeEntity;
 import com.project.crud.reply.dto.ReplyRequestDto;
 import com.project.crud.reply.dto.ReplyResponseDto;
 import jakarta.persistence.*;
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
 @Table(name = "REPLY")
-public class Reply {
+public class Reply extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "REPLY_ID", nullable = false)
@@ -27,6 +30,7 @@ public class Reply {
     @JoinColumn(name = "BOARD_ID", nullable = false)
     private Board board;
 
+    @Builder
     public Reply(String content, String writer, Board board) {
         this.content = content;
         this.writer = writer;

@@ -42,7 +42,11 @@ public class ReplyServiceTests {
 
     @BeforeAll
     static void init() {
-        board = new Board("제목", "내용", "작성자");
+        board = Board.builder()
+                .title("제목")
+                .content("내용")
+                .writer("작성자")
+                .build();
     }
 
     @DisplayName("댓글 생성 작동 테스트")
@@ -50,7 +54,11 @@ public class ReplyServiceTests {
     void create() {
         // given
         given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
-        given(replyRepository.save(any())).willReturn(new Reply("댓글 내용", "작성자", board));
+        given(replyRepository.save(any())).willReturn(Reply.builder()
+                .content("댓글 내용")
+                .writer("작성자")
+                .board(board)
+                .build());
         Long boardId = 0L;
         ReplyRequestDto dto = ReplyRequestDto.builder()
                 .content("댓글 내용")
@@ -94,7 +102,11 @@ public class ReplyServiceTests {
     @Test
     void readOne() {
         // given
-        Reply reply = new Reply("내용", "작성자", board);
+        Reply reply = Reply.builder()
+                .content("내용")
+                .writer("작성자")
+                .board(board)
+                .build();
         given(replyRepository.findById(anyLong())).willReturn(Optional.of(reply));
 
         // when
@@ -108,7 +120,11 @@ public class ReplyServiceTests {
     @Test
     void update() {
         // given
-        Reply reply = new Reply("내용", "작성자", board);
+        Reply reply = Reply.builder()
+                .content("내용")
+                .writer("작성자")
+                .board(board)
+                .build();
         given(replyRepository.findById(anyLong())).willReturn(Optional.of(reply));
         ReplyRequestDto dto = ReplyRequestDto.builder()
                 .content("내용수정")
@@ -138,8 +154,16 @@ public class ReplyServiceTests {
 
     private List<Reply> replies() {
         List<Reply> results = new ArrayList<>();
-        results.add(new Reply("내용1", "작성자", board));
-        results.add(new Reply("내용2", "작성자", board));
+        results.add(Reply.builder()
+                .content("내용1")
+                .writer("작성자")
+                .board(board)
+                .build());
+        results.add(Reply.builder()
+                .content("내용2")
+                .writer("작성자")
+                .board(board)
+                .build());
 
         return results;
     }

@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.NoSuchElementException;
 
 @Service
+@Transactional
 public class BoardLikeServiceImpl implements BoardLikeService {
     private final BoardRepository boardRepository;
     private final AccountRepository accountRepository;
@@ -28,31 +29,38 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     }
 
     @Override
-    @Transactional
     public void up(BoardLikeRequestDto request) {
         Board board = findExistBoardPessimistic(request.getBoardId());
         Account account = findExistAccountByUsername(request.getUsername());
 
         checkExists(board, account);
 
-        boardLikeRepository.save(new BoardLike(board, account));
+        boardLikeRepository.save(BoardLike.builder()
+                            .board(board)
+                            .account(account)
+                            .build());
         board.likeUp();
     }
 
     @Override
-    @Transactional
     public void down(BoardLikeRequestDto request) {
         Board board = findExistBoardPessimistic(request.getBoardId());
         Account account = findExistAccountByUsername(request.getUsername());
 
         checkNotExists(board, account);
 
-        boardLikeRepository.deleteById(new BoardLikeId(board, account));
+        boardLikeRepository.deleteById(BoardLikeId.builder()
+                .board(board)
+                .account(account)
+                .build());
         board.likeDown();
     }
 
     private void checkExists(final Board board, final Account account) {
-        BoardLikeId id = new BoardLikeId(board, account);
+        BoardLikeId id = BoardLikeId.builder()
+                .board(board)
+                .account(account)
+                .build();
 
         Boolean test = boardLikeRepository.findById(id).isPresent();
 
@@ -62,7 +70,10 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     }
 
     private void checkNotExists(final Board board, final Account account) {
-        BoardLikeId id = new BoardLikeId(board, account);
+        BoardLikeId id = BoardLikeId.builder()
+                .board(board)
+                .account(account)
+                .build();
 
         Boolean test = boardLikeRepository.findById(id).isPresent();
 

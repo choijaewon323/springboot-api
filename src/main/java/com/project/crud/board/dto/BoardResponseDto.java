@@ -14,4 +14,6 @@ public class BoardResponseDto {
     private String content;
     private String writer;
     private long likeCount;
+    private String createdDate;
+    private String modifiedDate;
 }

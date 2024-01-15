@@ -1,20 +1,16 @@
 package com.project.crud.account.domain;
 
 import com.project.crud.account.dto.AccountResponseDto;
-import com.project.crud.board.dto.BoardResponseDto;
+import com.project.crud.common.TimeEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.io.Serializable;
 
 @Entity
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "ACCOUNT")
-public class Account implements Serializable {
+public class Account extends TimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ACCOUNT_ID", nullable = false)
@@ -30,6 +26,7 @@ public class Account implements Serializable {
     @Enumerated(EnumType.STRING)
     private AccountRole role;
 
+    @Builder
     public Account(String username, String password, AccountRole role) {
         this.username = username;
         this.password = password;

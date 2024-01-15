@@ -16,7 +16,11 @@ public class BoardTest {
 
     @BeforeEach
     void init() {
-        board = new Board("제목1", "내용", "작성자");
+        board = Board.builder()
+                .title("제목1")
+                .content("내용")
+                .writer("작성자")
+                .build();
     }
 
     @DisplayName("board 객체의 좋아요는 처음에 무조건 0이어야 함")
