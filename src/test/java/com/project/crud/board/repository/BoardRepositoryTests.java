@@ -79,6 +79,34 @@ public class BoardRepositoryTests {
         assertThat(boards.size()).isEqualTo(2);
     }
 
+    @DisplayName("제목 기준으로 keyword 검색")
+    @Test
+    void findByTitleContainingTest() {
+        // given
+        givenTestBoards();
+
+        // when
+        List<Board> boards = boardRepository.findByTitleContaining("제목1");
+
+        // then
+        assertThat(boards.size()).isEqualTo(1);
+        assertThat(boards.get(0).getContent()).isEqualTo("내용1");
+    }
+
+    @DisplayName("작성자 기준으로 keyword 검색")
+    @Test
+    void findByWriterContainingTest() {
+        // given
+        givenTestBoards();
+
+        // when
+        List<Board> boards = boardRepository.findByWriterContaining("작성자1");
+
+        // then
+        assertThat(boards.size()).isEqualTo(1);
+        assertThat(boards.get(0).getContent()).isEqualTo("내용1");
+    }
+
     private void givenTestBoards() {
         boardRepository.save(makeBoard(1));
         boardRepository.save(makeBoard(2));

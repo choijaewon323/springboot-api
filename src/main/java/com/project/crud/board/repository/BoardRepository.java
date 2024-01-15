@@ -22,4 +22,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
 
     @Query("select board from Board board where board.content like concat('%', :keyword, '%')")
     List<Board> searchByContent(@Param("keyword") String keyword);
+
+    List<Board> findByTitleContaining(String title);
+
+    List<Board> findByWriterContaining(String writer);
 }
