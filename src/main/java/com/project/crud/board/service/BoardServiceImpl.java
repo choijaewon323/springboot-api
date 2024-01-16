@@ -39,7 +39,7 @@ public class BoardServiceImpl implements BoardService {
     @Override
     @Transactional(readOnly = true)
     public List<BoardResponseDto> readAllByPagingDesc(final int index, final int size) {
-        PageRequest pageRequest = PageRequest.of(index, size, Sort.by(Sort.Direction.DESC, "created_date"));
+        PageRequest pageRequest = PageRequest.of(index, size, Sort.by(Sort.Direction.DESC, "createdDate"));
 
         Page<Board> boards = boardRepository.findAll(pageRequest);
 
