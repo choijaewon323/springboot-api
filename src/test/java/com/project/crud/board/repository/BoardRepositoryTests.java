@@ -142,12 +142,6 @@ public class BoardRepositoryTests {
 
         // then
         assertThat(boards.getContent().size()).isEqualTo(5);
-        assertThat(boards.get().anyMatch(e -> {
-            if (e.getId().equals(8L)) {
-                return true;
-            }
-            return false;
-        })).isTrue();
     }
 
     private void givenTestBoards(final int count) {

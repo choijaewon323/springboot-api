@@ -17,12 +17,14 @@ import java.util.Map;
 
 @Slf4j
 public final class TokenUtils {
+    private TokenUtils() {}
+
     public static String generateJwtToken(UserTokenResponse userToken) {
         JwtBuilder builder = Jwts.builder()
                 .setSubject(userToken.getUsername())
                 .setHeader(createHeader())
                 .setClaims(createClaims(userToken))
-                .setExpiration(createExpireDateForOneYear())
+                .setExpiration(createExpireDateForOneMonth())
                 .signWith(SignatureAlgorithm.HS256, createSigningKey());
 
         return builder.compact();
@@ -32,7 +34,7 @@ public final class TokenUtils {
         try {
             Claims claims = getClaimsFormToken(token);
             log.info("expireTime :" + claims.getExpiration());
-            log.info("email :" + claims.get("email"));
+            log.info("username :" + claims.get("username"));
             log.info("role :" + claims.get("role"));
             return true;
 
@@ -52,7 +54,7 @@ public final class TokenUtils {
         return header.split(" ")[1];
     }
 
-    private static Date createExpireDateForOneYear() {
+    private static Date createExpireDateForOneMonth() {
         Calendar c = Calendar.getInstance();
         c.add(Calendar.DATE, 30);
         return c.getTime();
@@ -87,14 +89,14 @@ public final class TokenUtils {
                 .parseClaimsJws(token).getBody();
     }
 
-    private static String getUsernameFromToken(String token) {
+    public static String getUsernameFromToken(String token) {
         Claims claims = getClaimsFormToken(token);
         return (String) claims.get("username");
     }
 
-    private static AccountRole getRoleFromToken(String token) {
+    public static AccountRole getRoleFromToken(String token) {
         Claims claims = getClaimsFormToken(token);
-        return (AccountRole) claims.get("role");
+        return AccountRole.valueOf((String) claims.get("role"));
     }
 
 }
