@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface BoardRepository extends JpaRepository<Board, Long> {
+public interface BoardRepository extends JpaRepository<Board, Long>, QueryDslRepository {
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query("select b from Board b where b.id = :id")
     Optional<Board> pessimisticFindById(@Param("id") Long id);

@@ -12,6 +12,8 @@ public interface BoardService {
 
     List<BoardResponseDto> readAllByPagingDesc(final int index, final int size);
 
+    List<BoardResponseDto> readAllByPagingCovering(final int index, final int size);
+
     BoardResponseDto readOne(Long boardId);
 
     void update(Long boardId, BoardRequestDto dto);

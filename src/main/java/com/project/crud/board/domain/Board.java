@@ -72,6 +72,9 @@ public class Board extends TimeEntity {
                 .content(content)
                 .writer(writer)
                 .likeCount(likeCount)
+                .cnt(cnt)
+                .createdDate(getCreatedDate())
+                .modifiedDate(getModifiedDate())
                 .build();
     }
 }

@@ -48,6 +48,15 @@ public class BoardApiController {
         return okWithBody(results);
     }
 
+    @GetMapping("/list/covering/{pageIndex}")
+    public ResponseEntity<List<BoardResponseDto>> readAllByPaging(@PathVariable @NotNull Integer pageIndex, @RequestParam(value = "order", required = false) String order) {
+        checkInvalidIndex(pageIndex);
+
+        List<BoardResponseDto> results = boardService.readAllByPagingCovering(pageIndex, PAGING_SIZE);
+
+        return okWithBody(results);
+    }
+
     @GetMapping("/search/content")
     public ResponseEntity<List<BoardResponseDto>> searchByContent(@RequestParam @NotNull String keyword) {
         List<BoardResponseDto> boards = boardSearchService.searchByContent(keyword);

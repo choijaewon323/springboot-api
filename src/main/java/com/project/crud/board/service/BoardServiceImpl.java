@@ -61,6 +61,19 @@ public class BoardServiceImpl implements BoardService {
     }
 
     @Override
+    @Transactional(readOnly = true)
+    public List<BoardResponseDto> readAllByPagingCovering(int index, int size) {
+        List<Board> boards = boardRepository.readAllPagingDesc(index, size);
+        List<BoardResponseDto> results = new ArrayList<>();
+
+        boards.stream().forEach(e -> {
+            results.add(e.toDto());
+        });
+
+        return results;
+    }
+
+    @Override
     public BoardResponseDto readOne(Long boardId) {
         Board board = findExistBoard(boardId);
 

@@ -1,10 +1,13 @@
 package com.project.crud.board.repository;
 
 import com.project.crud.board.domain.Board;
+import com.project.crud.config.QueryDSLConfig;
+import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -14,6 +17,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Import(QueryDSLConfig.class)
 @DataJpaTest
 @ActiveProfiles("test")
 public class BoardRepositoryTests {
@@ -134,7 +138,7 @@ public class BoardRepositoryTests {
     @Test
     void findAllPagingIdDescTest() {
         // given
-        givenTestBoards(10);
+        givenTestBoards(1000);
         PageRequest pageRequest = PageRequest.of(0, 5, Sort.by(Sort.Direction.DESC, "id"));
 
         // when
@@ -142,6 +146,19 @@ public class BoardRepositoryTests {
 
         // then
         assertThat(boards.getContent().size()).isEqualTo(5);
+    }
+
+    @DisplayName("페이징 쿼리 - QueryDSL 및 커버링 인덱스 적용")
+    @Test
+    void findAllPagingCoveringIndexTest() {
+        // given
+        givenTestBoards(1000);
+
+        // when
+        List<Board> results = boardRepository.readAllPagingDesc(0, 5);
+
+        // then
+        assertThat(results.size()).isEqualTo(5);
     }
 
     private void givenTestBoards(final int count) {
