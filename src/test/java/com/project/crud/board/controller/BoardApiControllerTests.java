@@ -66,7 +66,11 @@ public class BoardApiControllerTests {
     @Test
     void createTest() throws Exception {
         // given
-        BoardRequestDto dto = new BoardRequestDto("제목1", "내용1", "작성자1");
+        BoardRequestDto dto = BoardRequestDto.builder()
+                .title("제목1")
+                .content("내용1")
+                .writer("작성자1")
+                .build();
         doNothing().when(boardService).create(dto);
 
         String content = objectMapper.writeValueAsString(dto);
@@ -130,7 +134,12 @@ public class BoardApiControllerTests {
     @Test
     void updateTest() throws Exception {
         // given
-        BoardRequestDto dto = new BoardRequestDto("제목2", "내용2", "작성자2");
+        BoardRequestDto dto = BoardRequestDto.builder()
+                .title("제목2")
+                .content("내용2")
+                .writer("작성자2")
+                .build();
+
         String content = objectMapper.writeValueAsString(dto);
         doNothing().when(boardService).update(0L, dto);
 

@@ -15,7 +15,11 @@ public class TokenUtilsTests {
 
     @BeforeEach
     void init() {
-        userToken = new UserTokenResponse("jaewon", "password123", AccountRole.USER);
+        userToken = UserTokenResponse.builder()
+                .username("jaewon")
+                .password("password123")
+                .role(AccountRole.USER)
+                .build();
     }
 
     @DisplayName("토큰 발부 테스트")

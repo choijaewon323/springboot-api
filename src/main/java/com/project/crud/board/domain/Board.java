@@ -12,7 +12,7 @@ import lombok.*;
 @Table(name = "BOARD")
 public class Board extends TimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "BOARD_ID", nullable = false)
     private Long id;
 

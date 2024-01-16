@@ -55,6 +55,8 @@ public class ReplyServiceImpl implements ReplyService {
                 .orElseThrow(() -> new NoSuchElementException("해당 reply이 존재하지 않습니다"));
 
         reply.update(dto);
+        ReplyResponseDto replyResponseDto = ReplyResponseDto.builder()
+                .build();
     }
 
     @Override

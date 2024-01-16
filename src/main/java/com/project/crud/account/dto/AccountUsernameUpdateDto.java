@@ -1,16 +1,19 @@
 package com.project.crud.account.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 @Getter
 public class AccountUsernameUpdateDto {
     @NotBlank
     private String before;
     @NotBlank
     private String after;
+
+    @Builder
+    AccountUsernameUpdateDto(String before, String after) {
+        this.before = before;
+        this.after = after;
+    }
 }

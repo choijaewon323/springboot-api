@@ -4,11 +4,9 @@ import com.project.crud.board.domain.Board;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
-@Builder
+
 @Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardRequestDto {
     @NotBlank
     private String title;
@@ -16,6 +14,13 @@ public class BoardRequestDto {
     private String content;
     @NotBlank
     private String writer;
+
+    @Builder
+    BoardRequestDto(String title, String content, String writer) {
+        this.title = title;
+        this.content = content;
+        this.writer = writer;
+    }
 
     public Board toEntity() {
         return Board.builder()

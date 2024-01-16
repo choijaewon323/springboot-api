@@ -28,7 +28,11 @@ public class CustomUserDetailsService implements UserDetailsService {
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 username입니다"));
 
         return new CustomUserDetails(
-                new UserTokenResponse(account.getUsername(), account.getPassword(), account.getRole()),
+                UserTokenResponse.builder()
+                        .username(account.getUsername())
+                        .password(account.getPassword())
+                        .role(account.getRole())
+                        .build(),
                 Collections.singleton(new SimpleGrantedAuthority(account.getRole().name()))
         );
     }

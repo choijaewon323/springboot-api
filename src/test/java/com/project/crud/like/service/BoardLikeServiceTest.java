@@ -72,7 +72,10 @@ public class BoardLikeServiceTest {
         given(boardLikeRepository.save(any())).willReturn(boardLike);
 
         // when
-        boardLikeService.up(new BoardLikeRequestDto(board.getId(), account.getUsername()));
+        boardLikeService.up(BoardLikeRequestDto.builder()
+                .boardId(board.getId())
+                .username(account.getUsername())
+                .build());
 
         // then
         verify(boardLikeRepository).save(any());
@@ -92,7 +95,10 @@ public class BoardLikeServiceTest {
 
         // when
         assertThatThrownBy(() -> {
-            boardLikeService.up(new BoardLikeRequestDto(board.getId(), account.getUsername()));
+            boardLikeService.up(BoardLikeRequestDto.builder()
+                    .boardId(board.getId())
+                    .username(account.getUsername())
+                    .build());
         })
                 // then
                 .isInstanceOf(IllegalStateException.class);
@@ -112,7 +118,10 @@ public class BoardLikeServiceTest {
         given(boardLikeRepository.save(any())).willReturn(boardLike);
 
         // when
-        boardLikeService.up(new BoardLikeRequestDto(board.getId(), account.getUsername()));
+        boardLikeService.up(BoardLikeRequestDto.builder()
+                .boardId(board.getId())
+                .username(account.getUsername())
+                .build());
 
         // then
         assertThat(board.getLikeCount()).isEqualTo(1L);
@@ -132,7 +141,10 @@ public class BoardLikeServiceTest {
         doNothing().when(boardLikeRepository).deleteById(any());
 
         // when
-        boardLikeService.down(new BoardLikeRequestDto(board.getId(), account.getUsername()));
+        boardLikeService.down(BoardLikeRequestDto.builder()
+                .boardId(board.getId())
+                .username(account.getUsername())
+                .build());
 
         // then
         verify(boardLikeRepository).deleteById(any());
@@ -147,7 +159,10 @@ public class BoardLikeServiceTest {
 
         // test
         assertThatThrownBy(() -> {
-            boardLikeService.down(new BoardLikeRequestDto(board.getId(), account.getUsername()));
+            boardLikeService.down(BoardLikeRequestDto.builder()
+                    .boardId(board.getId())
+                    .username(account.getUsername())
+                    .build());
         })
                 // then
                 .isInstanceOf(IllegalStateException.class);

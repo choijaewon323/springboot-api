@@ -1,15 +1,17 @@
 package com.project.crud.security.dto;
 
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
-@AllArgsConstructor
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class UserTokenRequest {
     private String username;
     private String password;
+
+    @Builder
+    UserTokenRequest(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }

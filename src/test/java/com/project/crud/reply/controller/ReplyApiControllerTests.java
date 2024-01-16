@@ -60,8 +60,11 @@ public class ReplyApiControllerTests {
     @Test
     void createTest() throws Exception {
         // given
-        doNothing().when(replyService).create(0L, new ReplyRequestDto("내용", "댓글"));
-        ReplyRequestDto replyRequestDto = new ReplyRequestDto("내용1", "작성자1");
+        doNothing().when(replyService).create(0L, ReplyRequestDto.builder().build());
+        ReplyRequestDto replyRequestDto = ReplyRequestDto.builder()
+                .content("내용")
+                .writer("작성자")
+                .build();
         String content = objectMapper.writeValueAsString(replyRequestDto);
 
         // when
@@ -79,7 +82,11 @@ public class ReplyApiControllerTests {
     @Test
     void readOneTest() throws Exception {
         // given
-        ReplyResponseDto dto = new ReplyResponseDto(0L, "내용", "작성자");
+        ReplyResponseDto dto = ReplyResponseDto.builder()
+                .id(0L)
+                .content("내용")
+                .writer("작성자")
+                .build();
         given(replyService.readOne(anyLong())).willReturn(dto);
         String expect = objectMapper.writeValueAsString(dto);
 
@@ -114,7 +121,10 @@ public class ReplyApiControllerTests {
     @Test
     void updateTest() throws Exception {
         // given
-        ReplyRequestDto dto = new ReplyRequestDto("내용2", "작성자2");
+        ReplyRequestDto dto = ReplyRequestDto.builder()
+                .writer("작성자2")
+                .content("내용2")
+                .build();
         doNothing().when(replyService).update(0L, dto);
         String content = objectMapper.writeValueAsString(dto);
 
@@ -146,8 +156,17 @@ public class ReplyApiControllerTests {
 
     private List<ReplyResponseDto> dtoList() {
         List<ReplyResponseDto> results = new ArrayList<>();
-        results.add(new ReplyResponseDto(0L, "내용1", "작성자1"));
-        results.add(new ReplyResponseDto(1L, "내용2", "작성자2"));
+
+        results.add(ReplyResponseDto.builder()
+                .id(0L)
+                .content("내용1")
+                .writer("작성자1")
+                .build());
+        results.add(ReplyResponseDto.builder()
+                .id(1L)
+                .content("내용2")
+                .writer("작성자2")
+                .build());
 
         return results;
     }

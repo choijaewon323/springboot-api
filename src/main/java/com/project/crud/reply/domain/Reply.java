@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "REPLY")
 public class Reply extends TimeEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "REPLY_ID", nullable = false)
     private Long id;
 

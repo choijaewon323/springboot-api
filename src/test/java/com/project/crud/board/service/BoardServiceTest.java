@@ -42,7 +42,11 @@ public class BoardServiceTest {
         given(boardRepository.save(any())).willReturn(board);
 
         // when
-        boardService.create(new BoardRequestDto("제목", "내용", "작성자"));
+        boardService.create(BoardRequestDto.builder()
+                .title("제목")
+                .content("내용")
+                .writer("작성자")
+                .build());
 
         // then
         verify(boardRepository).save(any());

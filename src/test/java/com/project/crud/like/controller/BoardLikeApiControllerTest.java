@@ -63,7 +63,10 @@ public class BoardLikeApiControllerTest {
     void upTest() throws Exception {
         // given
         doNothing().when(boardLikeService).up(any());
-        String content = objectMapper.writeValueAsString(new BoardLikeRequestDto(0L, "유저"));
+        String content = objectMapper.writeValueAsString(BoardLikeRequestDto.builder()
+                .boardId(0L)
+                .username("유저")
+                .build());
 
         // when
         mockMvc.perform(post("/api/v1/board/like")
@@ -80,7 +83,10 @@ public class BoardLikeApiControllerTest {
     void downTest() throws Exception {
         // given
         doNothing().when(boardLikeService).down(any());
-        String content = objectMapper.writeValueAsString(new BoardLikeRequestDto(0L, "유저"));
+        String content = objectMapper.writeValueAsString(BoardLikeRequestDto.builder()
+                .boardId(0L)
+                .username("유저")
+                .build());
 
         // when
         mockMvc.perform(delete("/api/v1/board/like")

@@ -4,23 +4,20 @@ import com.project.crud.board.domain.Board;
 import com.project.crud.reply.domain.Reply;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.util.Objects;
 
-@Builder
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class ReplyRequestDto {
     @NotBlank
     private String content;
     @NotBlank
     private String writer;
 
-    public ReplyRequestDto(String content, String writer) {
+    @Builder
+    ReplyRequestDto(String content, String writer) {
         this.content = content;
         this.writer = writer;
     }

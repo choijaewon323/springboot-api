@@ -1,16 +1,19 @@
 package com.project.crud.account.dto;
 
 import jakarta.validation.constraints.NotBlank;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Getter
-@NoArgsConstructor
-@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountRequestDto {
     @NotBlank
     private String username;
     @NotBlank
     private String password;
+
+    @Builder
+    AccountRequestDto(String username, String password) {
+        this.username = username;
+        this.password = password;
+    }
 }
