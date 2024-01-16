@@ -2,6 +2,7 @@ package com.project.crud.board.controller;
 
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
+import com.project.crud.board.service.BoardSearchService;
 import com.project.crud.board.service.BoardService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
@@ -17,9 +18,11 @@ import java.util.List;
 public class BoardApiController {
     private final int PAGING_SIZE = 20;
     private final BoardService boardService;
+    private final BoardSearchService boardSearchService;
 
-    public BoardApiController(BoardService boardService) {
+    public BoardApiController(BoardService boardService, BoardSearchService boardSearchService) {
         this.boardService = boardService;
+        this.boardSearchService = boardSearchService;
     }
 
     @GetMapping("/{boardId}")
@@ -47,7 +50,7 @@ public class BoardApiController {
 
     @GetMapping("/search/content")
     public ResponseEntity<List<BoardResponseDto>> searchByContent(@RequestParam @NotNull String keyword) {
-        List<BoardResponseDto> boards = boardService.searchByContent(keyword);
+        List<BoardResponseDto> boards = boardSearchService.searchByContent(keyword);
 
         return okWithBody(boards);
     }
@@ -55,7 +58,7 @@ public class BoardApiController {
     @GetMapping("/search/writer")
     public ResponseEntity<List<BoardResponseDto>> searchByWriter(@RequestParam @NotNull(message = "작성자는 null이 될 수 없습니다")
                                                                  String keyword) {
-        List<BoardResponseDto> boards = boardService.searchByWriter(keyword);
+        List<BoardResponseDto> boards = boardSearchService.searchByWriter(keyword);
 
         return okWithBody(boards);
     }
@@ -63,7 +66,7 @@ public class BoardApiController {
     @GetMapping("/search/title")
     public ResponseEntity<List<BoardResponseDto>> searchByTitle(@RequestParam @NotNull(message = "제목은 null이 될 수 없습니다")
                                                                 String keyword) {
-        List<BoardResponseDto> boards = boardService.searchByTitle(keyword);
+        List<BoardResponseDto> boards = boardSearchService.searchByTitle(keyword);
 
         return okWithBody(boards);
     }

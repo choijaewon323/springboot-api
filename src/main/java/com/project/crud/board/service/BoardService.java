@@ -17,10 +17,4 @@ public interface BoardService {
     void update(Long boardId, BoardRequestDto dto);
 
     void delete(Long boardId);
-
-    List<BoardResponseDto> searchByContent(String keyword);
-
-    List<BoardResponseDto> searchByTitle(final String title);
-
-    List<BoardResponseDto> searchByWriter(final String writer);
 }

@@ -12,15 +12,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.Arrays;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.verify;
@@ -152,12 +148,5 @@ public class BoardServiceTest {
         // then
         assertThat(dto.getLikeCount()).isEqualTo(0L);
         assertThat(dto.getContent()).isEqualTo("내용");
-    }
-
-    @DisplayName("제목 기반 검색 테스트")
-    @Test
-    void searchByTitleTest() {
-        // given
-
     }
 }

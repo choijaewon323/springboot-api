@@ -3,6 +3,8 @@ package com.project.crud.board.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
+import com.project.crud.board.repository.BoardRepository;
+import com.project.crud.board.service.BoardSearchService;
 import com.project.crud.board.service.BoardService;
 import com.project.crud.common.ExceptionApiController;
 import com.project.crud.security.config.WebMvcConfig;
@@ -44,6 +46,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BoardApiControllerTests {
     @MockBean
     BoardService boardService;
+    @MockBean
+    BoardSearchService boardSearchService;
 
     MockMvc mockMvc;
 
@@ -52,7 +56,7 @@ public class BoardApiControllerTests {
 
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new BoardApiController(boardService), new ExceptionApiController())
+        mockMvc = MockMvcBuilders.standaloneSetup(new BoardApiController(boardService, boardSearchService), new ExceptionApiController())
                 .addFilter(new CharacterEncodingFilter("UTF-8", true))
                 .alwaysDo(print())
                 .build();
@@ -107,8 +111,8 @@ public class BoardApiControllerTests {
     @Test
     void readAllTest() throws Exception {
         // given
-        String expect = expectList();
-        given(boardService.readAll()).willReturn(makeDtoList());
+        String expect = expectList(2L);
+        given(boardService.readAll()).willReturn(makeDtoList(2L));
 
         // when
         mockMvc.perform(
@@ -170,8 +174,8 @@ public class BoardApiControllerTests {
     @Test
     void readAllByPagingOrderNull() throws Exception {
         // given
-        given(boardService.readAllByPagingDesc(anyInt(), anyInt())).willReturn(makeDtoList());
-        String expect = expectList();
+        given(boardService.readAllByPagingDesc(anyInt(), anyInt())).willReturn(makeDtoList(2L));
+        String expect = expectList(2L);
 
         // when
         mockMvc.perform(get("/api/v1/board/list/{pagingIndex}", 1)
@@ -182,25 +186,28 @@ public class BoardApiControllerTests {
                 .andExpect(content().string(expect));
     }
 
-    private List<BoardResponseDto> makeDtoList() {
-        List<BoardResponseDto> expectList = new ArrayList<>();
-        expectList.add(makeDto(1L));
-        expectList.add(makeDto(2L));
+    private List<BoardResponseDto> makeDtoList(final long count) {
+        List<BoardResponseDto> results = new ArrayList<>();
 
-        return expectList;
+        for (long i = 1; i <= count; i++) {
+            results.add(makeDto(i));
+        }
+
+        return results;
     }
 
-    private String expectList() throws Exception {
-        return objectMapper.writeValueAsString(makeDtoList());
+    private String expectList(final long count) throws Exception {
+        return objectMapper.writeValueAsString(makeDtoList(count));
     }
 
-    private BoardResponseDto makeDto(Long number) {
+    private BoardResponseDto makeDto(final long number) {
         return BoardResponseDto.builder()
                 .id(number)
                 .title("제목" + number)
                 .content("내용" + number)
                 .writer("작성자" + number)
                 .likeCount(0L)
+                .cnt(0L)
                 .build();
     }
 }
