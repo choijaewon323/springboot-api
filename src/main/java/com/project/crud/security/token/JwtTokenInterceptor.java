@@ -12,7 +12,7 @@ public class JwtTokenInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         final String header = request.getHeader(AuthConstants.AUTH_HEADER.getType());
-        Objects.requireNonNull(header);
+        Objects.requireNonNull(header, "header의 auth_header type이 없습니다");
 
         final String token = TokenUtils.getTokenFromHeader(header);
 

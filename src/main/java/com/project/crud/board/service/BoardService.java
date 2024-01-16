@@ -19,4 +19,8 @@ public interface BoardService {
     void delete(Long boardId);
 
     List<BoardResponseDto> searchByContent(String keyword);
+
+    List<BoardResponseDto> searchByTitle(final String title);
+
+    List<BoardResponseDto> searchByWriter(final String writer);
 }

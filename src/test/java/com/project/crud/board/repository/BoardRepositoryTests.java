@@ -17,11 +17,11 @@ public class BoardRepositoryTests {
     @Autowired
     BoardRepository boardRepository;
 
-    @DisplayName("작성자 기준 board 조회")
+    @DisplayName("작성자 기준 board 조회 - 정확히 일치하는 writer만 색출")
     @Test
     void findByWriter() {
         // given
-        givenTestBoards();
+        givenTestBoards(2);
 
         // when
         List<Board> boards = boardRepository.findByWriter("작성자2");
@@ -35,7 +35,7 @@ public class BoardRepositoryTests {
     @Test
     void deleteByWriter() {
         // given
-        givenTestBoards();
+        givenTestBoards(2);
         boardRepository.save(Board.builder()
                         .title("제목")
                         .content("내용")
@@ -56,7 +56,7 @@ public class BoardRepositoryTests {
     @Test
     void searchByContentTest() {
         // given
-        givenTestBoards();
+        givenTestBoards(2);
 
         // when
         List<Board> boards = boardRepository.searchByContent("내용2");
@@ -70,7 +70,7 @@ public class BoardRepositoryTests {
     @Test
     void searchByContentContainsTest() {
         // given
-        givenTestBoards();
+        givenTestBoards(2);
 
         // when
         List<Board> boards = boardRepository.searchByContent("내용");
@@ -83,7 +83,7 @@ public class BoardRepositoryTests {
     @Test
     void findByTitleContainingTest() {
         // given
-        givenTestBoards();
+        givenTestBoards(2);
 
         // when
         List<Board> boards = boardRepository.findByTitleContaining("제목1");
@@ -97,7 +97,7 @@ public class BoardRepositoryTests {
     @Test
     void findByWriterContainingTest() {
         // given
-        givenTestBoards();
+        givenTestBoards(2);
 
         // when
         List<Board> boards = boardRepository.findByWriterContaining("작성자1");
@@ -107,9 +107,10 @@ public class BoardRepositoryTests {
         assertThat(boards.get(0).getContent()).isEqualTo("내용1");
     }
 
-    private void givenTestBoards() {
-        boardRepository.save(makeBoard(1));
-        boardRepository.save(makeBoard(2));
+    private void givenTestBoards(final int count) {
+        for (int i = 1; i <= count; i++) {
+            boardRepository.save(makeBoard(i));
+        }
     }
 
     private Board makeBoard(int number) {

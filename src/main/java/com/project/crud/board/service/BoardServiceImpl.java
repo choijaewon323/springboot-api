@@ -89,9 +89,25 @@ public class BoardServiceImpl implements BoardService {
         return makeDtoList(boards);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<BoardResponseDto> searchByTitle(String title) {
+        List<Board> boards = boardRepository.findByTitleContaining(title);
+
+        return makeDtoList(boards);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BoardResponseDto> searchByWriter(String writer) {
+        List<Board> boards = boardRepository.findByWriterContaining(writer);
+
+        return makeDtoList(boards);
+    }
+
     private Board findExistBoard(final Long boardId) {
         Board board = boardRepository.findById(boardId)
-                .orElseThrow(NoSuchElementException::new);
+                .orElseThrow(() -> new NoSuchElementException("해당 게시물이 없습니다"));
 
         return board;
     }

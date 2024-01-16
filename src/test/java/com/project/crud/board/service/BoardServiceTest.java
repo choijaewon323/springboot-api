@@ -153,4 +153,11 @@ public class BoardServiceTest {
         assertThat(dto.getLikeCount()).isEqualTo(0L);
         assertThat(dto.getContent()).isEqualTo("내용");
     }
+
+    @DisplayName("제목 기반 검색 테스트")
+    @Test
+    void searchByTitleTest() {
+        // given
+
+    }
 }

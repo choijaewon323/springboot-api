@@ -22,14 +22,14 @@ public class BoardApiController {
         this.boardService = boardService;
     }
 
-    @GetMapping(value = "/{boardId}", produces = "application/json;charset=UTF-8")
-    public ResponseEntity<BoardResponseDto> findOne(@NotNull @PathVariable Long boardId) {
+    @GetMapping("/{boardId}")
+    public ResponseEntity<BoardResponseDto> findOne(@NotNull(message = "boardId는 null이 될 수 없습니다") @PathVariable Long boardId) {
         BoardResponseDto board = boardService.readOne(boardId);
 
         return okWithBody(board);
     }
 
-    @GetMapping(value = "list", produces = "application/json;charset=UTF-8")
+    @GetMapping("/list")
     public ResponseEntity<List<BoardResponseDto>> findAll() {
         List<BoardResponseDto> boards = boardService.readAll();
 
@@ -48,6 +48,22 @@ public class BoardApiController {
     @GetMapping("/search/content")
     public ResponseEntity<List<BoardResponseDto>> searchByContent(@RequestParam @NotNull String keyword) {
         List<BoardResponseDto> boards = boardService.searchByContent(keyword);
+
+        return okWithBody(boards);
+    }
+
+    @GetMapping("/search/writer")
+    public ResponseEntity<List<BoardResponseDto>> searchByWriter(@RequestParam @NotNull(message = "작성자는 null이 될 수 없습니다")
+                                                                 String keyword) {
+        List<BoardResponseDto> boards = boardService.searchByWriter(keyword);
+
+        return okWithBody(boards);
+    }
+
+    @GetMapping("/search/title")
+    public ResponseEntity<List<BoardResponseDto>> searchByTitle(@RequestParam @NotNull(message = "제목은 null이 될 수 없습니다")
+                                                                String keyword) {
+        List<BoardResponseDto> boards = boardService.searchByTitle(keyword);
 
         return okWithBody(boards);
     }
