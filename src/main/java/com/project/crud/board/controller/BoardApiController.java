@@ -8,11 +8,13 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/v1/board")
 public class BoardApiController {
@@ -29,12 +31,14 @@ public class BoardApiController {
     public ResponseEntity<BoardResponseDto> findOne(@NotNull(message = "boardId는 null이 될 수 없습니다") @PathVariable Long boardId) {
         BoardResponseDto board = boardService.readOne(boardId);
 
+
         return okWithBody(board);
     }
 
     @GetMapping("/list")
     public ResponseEntity<List<BoardResponseDto>> findAll() {
         List<BoardResponseDto> boards = boardService.readAll();
+
 
         return okWithBody(boards);
     }
@@ -45,6 +49,7 @@ public class BoardApiController {
 
         List<BoardResponseDto> results = boardService.readAllByPagingDesc(pageIndex, PAGING_SIZE);
 
+
         return okWithBody(results);
     }
 
@@ -54,12 +59,14 @@ public class BoardApiController {
 
         List<BoardResponseDto> results = boardService.readAllByPagingCovering(pageIndex, PAGING_SIZE);
 
+
         return okWithBody(results);
     }
 
     @GetMapping("/search/content")
     public ResponseEntity<List<BoardResponseDto>> searchByContent(@RequestParam @NotNull String keyword) {
         List<BoardResponseDto> boards = boardSearchService.searchByContent(keyword);
+
 
         return okWithBody(boards);
     }
@@ -69,6 +76,7 @@ public class BoardApiController {
                                                                  String keyword) {
         List<BoardResponseDto> boards = boardSearchService.searchByWriter(keyword);
 
+
         return okWithBody(boards);
     }
 
@@ -77,12 +85,14 @@ public class BoardApiController {
                                                                 String keyword) {
         List<BoardResponseDto> boards = boardSearchService.searchByTitle(keyword);
 
+
         return okWithBody(boards);
     }
 
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody BoardRequestDto dto) {
         boardService.create(dto);
+
 
         return ok();
     }
@@ -91,12 +101,14 @@ public class BoardApiController {
     public ResponseEntity<Void> update(@NotNull @PathVariable Long boardId, @Valid @RequestBody BoardRequestDto dto) {
         boardService.update(boardId, dto);
 
+
         return ok();
     }
 
     @DeleteMapping("/{boardId}")
     public ResponseEntity<Void> delete(@NotNull @PathVariable Long boardId) {
         boardService.delete(boardId);
+
 
         return ok();
     }

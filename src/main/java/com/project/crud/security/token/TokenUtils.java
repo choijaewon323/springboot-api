@@ -56,7 +56,7 @@ public final class TokenUtils {
 
     private static Date createExpireDateForOneMonth() {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.DATE, 30);
+        c.add(Calendar.MINUTE, 1);
         return c.getTime();
     }
 
