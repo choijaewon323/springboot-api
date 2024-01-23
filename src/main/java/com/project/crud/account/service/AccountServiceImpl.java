@@ -45,7 +45,7 @@ public class AccountServiceImpl implements AccountService {
     @Override
     @Transactional(readOnly = true)
     public List<AccountResponseDto> readAll() {
-        List<Account> users = accountRepository.findAccountsByRole(AccountRole.USER);
+        List<Account> users = accountRepository.findByRole(AccountRole.USER);
         List<AccountResponseDto> results = new ArrayList<>();
 
         users.stream().forEach(u -> {

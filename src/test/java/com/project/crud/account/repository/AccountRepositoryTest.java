@@ -2,11 +2,13 @@ package com.project.crud.account.repository;
 
 import com.project.crud.account.domain.Account;
 import com.project.crud.account.domain.AccountRole;
+import com.project.crud.config.QueryDSLConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.test.context.ActiveProfiles;
@@ -16,6 +18,7 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@Import(QueryDSLConfig.class)
 @DataJpaTest
 @ActiveProfiles("test")
 public class AccountRepositoryTest {
@@ -43,7 +46,7 @@ public class AccountRepositoryTest {
     @Test
     void findAccountsByRoleTest() {
         // when
-        List<Account> accounts = accountRepository.findAccountsByRole(AccountRole.USER);
+        List<Account> accounts = accountRepository.findByRole(AccountRole.USER);
 
         // then
         assertThat(accounts.size()).isEqualTo(2);
