@@ -10,7 +10,7 @@ import java.util.Objects;
 
 public class JwtTokenInterceptor implements HandlerInterceptor {
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(final HttpServletRequest request, HttpServletResponse response, final Object handler) throws Exception {
         final String header = request.getHeader(AuthConstants.AUTH_HEADER.getType());
         Objects.requireNonNull(header, "header의 auth_header type이 없습니다");
 

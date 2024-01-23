@@ -10,7 +10,7 @@ public class UserTokenRequest {
     private String password;
 
     @Builder
-    UserTokenRequest(String username, String password) {
+    UserTokenRequest(final String username, final String password) {
         this.username = username;
         this.password = password;
     }

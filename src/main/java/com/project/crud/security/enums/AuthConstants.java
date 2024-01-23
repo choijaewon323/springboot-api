@@ -5,9 +5,9 @@ public enum AuthConstants {
     AUTH_HEADER("Authorization"),
     TOKEN_TYPE("BEARER");
 
-    private String type;
+    private final String type;
 
-    AuthConstants(String type) {
+    AuthConstants(final String type) {
         this.type = type;
     }
 

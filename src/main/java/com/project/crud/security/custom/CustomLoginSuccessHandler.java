@@ -13,7 +13,7 @@ import java.io.IOException;
 
 public class CustomLoginSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
     @Override
-    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws ServletException, IOException {
+    public void onAuthenticationSuccess(final HttpServletRequest request, HttpServletResponse response, final Authentication authentication) throws ServletException, IOException {
         final UserTokenResponse userToken = ((CustomUserDetails) authentication.getPrincipal()).getUserToken();
         final String token = TokenUtils.generateJwtToken(userToken);
         response.addHeader(AuthConstants.AUTH_HEADER.getType(), AuthConstants.TOKEN_TYPE.getType() + " " + token);

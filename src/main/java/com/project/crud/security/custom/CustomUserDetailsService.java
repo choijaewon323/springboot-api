@@ -17,12 +17,12 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     private final AccountRepository accountRepository;
 
-    public CustomUserDetailsService(AccountRepository accountRepository) {
+    public CustomUserDetailsService(final AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(final String username) throws UsernameNotFoundException {
 
         Account account = accountRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 username입니다"));

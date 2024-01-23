@@ -13,7 +13,7 @@ public class CustomUserDetails implements UserDetails {
     private final UserTokenResponse userToken;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public CustomUserDetails(UserTokenResponse userToken, Collection<? extends GrantedAuthority> authorities) {
+    public CustomUserDetails(final UserTokenResponse userToken, final Collection<? extends GrantedAuthority> authorities) {
         this.userToken = userToken;
         this.authorities = authorities;
     }

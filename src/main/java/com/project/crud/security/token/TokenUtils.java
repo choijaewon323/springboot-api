@@ -19,7 +19,7 @@ import java.util.Map;
 public final class TokenUtils {
     private TokenUtils() {}
 
-    public static String generateJwtToken(UserTokenResponse userToken) {
+    public static String generateJwtToken(final UserTokenResponse userToken) {
         JwtBuilder builder = Jwts.builder()
                 .setSubject(userToken.getUsername())
                 .setHeader(createHeader())
@@ -30,7 +30,7 @@ public final class TokenUtils {
         return builder.compact();
     }
 
-    public static boolean isValidToken(String token) {
+    public static boolean isValidToken(final String token) {
         try {
             Claims claims = getClaimsFormToken(token);
             log.info("expireTime :" + claims.getExpiration());
@@ -50,7 +50,7 @@ public final class TokenUtils {
         }
     }
 
-    public static String getTokenFromHeader(String header) {
+    public static String getTokenFromHeader(final String header) {
         return header.split(" ")[1];
     }
 
@@ -70,7 +70,7 @@ public final class TokenUtils {
         return header;
     }
 
-    private static Map<String, Object> createClaims(UserTokenResponse userToken) {
+    private static Map<String, Object> createClaims(final UserTokenResponse userToken) {
         Map<String, Object> claims = new HashMap<>();
 
         claims.put("username", userToken.getUsername());
@@ -84,17 +84,17 @@ public final class TokenUtils {
         return new SecretKeySpec(apiKeySecretBytes, SignatureAlgorithm.HS256.getJcaName());
     }
 
-    private static Claims getClaimsFormToken(String token) {
+    private static Claims getClaimsFormToken(final String token) {
         return Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(KeyInfo.SECRET_KEY.get()))
                 .parseClaimsJws(token).getBody();
     }
 
-    public static String getUsernameFromToken(String token) {
+    public static String getUsernameFromToken(final String token) {
         Claims claims = getClaimsFormToken(token);
         return (String) claims.get("username");
     }
 
-    public static AccountRole getRoleFromToken(String token) {
+    public static AccountRole getRoleFromToken(final String token) {
         Claims claims = getClaimsFormToken(token);
         return AccountRole.valueOf((String) claims.get("role"));
     }

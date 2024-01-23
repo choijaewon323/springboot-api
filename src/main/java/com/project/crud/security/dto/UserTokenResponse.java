@@ -11,7 +11,7 @@ public class UserTokenResponse {
     private AccountRole role;
 
     @Builder
-    UserTokenResponse(String username, String password, AccountRole role) {
+    UserTokenResponse(final String username, final String password, final AccountRole role) {
         this.username = username;
         this.password = password;
         this.role = role;
