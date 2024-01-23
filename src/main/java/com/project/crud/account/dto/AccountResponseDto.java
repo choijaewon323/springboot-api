@@ -18,7 +18,7 @@ public class AccountResponseDto {
     private AccountRole role;
 
     @Builder
-    AccountResponseDto(Long id, String username, String password, AccountRole role) {
+    AccountResponseDto(final Long id, final String username, final String password, final AccountRole role) {
         this.id = id;
         this.username = username;
         this.password = password;

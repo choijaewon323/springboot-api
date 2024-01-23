@@ -22,16 +22,16 @@ public class AccountServiceImpl implements AccountService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final BoardRepository boardRepository;
 
-    public AccountServiceImpl(AccountRepository accountRepository,
-                              BCryptPasswordEncoder passwordEncoder,
-                              BoardRepository boardRepository) {
+    public AccountServiceImpl(final AccountRepository accountRepository,
+                              final BCryptPasswordEncoder passwordEncoder,
+                              final BoardRepository boardRepository) {
         this.accountRepository = accountRepository;
         this.passwordEncoder = passwordEncoder;
         this.boardRepository = boardRepository;
     }
 
     @Override
-    public void create(AccountRequestDto request) {
+    public void create(final AccountRequestDto request) {
         checkUsernameAlreadyExist(request.getUsername());
 
         String encodedPassword = passwordEncoder.encode(request.getPassword());
@@ -56,12 +56,12 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public AccountResponseDto readOne(Long accountId) {
+    public AccountResponseDto readOne(final Long accountId) {
         return null;
     }
 
     @Override
-    public void updateUsername(AccountUsernameUpdateDto dto) {
+    public void updateUsername(final AccountUsernameUpdateDto dto) {
         Account account = getExistAccount(dto.getBefore());
 
         checkUsernameAlreadyExist(dto.getAfter());
@@ -70,21 +70,21 @@ public class AccountServiceImpl implements AccountService {
     }
 
     @Override
-    public void updatePassword(AccountRequestDto dto) {
+    public void updatePassword(final AccountRequestDto dto) {
         Account account = getExistAccount(dto.getUsername());
 
         account.updatePassword(passwordEncoder.encode(dto.getPassword()));
     }
 
     @Override
-    public void delete(String username) {
+    public void delete(final String username) {
         Account account = getExistAccount(username);
 
         accountRepository.deleteById(account.getId());
         boardRepository.deleteByWriter(username);
     }
 
-    private void checkUsernameAlreadyExist(String username) {
+    private void checkUsernameAlreadyExist(final String username) {
         boolean check = accountRepository.findByUsername(username).isPresent();
 
         if (check) {
@@ -92,7 +92,7 @@ public class AccountServiceImpl implements AccountService {
         }
     }
 
-    private void changeUsernameInBoard(AccountUsernameUpdateDto dto) {
+    private void changeUsernameInBoard(final AccountUsernameUpdateDto dto) {
         List<Board> boards = boardRepository.findByWriter(dto.getBefore());
 
         boards.stream().forEach(board -> {
@@ -100,7 +100,7 @@ public class AccountServiceImpl implements AccountService {
         });
     }
 
-    private Account getExistAccount(String username) {
+    private Account getExistAccount(final String username) {
         return accountRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 username입니다"));
     }

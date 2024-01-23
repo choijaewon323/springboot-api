@@ -12,7 +12,7 @@ public class AccountUsernameUpdateDto {
     private String after;
 
     @Builder
-    AccountUsernameUpdateDto(String before, String after) {
+    AccountUsernameUpdateDto(final String before, final String after) {
         this.before = before;
         this.after = after;
     }

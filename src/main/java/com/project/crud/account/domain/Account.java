@@ -27,17 +27,17 @@ public class Account extends TimeEntity {
     private AccountRole role;
 
     @Builder
-    public Account(String username, String password, AccountRole role) {
+    public Account(final String username, final String password, final AccountRole role) {
         this.username = username;
         this.password = password;
         this.role = role;
     }
 
-    public void updateUsername(String username) {
+    public void updateUsername(final String username) {
         this.username = username;
     }
 
-    public void updatePassword(String password) {
+    public void updatePassword(final String password) {
         this.password = password;
     }
 

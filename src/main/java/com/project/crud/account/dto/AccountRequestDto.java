@@ -12,7 +12,7 @@ public class AccountRequestDto {
     private String password;
 
     @Builder
-    AccountRequestDto(String username, String password) {
+    AccountRequestDto(final String username, final String password) {
         this.username = username;
         this.password = password;
     }

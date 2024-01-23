@@ -59,7 +59,7 @@ public class AccountRepositoryTest {
         })).isTrue();
     }
 
-    private void makeAccount(int number) {
+    private void makeAccount(final int number) {
         accountRepository.save(Account.builder()
                         .username("유저네임" + number)
                         .password("비밀번호" + number)
