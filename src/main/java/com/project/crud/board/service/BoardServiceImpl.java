@@ -33,7 +33,7 @@ public class BoardServiceImpl implements BoardService {
     public List<BoardResponseDto> readAll() {
         List<Board> boards = boardRepository.findAll();
 
-        return makeDtoList(boards);
+        return BoardResponseDto.toDtoList(boards);
     }
 
     @Override
@@ -43,34 +43,15 @@ public class BoardServiceImpl implements BoardService {
 
         Page<Board> boards = boardRepository.findAll(pageRequest);
 
-        List<BoardResponseDto> results = new ArrayList<>();
-        boards.getContent().stream().forEach(e -> {
-            results.add(BoardResponseDto.builder()
-                            .id(e.getId())
-                            .title(e.getTitle())
-                            .content(e.getContent())
-                            .writer(e.getWriter())
-                            .likeCount(e.getLikeCount())
-                            .cnt(e.getCnt())
-                            .createdDate(e.getCreatedDate())
-                            .modifiedDate(e.getModifiedDate())
-                    .build());
-        });
-
-        return results;
+        return BoardResponseDto.toDtoList(boards.getContent());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<BoardResponseDto> readAllByPagingCovering(int index, int size) {
         List<Board> boards = boardRepository.readAllPagingDesc(index, size);
-        List<BoardResponseDto> results = new ArrayList<>();
 
-        boards.stream().forEach(e -> {
-            results.add(e.toDto());
-        });
-
-        return results;
+        return BoardResponseDto.toDtoList(boards);
     }
 
     @Override
@@ -106,12 +87,5 @@ public class BoardServiceImpl implements BoardService {
                 .orElseThrow(() -> new NoSuchElementException("해당 게시물이 없습니다"));
 
         return board;
-    }
-
-    private List<BoardResponseDto> makeDtoList(List<Board> boards) {
-        List<BoardResponseDto> results = new ArrayList<>();
-
-        boards.stream().forEach(e -> results.add(e.toDto()));
-        return results;
     }
 }

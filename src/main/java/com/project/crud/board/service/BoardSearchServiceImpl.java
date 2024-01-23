@@ -22,7 +22,7 @@ public class BoardSearchServiceImpl implements BoardSearchService {
     public List<BoardResponseDto> searchByContent(final String keyword) {
         List<Board> boards = boardRepository.searchByContent(keyword);
 
-        return makeDtoList(boards);
+        return BoardResponseDto.toDtoList(boards);
     }
 
     @Override
@@ -30,7 +30,7 @@ public class BoardSearchServiceImpl implements BoardSearchService {
     public List<BoardResponseDto> searchByTitle(final String title) {
         List<Board> boards = boardRepository.findByTitleContaining(title);
 
-        return makeDtoList(boards);
+        return BoardResponseDto.toDtoList(boards);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class BoardSearchServiceImpl implements BoardSearchService {
     public List<BoardResponseDto> searchByWriter(final String writer) {
         List<Board> boards = boardRepository.findByWriterContaining(writer);
 
-        return makeDtoList(boards);
+        return BoardResponseDto.toDtoList(boards);
     }
 
     @Override
@@ -46,13 +46,6 @@ public class BoardSearchServiceImpl implements BoardSearchService {
     public List<BoardResponseDto> searchByContentFullText(final String keyword) {
         List<Board> boards = boardRepository.searchByContentFullText(keyword);
 
-        return makeDtoList(boards);
-    }
-
-    private List<BoardResponseDto> makeDtoList(List<Board> boards) {
-        List<BoardResponseDto> results = new ArrayList<>();
-
-        boards.stream().forEach(e -> results.add(e.toDto()));
-        return results;
+        return BoardResponseDto.toDtoList(boards);
     }
 }

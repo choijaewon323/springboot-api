@@ -3,6 +3,9 @@ package com.project.crud.board.dto;
 import com.project.crud.board.domain.Board;
 import lombok.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class BoardResponseDto {
@@ -26,5 +29,12 @@ public class BoardResponseDto {
         this.cnt = cnt;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
+    }
+
+    public static List<BoardResponseDto> toDtoList(List<Board> boards) {
+        List<BoardResponseDto> results = new ArrayList<>();
+
+        boards.stream().forEach(e -> results.add(e.toDto()));
+        return results;
     }
 }
