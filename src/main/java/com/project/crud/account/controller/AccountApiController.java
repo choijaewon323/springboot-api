@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static com.project.crud.common.ApiResponse.ok;
+
 @RestController
 @RequestMapping("/api/v1/account")
 public class AccountApiController {
@@ -46,11 +48,5 @@ public class AccountApiController {
         accountService.delete(username);
 
         return ok();
-    }
-
-    private ResponseEntity<Void> ok() {
-        return ResponseEntity
-                .ok()
-                .build();
     }
 }

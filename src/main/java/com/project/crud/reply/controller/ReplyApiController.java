@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static com.project.crud.common.ApiResponse.ok;
+import static com.project.crud.common.ApiResponse.okWithBody;
+
 @RestController
 @RequestMapping("/api/v1/reply")
 public class ReplyApiController {
@@ -61,17 +64,5 @@ public class ReplyApiController {
         return ResponseEntity
                 .status(HttpStatus.NOT_FOUND)
                 .body(exception.getMessage());
-    }
-
-    private ResponseEntity<Void> ok() {
-        return ResponseEntity
-                .ok()
-                .build();
-    }
-
-    private <T> ResponseEntity<T> okWithBody(T body) {
-        return ResponseEntity
-                .ok()
-                .body(body);
     }
 }

@@ -4,6 +4,7 @@ import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
 import com.project.crud.board.service.BoardSearchService;
 import com.project.crud.board.service.BoardService;
+import com.project.crud.common.ApiResponse;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -13,6 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+
+import static com.project.crud.common.ApiResponse.ok;
+import static com.project.crud.common.ApiResponse.okWithBody;
 
 @Slf4j
 @RestController
@@ -31,14 +35,12 @@ public class BoardApiController {
     public ResponseEntity<BoardResponseDto> findOne(@NotNull(message = "boardId는 null이 될 수 없습니다") @PathVariable Long boardId) {
         BoardResponseDto board = boardService.readOne(boardId);
 
-
         return okWithBody(board);
     }
 
     @GetMapping("/list")
     public ResponseEntity<List<BoardResponseDto>> findAll() {
         List<BoardResponseDto> boards = boardService.readAll();
-
 
         return okWithBody(boards);
     }
@@ -47,20 +49,18 @@ public class BoardApiController {
     public ResponseEntity<List<BoardResponseDto>> findAllByPaging(@PathVariable @NotNull Integer pageIndex, @RequestParam(value = "order", required = false) String order) {
         checkInvalidIndex(pageIndex);
 
-        List<BoardResponseDto> results = boardService.readAllByPagingDesc(pageIndex, PAGING_SIZE);
+        List<BoardResponseDto> boards = boardService.readAllByPagingDesc(pageIndex, PAGING_SIZE);
 
-
-        return okWithBody(results);
+        return okWithBody(boards);
     }
 
     @GetMapping("/list/covering/{pageIndex}")
     public ResponseEntity<List<BoardResponseDto>> readAllByPaging(@PathVariable @NotNull Integer pageIndex, @RequestParam(value = "order", required = false) String order) {
         checkInvalidIndex(pageIndex);
 
-        List<BoardResponseDto> results = boardService.readAllByPagingCovering(pageIndex, PAGING_SIZE);
+        List<BoardResponseDto> boards = boardService.readAllByPagingCovering(pageIndex, PAGING_SIZE);
 
-
-        return okWithBody(results);
+        return okWithBody(boards);
     }
 
     @GetMapping("/search/content")
@@ -83,7 +83,6 @@ public class BoardApiController {
                                                                  String keyword) {
         List<BoardResponseDto> boards = boardSearchService.searchByWriter(keyword);
 
-
         return okWithBody(boards);
     }
 
@@ -91,7 +90,6 @@ public class BoardApiController {
     public ResponseEntity<List<BoardResponseDto>> searchByTitle(@RequestParam @NotNull(message = "제목은 null이 될 수 없습니다")
                                                                 String keyword) {
         List<BoardResponseDto> boards = boardSearchService.searchByTitle(keyword);
-
 
         return okWithBody(boards);
     }
@@ -118,18 +116,6 @@ public class BoardApiController {
 
 
         return ok();
-    }
-
-    private ResponseEntity<Void> ok() {
-        return ResponseEntity
-                .ok()
-                .build();
-    }
-
-    private <T> ResponseEntity<T> okWithBody(T body) {
-        return ResponseEntity
-                .ok()
-                .body(body);
     }
 
     private void checkInvalidIndex(final int index) {
