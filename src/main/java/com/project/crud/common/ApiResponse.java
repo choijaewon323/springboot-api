@@ -2,7 +2,7 @@ package com.project.crud.common;
 
 import org.springframework.http.ResponseEntity;
 
-public class ApiResponse {
+public final class ApiResponse {
     private ApiResponse() {}
 
     public static ResponseEntity<Void> ok() {

@@ -1,5 +1,7 @@
 package com.project.crud.like.dto;
 
+import com.project.crud.account.domain.Account;
+import com.project.crud.board.domain.Board;
 import com.project.crud.like.domain.BoardLike;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,8 +16,15 @@ public class BoardLikeRequestDto {
     private String username;
 
     @Builder
-    BoardLikeRequestDto(Long boardId, String username) {
+    BoardLikeRequestDto(final Long boardId, final String username) {
         this.boardId = boardId;
         this.username = username;
+    }
+
+    public BoardLike toEntity(final Account account, final Board board) {
+        return BoardLike.builder()
+                .account(account)
+                .board(board)
+                .build();
     }
 }

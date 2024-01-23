@@ -46,8 +46,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class BoardApiControllerTests {
     @MockBean
     BoardService boardService;
-    @MockBean
-    BoardSearchService boardSearchService;
 
     MockMvc mockMvc;
 
@@ -56,7 +54,7 @@ public class BoardApiControllerTests {
 
     @BeforeEach
     void setup() {
-        mockMvc = MockMvcBuilders.standaloneSetup(new BoardApiController(boardService, boardSearchService), new ExceptionApiController())
+        mockMvc = MockMvcBuilders.standaloneSetup(new BoardApiController(boardService), new ExceptionApiController())
                 .addFilter(new CharacterEncodingFilter("UTF-8", true))
                 .alwaysDo(print())
                 .build();

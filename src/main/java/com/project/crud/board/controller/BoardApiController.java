@@ -24,11 +24,9 @@ import static com.project.crud.common.ApiResponse.okWithBody;
 public class BoardApiController {
     private final int PAGING_SIZE = 20;
     private final BoardService boardService;
-    private final BoardSearchService boardSearchService;
 
-    public BoardApiController(BoardService boardService, BoardSearchService boardSearchService) {
+    public BoardApiController(BoardService boardService) {
         this.boardService = boardService;
-        this.boardSearchService = boardSearchService;
     }
 
     @GetMapping("/{boardId}")
@@ -63,41 +61,9 @@ public class BoardApiController {
         return okWithBody(boards);
     }
 
-    @GetMapping("/search/content")
-    public ResponseEntity<List<BoardResponseDto>> searchByContent(@RequestParam @NotNull String keyword) {
-        List<BoardResponseDto> boards = boardSearchService.searchByContent(keyword);
-
-
-        return okWithBody(boards);
-    }
-
-    @GetMapping("/search/content/fulltext")
-    public ResponseEntity<List<BoardResponseDto>> searchByContentFullText(@RequestParam @NotNull String keyword) {
-        List<BoardResponseDto> boards = boardSearchService.searchByContentFullText(keyword);
-
-        return okWithBody(boards);
-    }
-
-    @GetMapping("/search/writer")
-    public ResponseEntity<List<BoardResponseDto>> searchByWriter(@RequestParam @NotNull(message = "작성자는 null이 될 수 없습니다")
-                                                                 String keyword) {
-        List<BoardResponseDto> boards = boardSearchService.searchByWriter(keyword);
-
-        return okWithBody(boards);
-    }
-
-    @GetMapping("/search/title")
-    public ResponseEntity<List<BoardResponseDto>> searchByTitle(@RequestParam @NotNull(message = "제목은 null이 될 수 없습니다")
-                                                                String keyword) {
-        List<BoardResponseDto> boards = boardSearchService.searchByTitle(keyword);
-
-        return okWithBody(boards);
-    }
-
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody BoardRequestDto dto) {
         boardService.create(dto);
-
 
         return ok();
     }

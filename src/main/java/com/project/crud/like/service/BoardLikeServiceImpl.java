@@ -35,10 +35,7 @@ public class BoardLikeServiceImpl implements BoardLikeService {
 
         checkExists(board, account);
 
-        boardLikeRepository.save(BoardLike.builder()
-                            .board(board)
-                            .account(account)
-                            .build());
+        boardLikeRepository.save(request.toEntity(account, board));
         board.likeUp();
     }
 
