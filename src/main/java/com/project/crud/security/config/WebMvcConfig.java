@@ -18,6 +18,7 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/**").addResourceLocations(CLASSPATH_RESOURCE_LOCATIONS);
     }
 
+    /*
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(jwtTokenInterceptor())
@@ -25,6 +26,8 @@ public class WebMvcConfig implements WebMvcConfigurer {
                 .excludePathPatterns("/api/v1/account")
                 .excludePathPatterns("/api/v1/login");
     }
+    */
+
 
     @Bean
     public JwtTokenInterceptor jwtTokenInterceptor() {

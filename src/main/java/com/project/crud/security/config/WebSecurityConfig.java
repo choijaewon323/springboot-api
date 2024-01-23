@@ -41,8 +41,8 @@ public class WebSecurityConfig {
                 )
                 .sessionManagement((sessionManage) -> sessionManage
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
-                .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
+                );
+                //.addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }

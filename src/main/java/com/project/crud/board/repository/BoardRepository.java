@@ -20,8 +20,15 @@ public interface BoardRepository extends JpaRepository<Board, Long>, QueryDslRep
 
     void deleteByWriter(String writer);
 
-    @Query("select board from Board board where board.content like concat('%', :keyword, '%')")
+    @Query(value = "select board " +
+            "from Board board " +
+            "where board.content like concat('%', :keyword, '%')")
     List<Board> searchByContent(@Param("keyword") String keyword);
+
+    @Query(value = "select * " +
+            "from board " +
+            "where MATCH(content) AGAINST (:keyword IN BOOLEAN MODE)", nativeQuery = true)
+    List<Board> searchByContentFullText(@Param("keyword") String keyword);
 
     List<Board> findByTitleContaining(String title);
 

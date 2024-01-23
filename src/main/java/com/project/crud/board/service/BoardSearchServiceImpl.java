@@ -19,7 +19,7 @@ public class BoardSearchServiceImpl implements BoardSearchService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardResponseDto> searchByContent(String keyword) {
+    public List<BoardResponseDto> searchByContent(final String keyword) {
         List<Board> boards = boardRepository.searchByContent(keyword);
 
         return makeDtoList(boards);
@@ -27,7 +27,7 @@ public class BoardSearchServiceImpl implements BoardSearchService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardResponseDto> searchByTitle(String title) {
+    public List<BoardResponseDto> searchByTitle(final String title) {
         List<Board> boards = boardRepository.findByTitleContaining(title);
 
         return makeDtoList(boards);
@@ -35,8 +35,16 @@ public class BoardSearchServiceImpl implements BoardSearchService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardResponseDto> searchByWriter(String writer) {
+    public List<BoardResponseDto> searchByWriter(final String writer) {
         List<Board> boards = boardRepository.findByWriterContaining(writer);
+
+        return makeDtoList(boards);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<BoardResponseDto> searchByContentFullText(final String keyword) {
+        List<Board> boards = boardRepository.searchByContentFullText(keyword);
 
         return makeDtoList(boards);
     }

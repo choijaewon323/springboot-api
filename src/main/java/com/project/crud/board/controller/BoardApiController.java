@@ -71,6 +71,13 @@ public class BoardApiController {
         return okWithBody(boards);
     }
 
+    @GetMapping("/search/content/fulltext")
+    public ResponseEntity<List<BoardResponseDto>> searchByContentFullText(@RequestParam @NotNull String keyword) {
+        List<BoardResponseDto> boards = boardSearchService.searchByContentFullText(keyword);
+
+        return okWithBody(boards);
+    }
+
     @GetMapping("/search/writer")
     public ResponseEntity<List<BoardResponseDto>> searchByWriter(@RequestParam @NotNull(message = "작성자는 null이 될 수 없습니다")
                                                                  String keyword) {

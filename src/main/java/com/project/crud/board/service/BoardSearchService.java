@@ -10,4 +10,6 @@ public interface BoardSearchService {
     List<BoardResponseDto> searchByTitle(final String keyword);
 
     List<BoardResponseDto> searchByWriter(final String keyword);
+
+    List<BoardResponseDto> searchByContentFullText(final String keyword);
 }
