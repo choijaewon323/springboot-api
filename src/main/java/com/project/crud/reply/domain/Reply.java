@@ -31,13 +31,13 @@ public class Reply extends TimeEntity {
     private Board board;
 
     @Builder
-    public Reply(String content, String writer, Board board) {
+    public Reply(final String content, final String writer, final Board board) {
         this.content = content;
         this.writer = writer;
         this.board = board;
     }
 
-    public void update(ReplyRequestDto dto) {
+    public void update(final ReplyRequestDto dto) {
         this.content = dto.getContent();
         this.writer = dto.getWriter();
     }

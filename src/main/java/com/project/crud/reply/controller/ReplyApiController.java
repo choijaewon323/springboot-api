@@ -20,7 +20,7 @@ import static com.project.crud.common.ApiResponse.okWithBody;
 public class ReplyApiController {
     private final ReplyService replyService;
 
-    public ReplyApiController(ReplyService replyService) {
+    public ReplyApiController(final ReplyService replyService) {
         this.replyService = replyService;
     }
 

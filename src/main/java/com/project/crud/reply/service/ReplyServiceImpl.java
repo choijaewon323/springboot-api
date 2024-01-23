@@ -19,13 +19,13 @@ public class ReplyServiceImpl implements ReplyService {
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
 
-    public ReplyServiceImpl(BoardRepository boardRepository, ReplyRepository replyRepository) {
+    public ReplyServiceImpl(final BoardRepository boardRepository, final ReplyRepository replyRepository) {
         this.boardRepository = boardRepository;
         this.replyRepository = replyRepository;
     }
 
     @Override
-    public void create(Long boardId, ReplyRequestDto dto) {
+    public void create(final Long boardId, final ReplyRequestDto dto) {
         Board board = boardRepository.findById(boardId)
                 .orElseThrow(() -> new NoSuchElementException("해당 board가 존재하지 않습니다"));
 
@@ -34,7 +34,7 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<ReplyResponseDto> readAll(Long boardId) {
+    public List<ReplyResponseDto> readAll(final Long boardId) {
         List<Reply> replies = replyRepository.findAllByBoard(boardId);
 
         return makeDtoList(replies);
@@ -42,7 +42,7 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     @Transactional(readOnly = true)
-    public ReplyResponseDto readOne(Long replyId) {
+    public ReplyResponseDto readOne(final Long replyId) {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new NoSuchElementException("해당 reply이 존재하지 않습니다"));
 
@@ -50,7 +50,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public void update(Long replyId, ReplyRequestDto dto) {
+    public void update(final Long replyId, final ReplyRequestDto dto) {
         Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new NoSuchElementException("해당 reply이 존재하지 않습니다"));
 
@@ -60,11 +60,11 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public void delete(Long replyId) {
+    public void delete(final Long replyId) {
         replyRepository.deleteById(replyId);
     }
 
-    private List<ReplyResponseDto> makeDtoList(List<Reply> replies) {
+    private List<ReplyResponseDto> makeDtoList(final List<Reply> replies) {
         List<ReplyResponseDto> results = new ArrayList<>();
 
         replies.stream().forEach(e -> results.add(e.toDto()));

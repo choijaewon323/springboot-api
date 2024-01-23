@@ -12,7 +12,7 @@ public class ReplyResponseDto {
     private String modifiedDate;
 
     @Builder
-    ReplyResponseDto(Long id, String content, String writer, String createdDate, String modifiedDate) {
+    ReplyResponseDto(final Long id, final String content, final String writer, final String createdDate, final String modifiedDate) {
         this.id = id;
         this.content = content;
         this.writer = writer;

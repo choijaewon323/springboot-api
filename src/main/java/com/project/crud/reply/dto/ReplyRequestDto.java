@@ -17,12 +17,12 @@ public class ReplyRequestDto {
     private String writer;
 
     @Builder
-    ReplyRequestDto(String content, String writer) {
+    ReplyRequestDto(final String content, final String writer) {
         this.content = content;
         this.writer = writer;
     }
 
-    public Reply toEntity(Board board) {
+    public Reply toEntity(final Board board) {
         return Reply.builder()
                 .content(content)
                 .writer(writer)
