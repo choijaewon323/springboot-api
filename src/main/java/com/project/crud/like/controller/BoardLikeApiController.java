@@ -17,7 +17,7 @@ import static com.project.crud.common.ApiResponse.ok;
 public class BoardLikeApiController {
     private final BoardLikeService boardLikeService;
 
-    public BoardLikeApiController(BoardLikeService boardLikeService) {
+    public BoardLikeApiController(final BoardLikeService boardLikeService) {
         this.boardLikeService = boardLikeService;
     }
 
@@ -36,7 +36,7 @@ public class BoardLikeApiController {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> exceptionHandle(Exception e) {
+    public ResponseEntity<String> exceptionHandle(final Exception e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(e.getMessage());

@@ -20,16 +20,16 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     private final AccountRepository accountRepository;
     private final BoardLikeRepository boardLikeRepository;
 
-    public BoardLikeServiceImpl(BoardRepository boardRepository,
-                                AccountRepository accountRepository,
-                                BoardLikeRepository boardLikeRepository) {
+    public BoardLikeServiceImpl(final BoardRepository boardRepository,
+                                final AccountRepository accountRepository,
+                                final BoardLikeRepository boardLikeRepository) {
         this.boardRepository = boardRepository;
         this.accountRepository = accountRepository;
         this.boardLikeRepository = boardLikeRepository;
     }
 
     @Override
-    public void up(BoardLikeRequestDto request) {
+    public void up(final BoardLikeRequestDto request) {
         Board board = findExistBoardPessimistic(request.getBoardId());
         Account account = findExistAccountByUsername(request.getUsername());
 
@@ -40,7 +40,7 @@ public class BoardLikeServiceImpl implements BoardLikeService {
     }
 
     @Override
-    public void down(BoardLikeRequestDto request) {
+    public void down(final BoardLikeRequestDto request) {
         Board board = findExistBoardPessimistic(request.getBoardId());
         Account account = findExistAccountByUsername(request.getUsername());
 

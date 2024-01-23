@@ -23,7 +23,7 @@ public class BoardLike {
     private Account account;
 
     @Builder
-    public BoardLike(Board board, Account account) {
+    public BoardLike(final Board board, final Account account) {
         this.board = board;
         this.account = account;
     }

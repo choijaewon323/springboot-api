@@ -13,7 +13,7 @@ public class BoardLikeId implements Serializable {
     private Account account;
 
     @Builder
-    public BoardLikeId(Board board, Account account) {
+    public BoardLikeId(final Board board, final Account account) {
         this.board = board;
         this.account = account;
     }
