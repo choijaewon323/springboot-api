@@ -27,8 +27,7 @@ public class AccountRepositoryTest {
 
     @BeforeEach
     void init() {
-        makeAccount(1);
-        makeAccount(2);
+        makeAccountsByCount(1, 2);
     }
 
     @DisplayName("username 기준 조회 테스트")
@@ -65,5 +64,11 @@ public class AccountRepositoryTest {
                         .password("비밀번호" + number)
                         .role(AccountRole.USER)
                     .build());
+    }
+
+    private void makeAccountsByCount(final int startNumber, final int count) {
+        for (int i = startNumber; i < startNumber + count; i++) {
+            makeAccount(i);
+        }
     }
 }
