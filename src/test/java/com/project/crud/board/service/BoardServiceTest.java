@@ -4,6 +4,7 @@ import com.project.crud.board.domain.Board;
 import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -30,15 +31,21 @@ public class BoardServiceTest {
     @Mock
     BoardRepository boardRepository;
 
+    Board board;
+
+    @BeforeEach
+    void init() {
+        board = Board.builder()
+                .title("제목")
+                .content("내용")
+                .writer("작성자")
+                .build();
+    }
+
     @DisplayName("게시판 등록 테스트")
     @Test
     void create() throws Exception {
         // given
-        Board board = Board.builder()
-                        .title("제목")
-                        .content("내용")
-                        .writer("작성자")
-                        .build();
         given(boardRepository.save(any())).willReturn(board);
 
         // when
@@ -56,12 +63,6 @@ public class BoardServiceTest {
     @Test
     void update() throws Exception {
         // given
-        Board board = Board.builder()
-                .title("제목")
-                .content("내용")
-                .writer("작성자")
-                .build();
-        Long boardId = board.getId();
         BoardRequestDto dto = BoardRequestDto.builder()
                                 .title("제목2")
                                 .content("내용2")
@@ -71,7 +72,7 @@ public class BoardServiceTest {
         given(boardRepository.findById(any())).willReturn(Optional.of(board));
 
         // when
-        boardService.update(boardId, dto);
+        boardService.update(board.getId(), dto);
 
         // then
         assertThat(board.getContent()).isEqualTo("내용2");
@@ -124,12 +125,11 @@ public class BoardServiceTest {
     @Test
     void readOneException() throws Exception {
         // given
-        Long id = 0L;
-        given(boardRepository.findById(0L)).willReturn(Optional.empty());
+        given(boardRepository.findById(anyLong())).willReturn(Optional.empty());
 
         // when
         assertThatThrownBy(() -> {
-            BoardResponseDto result = boardService.readOne(id);
+            BoardResponseDto result = boardService.readOne(0L);
         })
                 // then
                 .isInstanceOf(NoSuchElementException.class);
@@ -139,11 +139,6 @@ public class BoardServiceTest {
     @Test
     void readOne() {
         // given
-        Board board = Board.builder()
-                .title("제목")
-                .content("내용")
-                .writer("작성자")
-                .build();
         given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
 
         // when

@@ -167,7 +167,7 @@ public class BoardRepositoryTests {
         }
     }
 
-    private Board makeBoard(int number) {
+    private Board makeBoard(final int number) {
         return Board.builder()
                 .title("제목" + number)
                 .content("내용" + number)

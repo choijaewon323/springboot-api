@@ -3,6 +3,7 @@ package com.project.crud.board.service;
 import com.project.crud.board.domain.Board;
 import com.project.crud.board.dto.BoardResponseDto;
 import com.project.crud.board.repository.BoardRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,32 +28,37 @@ public class BoardSearchServiceTests {
     @Mock
     BoardRepository boardRepository;
 
+    List<Board> givenBoards;
+
+    @BeforeEach
+    void init() {
+        givenBoards = givenBoards(3);
+    }
+
     @DisplayName("제목 기반 검색 테스트")
     @Test
     void searchByTitleTest() {
         // given
-        List<Board> givenBoards = givenBoards(3);
         given(boardRepository.findByTitleContaining(anyString())).willReturn(givenBoards);
 
         // when
         List<BoardResponseDto> results = boardSearchService.searchByTitle("제목");
 
         // then
-        assertThat(results.size()).isEqualTo(3);
+        assertThat(results.size()).isEqualTo(givenBoards.size());
     }
 
     @DisplayName("내용 기반 검색 테스트")
     @Test
     void searchByContentTest() {
         // given
-        List<Board> givenBoards = givenBoards(3);
         given(boardRepository.searchByContent(anyString())).willReturn(givenBoards);
 
         // when
         List<BoardResponseDto> results = boardSearchService.searchByContent("내용");
 
         // then
-        assertThat(results.size()).isEqualTo(3);
+        assertThat(results.size()).isEqualTo(givenBoards.size());
     }
 
     @DisplayName("제목 기반 검색 테스트")
@@ -66,7 +72,7 @@ public class BoardSearchServiceTests {
         List<BoardResponseDto> results = boardSearchService.searchByWriter("제목");
 
         // then
-        assertThat(results.size()).isEqualTo(3);
+        assertThat(results.size()).isEqualTo(givenBoards.size());
     }
 
     private List<Board> givenBoards(final int count) {
