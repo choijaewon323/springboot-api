@@ -53,20 +53,16 @@ public class ReplyServiceTests {
     @Test
     void create() {
         // given
-        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
-        given(replyRepository.save(any())).willReturn(Reply.builder()
-                .content("댓글 내용")
-                .writer("작성자")
-                .board(board)
-                .build());
-        Long boardId = 0L;
-        ReplyRequestDto dto = ReplyRequestDto.builder()
+        final ReplyRequestDto dto = ReplyRequestDto.builder()
                 .content("댓글 내용")
                 .writer("작성자")
                 .build();
 
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
+        given(replyRepository.save(any())).willReturn(makeOrdinaryReply());
+
         // when
-        replyService.create(boardId, dto);
+        replyService.create(0L, dto);
 
         // then
         verify(replyRepository).save(any());
@@ -77,13 +73,15 @@ public class ReplyServiceTests {
     @Test
     void readAll() {
         // given
-        given(replyRepository.findAllByBoard(0L)).willReturn(replies());
+        final int SIZE = 2;
+
+        given(replyRepository.findAllByBoard(0L)).willReturn(makeRepliesWithSameWriter(SIZE));
 
         // when
-        List<ReplyResponseDto> results = replyService.readAll(0L);
+        final List<ReplyResponseDto> results = replyService.readAll(0L);
 
         // then
-        assertThat(results.size()).isEqualTo(2);
+        assertThat(results.size()).isEqualTo(SIZE);
         assertThat(results.stream().anyMatch(e -> {
             if (e.getContent().equals("내용1")) {
                 return true;
@@ -102,15 +100,12 @@ public class ReplyServiceTests {
     @Test
     void readOne() {
         // given
-        Reply reply = Reply.builder()
-                .content("내용")
-                .writer("작성자")
-                .board(board)
-                .build();
+        final Reply reply = makeOrdinaryReply();
+
         given(replyRepository.findById(anyLong())).willReturn(Optional.of(reply));
 
         // when
-        ReplyResponseDto result = replyService.readOne(0L);
+        final ReplyResponseDto result = replyService.readOne(0L);
 
         // then
         assertThat(result.getContent()).isEqualTo("내용");
@@ -120,16 +115,13 @@ public class ReplyServiceTests {
     @Test
     void update() {
         // given
-        Reply reply = Reply.builder()
-                .content("내용")
-                .writer("작성자")
-                .board(board)
-                .build();
-        given(replyRepository.findById(anyLong())).willReturn(Optional.of(reply));
-        ReplyRequestDto dto = ReplyRequestDto.builder()
+        final Reply reply = makeOrdinaryReply();
+        final ReplyRequestDto dto = ReplyRequestDto.builder()
                 .content("내용수정")
                 .writer("작성자")
                 .build();
+
+        given(replyRepository.findById(anyLong())).willReturn(Optional.of(reply));
 
         // when
         replyService.update(0L, dto);
@@ -152,19 +144,29 @@ public class ReplyServiceTests {
         verify(replyRepository).deleteById(0L);
     }
 
-    private List<Reply> replies() {
+    private List<Reply> makeRepliesWithSameWriter(final int count) {
         List<Reply> results = new ArrayList<>();
-        results.add(Reply.builder()
-                .content("내용1")
-                .writer("작성자")
-                .board(board)
-                .build());
-        results.add(Reply.builder()
-                .content("내용2")
-                .writer("작성자")
-                .board(board)
-                .build());
+
+        for (int i = 1; i <= count; i++) {
+            results.add(makeReplyWithSameWriter(i));
+        }
 
         return results;
+    }
+
+    private Reply makeReplyWithSameWriter(final int number) {
+        return Reply.builder()
+                .content("내용" + number)
+                .writer("작성자")
+                .board(board)
+                .build();
+    }
+
+    private Reply makeOrdinaryReply() {
+        return Reply.builder()
+                .content("내용")
+                .writer("작성자")
+                .board(board)
+                .build();
     }
 }

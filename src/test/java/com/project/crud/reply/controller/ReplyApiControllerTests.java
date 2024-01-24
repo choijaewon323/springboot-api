@@ -60,12 +60,13 @@ public class ReplyApiControllerTests {
     @Test
     void createTest() throws Exception {
         // given
-        doNothing().when(replyService).create(0L, ReplyRequestDto.builder().build());
-        ReplyRequestDto replyRequestDto = ReplyRequestDto.builder()
+        final ReplyRequestDto replyRequestDto = ReplyRequestDto.builder()
                 .content("내용")
                 .writer("작성자")
                 .build();
-        String content = objectMapper.writeValueAsString(replyRequestDto);
+        final String content = objectMapper.writeValueAsString(replyRequestDto);
+
+        doNothing().when(replyService).create(0L, replyRequestDto);
 
         // when
         mockMvc.perform(
@@ -82,13 +83,10 @@ public class ReplyApiControllerTests {
     @Test
     void readOneTest() throws Exception {
         // given
-        ReplyResponseDto dto = ReplyResponseDto.builder()
-                .id(0L)
-                .content("내용")
-                .writer("작성자")
-                .build();
+        final ReplyResponseDto dto = makeResponseDto(0L);
+        final String expect = objectMapper.writeValueAsString(dto);
+
         given(replyService.readOne(anyLong())).willReturn(dto);
-        String expect = objectMapper.writeValueAsString(dto);
 
         // when
         mockMvc.perform(
@@ -104,8 +102,9 @@ public class ReplyApiControllerTests {
     @Test
     void readAllTest() throws Exception {
         // given
-        given(replyService.readAll(0L)).willReturn(dtoList());
-        String expect = objectMapper.writeValueAsString(dtoList());
+        final String expect = objectMapper.writeValueAsString(makeResponseDtoList(2));
+
+        given(replyService.readAll(0L)).willReturn(makeResponseDtoList(2));
 
         // when
         mockMvc.perform(
@@ -121,12 +120,13 @@ public class ReplyApiControllerTests {
     @Test
     void updateTest() throws Exception {
         // given
-        ReplyRequestDto dto = ReplyRequestDto.builder()
+        final ReplyRequestDto dto = ReplyRequestDto.builder()
                 .writer("작성자2")
                 .content("내용2")
                 .build();
+        final String content = objectMapper.writeValueAsString(dto);
+
         doNothing().when(replyService).update(0L, dto);
-        String content = objectMapper.writeValueAsString(dto);
 
         // when
         mockMvc.perform(
@@ -154,20 +154,21 @@ public class ReplyApiControllerTests {
                 .andExpect(status().isOk());
     }
 
-    private List<ReplyResponseDto> dtoList() {
+    private List<ReplyResponseDto> makeResponseDtoList(final int count) {
         List<ReplyResponseDto> results = new ArrayList<>();
 
-        results.add(ReplyResponseDto.builder()
-                .id(0L)
-                .content("내용1")
-                .writer("작성자1")
-                .build());
-        results.add(ReplyResponseDto.builder()
-                .id(1L)
-                .content("내용2")
-                .writer("작성자2")
-                .build());
+        for (long i = 1; i <= count; i++) {
+            results.add(makeResponseDto(i));
+        }
 
         return results;
+    }
+
+    private ReplyResponseDto makeResponseDto(final long number) {
+        return ReplyResponseDto.builder()
+                .id(number)
+                .content("내용" + number)
+                .writer("작성자" + number)
+                .build();
     }
 }

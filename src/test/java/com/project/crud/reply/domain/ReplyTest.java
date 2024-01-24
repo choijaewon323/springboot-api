@@ -11,6 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ReplyTest {
 
     Board board;
+    Reply reply;
 
     @BeforeEach
     void init() {
@@ -19,19 +20,18 @@ public class ReplyTest {
                 .content("게시글 내용")
                 .writer("게시글 작성자")
                 .build();
+        reply = Reply.builder()
+                .writer("작성자")
+                .content("내용")
+                .board(board)
+                .build();
     }
 
     @DisplayName("Reply update 테스트")
     @Test
     void update() {
         // given
-        Reply reply = Reply.builder()
-                .writer("작성자")
-                .content("내용")
-                .board(board)
-                .build();
-
-        ReplyRequestDto dto = ReplyRequestDto.builder()
+        final ReplyRequestDto dto = ReplyRequestDto.builder()
                 .content("내용2")
                 .writer("작성자")
                 .build();

@@ -44,19 +44,10 @@ public class ReplyRepositoryTest {
     @Test
     void findAllByBoard() {
         // given
-        replyRepository.save(Reply.builder()
-                .content("댓글 내용1")
-                .writer("작성자")
-                .board(board)
-                .build());
-        replyRepository.save(Reply.builder()
-                .content("댓글 내용2")
-                .writer("작성자")
-                .board(board)
-                .build());
+        makeRepliesWithSameWriter(2);
 
         // when
-        List<Reply> results = replyRepository.findAllByBoard(board.getId());
+        final List<Reply> results = replyRepository.findAllByBoard(board.getId());
 
         // then
         assertThat(results.size()).isEqualTo(2);
@@ -72,5 +63,19 @@ public class ReplyRepositoryTest {
             }
             return false;
         })).isTrue();
+    }
+
+    private void makeRepliesWithSameWriter(final int count) {
+        for (int i = 1; i <= count; i++) {
+            replyRepository.save(makeReplyWithSameWriter(i));
+        }
+    }
+
+    private Reply makeReplyWithSameWriter(final int number) {
+        return Reply.builder()
+                .board(board)
+                .writer("작성자")
+                .content("댓글 내용" + number)
+                .build();
     }
 }
