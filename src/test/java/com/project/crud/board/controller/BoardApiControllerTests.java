@@ -64,14 +64,10 @@ public class BoardApiControllerTests {
     @Test
     void createTest() throws Exception {
         // given
-        BoardRequestDto dto = BoardRequestDto.builder()
-                .title("제목1")
-                .content("내용1")
-                .writer("작성자1")
-                .build();
-        doNothing().when(boardService).create(dto);
+        final BoardRequestDto dto = makeRequestDto(1L);
+        final String content = objectMapper.writeValueAsString(dto);
 
-        String content = objectMapper.writeValueAsString(dto);
+        doNothing().when(boardService).create(dto);
 
         // when
         mockMvc.perform(post("/api/v1/board")
@@ -87,16 +83,10 @@ public class BoardApiControllerTests {
     @Test
     void readOneTest() throws Exception {
         // given
-        BoardResponseDto dto = BoardResponseDto.builder()
-                .id(0L)
-                .title("제목")
-                .content("내용")
-                .writer("작성자")
-                .likeCount(0L)
-                .build();
+        final BoardResponseDto dto = makeResponseDto(1L);
+        final String expected = objectMapper.writeValueAsString(dto);
 
         given(boardService.readOne(anyLong())).willReturn(dto);
-        String expected = objectMapper.writeValueAsString(dto);
 
         // when
         mockMvc.perform(get("/api/v1/board/{boardId}", dto.getId())
@@ -113,8 +103,10 @@ public class BoardApiControllerTests {
     @Test
     void readAllTest() throws Exception {
         // given
-        String expect = expectList(2L);
-        given(boardService.readAll()).willReturn(makeDtoList(2L));
+        final long SIZE = 2L;
+        final String expect = expectResponseDtoList(SIZE);
+
+        given(boardService.readAll()).willReturn(makeResponseDtoList(SIZE));
 
         // when
         mockMvc.perform(
@@ -132,13 +124,9 @@ public class BoardApiControllerTests {
     @Test
     void updateTest() throws Exception {
         // given
-        BoardRequestDto dto = BoardRequestDto.builder()
-                .title("제목2")
-                .content("내용2")
-                .writer("작성자2")
-                .build();
+        final BoardRequestDto dto = makeRequestDto(2L);
+        final String content = objectMapper.writeValueAsString(dto);
 
-        String content = objectMapper.writeValueAsString(dto);
         doNothing().when(boardService).update(0L, dto);
 
         // when
@@ -181,8 +169,10 @@ public class BoardApiControllerTests {
     @Test
     void readAllByPagingOrderNull() throws Exception {
         // given
-        given(boardService.readAllByPagingDesc(anyInt(), anyInt())).willReturn(makeDtoList(2L));
-        String expect = expectList(2L);
+        final long SIZE = 2L;
+        final String expect = expectResponseDtoList(SIZE);
+
+        given(boardService.readAllByPagingDesc(anyInt(), anyInt())).willReturn(makeResponseDtoList(SIZE));
 
         // when
         mockMvc.perform(get("/api/v1/board/list/{pagingIndex}", 1)
@@ -193,7 +183,7 @@ public class BoardApiControllerTests {
                 .andExpect(content().string(expect));
     }
 
-    private List<BoardResponseDto> makeDtoList(final long count) {
+    private List<BoardResponseDto> makeResponseDtoList(final long count) {
         List<BoardResponseDto> results = new ArrayList<>();
 
         for (long i = 1; i <= count; i++) {
@@ -203,11 +193,30 @@ public class BoardApiControllerTests {
         return results;
     }
 
-    private String expectList(final long count) throws Exception {
-        return objectMapper.writeValueAsString(makeDtoList(count));
+    private String expectResponseDtoList(final long count) throws Exception {
+        return objectMapper.writeValueAsString(makeResponseDtoList(count));
     }
 
     private BoardResponseDto makeDto(final long number) {
+        return BoardResponseDto.builder()
+                .id(number)
+                .title("제목" + number)
+                .content("내용" + number)
+                .writer("작성자" + number)
+                .likeCount(0L)
+                .cnt(0L)
+                .build();
+    }
+
+    private BoardRequestDto makeRequestDto(final long number) {
+        return BoardRequestDto.builder()
+                .title("제목" + number)
+                .content("내용" + number)
+                .writer("작성자" + number)
+                .build();
+    }
+
+    private BoardResponseDto makeResponseDto(final long number) {
         return BoardResponseDto.builder()
                 .id(number)
                 .title("제목" + number)
