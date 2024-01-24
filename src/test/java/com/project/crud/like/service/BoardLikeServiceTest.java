@@ -62,20 +62,14 @@ public class BoardLikeServiceTest {
     @Test
     void upTest() throws Exception {
         // given
-        BoardLike boardLike = BoardLike.builder()
-                .board(board)
-                .account(account)
-                .build();
+        final BoardLike boardLike = makeBoardLike();
 
         commonGiven();
         given(boardLikeRepository.findById(any())).willReturn(Optional.empty());
         given(boardLikeRepository.save(any())).willReturn(boardLike);
 
         // when
-        boardLikeService.up(BoardLikeRequestDto.builder()
-                .boardId(board.getId())
-                .username(account.getUsername())
-                .build());
+        boardLikeService.up(makeRequestDto());
 
         // then
         verify(boardLikeRepository).save(any());
@@ -85,20 +79,14 @@ public class BoardLikeServiceTest {
     @Test
     void upTestException() throws Exception {
         // given
-        BoardLike boardLike = BoardLike.builder()
-                .board(board)
-                .account(account)
-                .build();
+        final BoardLike boardLike = makeBoardLike();
 
         commonGiven();
         given(boardLikeRepository.findById(any())).willReturn(Optional.of(boardLike));
 
         // when
         assertThatThrownBy(() -> {
-            boardLikeService.up(BoardLikeRequestDto.builder()
-                    .boardId(board.getId())
-                    .username(account.getUsername())
-                    .build());
+            boardLikeService.up(makeRequestDto());
         })
                 // then
                 .isInstanceOf(IllegalStateException.class);
@@ -108,20 +96,14 @@ public class BoardLikeServiceTest {
     @Test
     void boardLikeCount() throws Exception {
         // given
-        BoardLike boardLike = BoardLike.builder()
-                .board(board)
-                .account(account)
-                .build();
+        final BoardLike boardLike = makeBoardLike();
 
         commonGiven();
         given(boardLikeRepository.findById(any())).willReturn(Optional.empty());
         given(boardLikeRepository.save(any())).willReturn(boardLike);
 
         // when
-        boardLikeService.up(BoardLikeRequestDto.builder()
-                .boardId(board.getId())
-                .username(account.getUsername())
-                .build());
+        boardLikeService.up(makeRequestDto());
 
         // then
         assertThat(board.getLikeCount()).isEqualTo(1L);
@@ -132,19 +114,16 @@ public class BoardLikeServiceTest {
     @Transactional
     void downTest() throws Exception {
         // given
-        Board board = likeAppliedGiven();
-        BoardLike boardLike = BoardLike.builder()
-                .board(board)
-                .account(account)
-                .build();
+        board.likeUp();
+        commonGiven();
+
+        final BoardLike boardLike = makeBoardLike();
+
         given(boardLikeRepository.findById(any())).willReturn(Optional.of(boardLike));
         doNothing().when(boardLikeRepository).deleteById(any());
 
         // when
-        boardLikeService.down(BoardLikeRequestDto.builder()
-                .boardId(board.getId())
-                .username(account.getUsername())
-                .build());
+        boardLikeService.down(makeRequestDto());
 
         // then
         verify(boardLikeRepository).deleteById(any());
@@ -159,13 +138,17 @@ public class BoardLikeServiceTest {
 
         // test
         assertThatThrownBy(() -> {
-            boardLikeService.down(BoardLikeRequestDto.builder()
-                    .boardId(board.getId())
-                    .username(account.getUsername())
-                    .build());
+            boardLikeService.down(makeRequestDto());
         })
                 // then
                 .isInstanceOf(IllegalStateException.class);
+    }
+
+    private BoardLike makeBoardLike() {
+        return BoardLike.builder()
+                .account(account)
+                .board(board)
+                .build();
     }
 
     private void commonGiven() {
@@ -173,15 +156,10 @@ public class BoardLikeServiceTest {
         given(accountRepository.findByUsername("유저 이름")).willReturn(Optional.of(account));
     }
 
-    private Board likeAppliedGiven() {
-        Board board = Board.builder()
-                .title("제목")
-                .content("내용")
-                .writer("작성자")
+    private BoardLikeRequestDto makeRequestDto() {
+        return BoardLikeRequestDto.builder()
+                .boardId(board.getId())
+                .username(account.getUsername())
                 .build();
-        board.likeUp();
-        given(boardRepository.pessimisticFindById(any())).willReturn(Optional.of(board));
-        given(accountRepository.findByUsername("유저 이름")).willReturn(Optional.of(account));
-        return board;
     }
 }
