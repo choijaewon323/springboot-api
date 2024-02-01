@@ -1,5 +1,7 @@
 package com.project.crud.reply.service;
 
+import com.project.crud.account.domain.Account;
+import com.project.crud.account.repository.AccountRepository;
 import com.project.crud.board.domain.Board;
 import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.reply.domain.Reply;
@@ -18,24 +20,23 @@ import java.util.NoSuchElementException;
 public class ReplyServiceImpl implements ReplyService {
     private final BoardRepository boardRepository;
     private final ReplyRepository replyRepository;
+    private final AccountRepository accountRepository;
 
-    public ReplyServiceImpl(final BoardRepository boardRepository, final ReplyRepository replyRepository) {
+    public ReplyServiceImpl(BoardRepository boardRepository, ReplyRepository replyRepository, AccountRepository accountRepository) {
         this.boardRepository = boardRepository;
         this.replyRepository = replyRepository;
+        this.accountRepository = accountRepository;
     }
 
     @Override
     public void create(final Long boardId, final ReplyRequestDto dto) {
-        Board board = boardRepository.findById(boardId)
-                .orElseThrow(() -> new NoSuchElementException("해당 board가 존재하지 않습니다"));
-
-        replyRepository.save(dto.toEntity(board));
+        replyRepository.save(dto.toEntity(boardId));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<ReplyResponseDto> readAll(final Long boardId) {
-        List<Reply> replies = replyRepository.findAllByBoard(boardId);
+        final List<Reply> replies = replyRepository.findByBoardId(boardId);
 
         return makeDtoList(replies);
     }
@@ -43,7 +44,7 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     @Transactional(readOnly = true)
     public ReplyResponseDto readOne(final Long replyId) {
-        Reply reply = replyRepository.findById(replyId)
+        final Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new NoSuchElementException("해당 reply이 존재하지 않습니다"));
 
         return reply.toDto();
@@ -51,12 +52,10 @@ public class ReplyServiceImpl implements ReplyService {
 
     @Override
     public void update(final Long replyId, final ReplyRequestDto dto) {
-        Reply reply = replyRepository.findById(replyId)
+        final Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new NoSuchElementException("해당 reply이 존재하지 않습니다"));
 
         reply.update(dto);
-        ReplyResponseDto replyResponseDto = ReplyResponseDto.builder()
-                .build();
     }
 
     @Override

@@ -21,7 +21,7 @@ public class QueryDslRepositoryImpl implements QueryDslRepository {
     QBoard board = QBoard.board;
 
     @Override
-    public List<Board> readAllPagingDesc(final int pageIndex, final int pageSize) {
+    public List<Board> findAllByPaging(final int pageIndex, final int pageSize) {
         List<Long> ids = factory
                 .select(board.id)
                 .from(board)

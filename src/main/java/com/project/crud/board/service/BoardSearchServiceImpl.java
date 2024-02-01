@@ -6,10 +6,10 @@ import com.project.crud.board.repository.BoardRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 public class BoardSearchServiceImpl implements BoardSearchService {
     private final BoardRepository boardRepository;
 
@@ -19,32 +19,24 @@ public class BoardSearchServiceImpl implements BoardSearchService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardResponseDto> searchByContent(final String keyword) {
-        List<Board> boards = boardRepository.searchByContent(keyword);
+    public List<BoardResponseDto> searchInContent(final String keyword) {
+        List<Board> boards = boardRepository.findByContentFulltext(keyword);
 
         return BoardResponseDto.toDtoList(boards);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardResponseDto> searchByTitle(final String title) {
-        List<Board> boards = boardRepository.findByTitleContaining(title);
+    public List<BoardResponseDto> searchInTitle(final String keyword) {
+        List<Board> boards = boardRepository.findByTitleContaining(keyword);
 
         return BoardResponseDto.toDtoList(boards);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<BoardResponseDto> searchByWriter(final String writer) {
-        List<Board> boards = boardRepository.findByWriterContaining(writer);
-
-        return BoardResponseDto.toDtoList(boards);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<BoardResponseDto> searchByContentFullText(final String keyword) {
-        List<Board> boards = boardRepository.searchByContentFullText(keyword);
+    public List<BoardResponseDto> searchInWriter(final String keyword) {
+        List<Board> boards = boardRepository.findByWriterContaining(keyword);
 
         return BoardResponseDto.toDtoList(boards);
     }

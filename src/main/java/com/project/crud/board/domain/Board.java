@@ -1,5 +1,6 @@
 package com.project.crud.board.domain;
 
+import com.project.crud.account.domain.Account;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
 import com.project.crud.common.TimeEntity;
@@ -33,19 +34,18 @@ public class Board extends TimeEntity {
     private long cnt = 0L;
 
     @Builder
-    public Board(String title, String content, String writer) {
+    public Board(final String title, final String content, final String writer) {
         this.title = title;
         this.content = content;
         this.writer = writer;
     }
 
-    public void update(BoardRequestDto dto) {
+    public void update(final BoardRequestDto dto) {
         this.title = dto.getTitle();
         this.content = dto.getContent();
-        this.writer = dto.getWriter();
     }
 
-    public void updateWriter(String writer) {
+    public void updateWriter(final String writer) {
         this.writer = writer;
     }
 

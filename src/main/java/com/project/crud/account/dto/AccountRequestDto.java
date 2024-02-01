@@ -1,5 +1,7 @@
 package com.project.crud.account.dto;
 
+import com.project.crud.account.domain.Account;
+import com.project.crud.account.domain.AccountRole;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
@@ -15,5 +17,13 @@ public class AccountRequestDto {
     AccountRequestDto(final String username, final String password) {
         this.username = username;
         this.password = password;
+    }
+
+    public Account toEntity(final String encodedPassword) {
+        return Account.builder()
+                .username(username)
+                .password(encodedPassword)
+                .role(AccountRole.USER)
+                .build();
     }
 }

@@ -10,20 +10,14 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class ReplyTest {
 
-    Board board;
     Reply reply;
 
     @BeforeEach
     void init() {
-        board = Board.builder()
-                .title("제목")
-                .content("게시글 내용")
-                .writer("게시글 작성자")
-                .build();
         reply = Reply.builder()
                 .writer("작성자")
                 .content("내용")
-                .board(board)
+                .boardId(0L)
                 .build();
     }
 

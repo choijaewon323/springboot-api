@@ -1,5 +1,6 @@
 package com.project.crud.reply.dto;
 
+import com.project.crud.account.domain.Account;
 import com.project.crud.board.domain.Board;
 import com.project.crud.reply.domain.Reply;
 import jakarta.validation.constraints.NotBlank;
@@ -22,11 +23,11 @@ public class ReplyRequestDto {
         this.writer = writer;
     }
 
-    public Reply toEntity(final Board board) {
+    public Reply toEntity(final Long boardId) {
         return Reply.builder()
                 .content(content)
                 .writer(writer)
-                .board(board)
+                .boardId(boardId)
                 .build();
     }
 }

@@ -1,5 +1,6 @@
 package com.project.crud.reply.domain;
 
+import com.project.crud.account.domain.Account;
 import com.project.crud.board.domain.Board;
 import com.project.crud.common.TimeEntity;
 import com.project.crud.reply.dto.ReplyRequestDto;
@@ -26,20 +27,18 @@ public class Reply extends TimeEntity {
     @Column(name = "WRITER", nullable = false)
     private String writer;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "BOARD_ID", nullable = false)
-    private Board board;
+    @Column(name = "BOARD_ID", nullable = false)
+    private Long boardId;
 
     @Builder
-    public Reply(final String content, final String writer, final Board board) {
+    public Reply(final String content, final String writer, final Long boardId) {
         this.content = content;
         this.writer = writer;
-        this.board = board;
+        this.boardId = boardId;
     }
 
     public void update(final ReplyRequestDto dto) {
         this.content = dto.getContent();
-        this.writer = dto.getWriter();
     }
 
     public ReplyResponseDto toDto() {

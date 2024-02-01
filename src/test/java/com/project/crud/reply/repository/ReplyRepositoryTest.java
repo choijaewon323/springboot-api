@@ -28,17 +28,7 @@ public class ReplyRepositoryTest {
     @Autowired
     BoardRepository boardRepository;
 
-    Board board;
-
-    @BeforeEach
-    void init() {
-        board = Board.builder()
-                .title("제목")
-                .content("내용")
-                .writer("작성자")
-                .build();
-        boardRepository.save(board);
-    }
+    final Long boardId = 0L;
 
     @DisplayName("board와 연관된 reply 찾기")
     @Test
@@ -47,7 +37,7 @@ public class ReplyRepositoryTest {
         makeRepliesWithSameWriter(2);
 
         // when
-        final List<Reply> results = replyRepository.findAllByBoard(board.getId());
+        final List<Reply> results = replyRepository.findByBoardId(boardId);
 
         // then
         assertThat(results.size()).isEqualTo(2);
@@ -73,7 +63,7 @@ public class ReplyRepositoryTest {
 
     private Reply makeReplyWithSameWriter(final int number) {
         return Reply.builder()
-                .board(board)
+                .boardId(boardId)
                 .writer("작성자")
                 .content("댓글 내용" + number)
                 .build();

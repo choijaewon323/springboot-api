@@ -5,11 +5,9 @@ import com.project.crud.board.dto.BoardResponseDto;
 import java.util.List;
 
 public interface BoardSearchService {
-    List<BoardResponseDto> searchByContent(final String keyword);
+    List<BoardResponseDto> searchInContent(final String keyword);
 
-    List<BoardResponseDto> searchByTitle(final String keyword);
+    List<BoardResponseDto> searchInTitle(final String keyword);
 
-    List<BoardResponseDto> searchByWriter(final String keyword);
-
-    List<BoardResponseDto> searchByContentFullText(final String keyword);
+    List<BoardResponseDto> searchInWriter(final String keyword);
 }

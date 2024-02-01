@@ -26,7 +26,7 @@ public class TokenUtilsTests {
     @Test
     void createTokenTest() {
         // when
-        String token = TokenUtils.generateJwtToken(userToken);
+        final String token = TokenUtils.generateJwtToken(userToken);
 
         // then
         System.out.println(token);

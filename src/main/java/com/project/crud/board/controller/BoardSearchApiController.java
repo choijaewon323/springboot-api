@@ -24,7 +24,7 @@ public class BoardSearchApiController {
         this.boardSearchService = boardSearchService;
     }
 
-    @GetMapping("/search/content")
+    @GetMapping("/content")
     public ResponseEntity<List<BoardResponseDto>> searchByContent(@RequestParam @NotNull String keyword) {
         List<BoardResponseDto> boards = boardSearchService.searchByContent(keyword);
 
@@ -32,14 +32,14 @@ public class BoardSearchApiController {
         return okWithBody(boards);
     }
 
-    @GetMapping("/search/content/fulltext")
+    @GetMapping("/content/fulltext")
     public ResponseEntity<List<BoardResponseDto>> searchByContentFullText(@RequestParam @NotNull String keyword) {
         List<BoardResponseDto> boards = boardSearchService.searchByContentFullText(keyword);
 
         return okWithBody(boards);
     }
 
-    @GetMapping("/search/writer")
+    @GetMapping("/writer")
     public ResponseEntity<List<BoardResponseDto>> searchByWriter(@RequestParam @NotNull(message = "작성자는 null이 될 수 없습니다")
                                                                          String keyword) {
         List<BoardResponseDto> boards = boardSearchService.searchByWriter(keyword);
@@ -47,7 +47,7 @@ public class BoardSearchApiController {
         return okWithBody(boards);
     }
 
-    @GetMapping("/search/title")
+    @GetMapping("/title")
     public ResponseEntity<List<BoardResponseDto>> searchByTitle(@RequestParam @NotNull(message = "제목은 null이 될 수 없습니다")
                                                                         String keyword) {
         List<BoardResponseDto> boards = boardSearchService.searchByTitle(keyword);

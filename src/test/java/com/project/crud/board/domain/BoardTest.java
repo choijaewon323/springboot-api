@@ -1,5 +1,7 @@
 package com.project.crud.board.domain;
 
+import com.project.crud.account.domain.Account;
+import com.project.crud.account.domain.AccountRole;
 import com.project.crud.board.dto.BoardRequestDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -13,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 public class BoardTest {
 
     Board board;
-
     @BeforeEach
     void init() {
         board = Board.builder()

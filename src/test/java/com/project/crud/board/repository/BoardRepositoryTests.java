@@ -66,7 +66,7 @@ public class BoardRepositoryTests {
         givenTestBoards(2);
 
         // when
-        List<Board> boards = boardRepository.searchByContent("내용2");
+        List<Board> boards = boardRepository.findByContentContaining("내용2");
 
         // then
         assertThat(boards.size()).isEqualTo(1);
@@ -80,7 +80,7 @@ public class BoardRepositoryTests {
         givenTestBoards(2);
 
         // when
-        List<Board> boards = boardRepository.searchByContent("내용");
+        List<Board> boards = boardRepository.findByContentContaining("내용");
 
         // then
         assertThat(boards.size()).isEqualTo(2);
@@ -155,7 +155,7 @@ public class BoardRepositoryTests {
         givenTestBoards(1000);
 
         // when
-        List<Board> results = boardRepository.readAllPagingDesc(0, 5);
+        List<Board> results = boardRepository.findAllByPaging(0, 5);
 
         // then
         assertThat(results.size()).isEqualTo(5);

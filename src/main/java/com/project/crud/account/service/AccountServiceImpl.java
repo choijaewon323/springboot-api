@@ -14,45 +14,35 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 @Transactional
 public class AccountServiceImpl implements AccountService {
-    private final AccountRepository accountRepository;
     private final BCryptPasswordEncoder passwordEncoder;
     private final BoardRepository boardRepository;
+    private final AccountRepository accountRepository;
 
-    public AccountServiceImpl(final AccountRepository accountRepository,
-                              final BCryptPasswordEncoder passwordEncoder,
-                              final BoardRepository boardRepository) {
-        this.accountRepository = accountRepository;
+    public AccountServiceImpl(BCryptPasswordEncoder passwordEncoder, BoardRepository boardRepository, AccountRepository accountRepository) {
         this.passwordEncoder = passwordEncoder;
         this.boardRepository = boardRepository;
+        this.accountRepository = accountRepository;
     }
 
     @Override
     public void create(final AccountRequestDto request) {
         checkUsernameAlreadyExist(request.getUsername());
 
-        String encodedPassword = passwordEncoder.encode(request.getPassword());
-        accountRepository.save(Account.builder()
-                        .username(request.getUsername())
-                        .password(encodedPassword)
-                        .role(AccountRole.USER)
-                .build());
+        final String encodedPassword = passwordEncoder.encode(request.getPassword());
+        accountRepository.save(request.toEntity(encodedPassword));
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<AccountResponseDto> readAll() {
-        List<Account> users = accountRepository.findByRole(AccountRole.USER);
-        List<AccountResponseDto> results = new ArrayList<>();
+        final List<Account> accounts = accountRepository.findByRole(AccountRole.USER);
 
-        users.stream().forEach(u -> {
-            results.add(u.toResponseDto());
-        });
-
-        return results;
+        return toResponseDto(accounts);
     }
 
     @Override
@@ -62,7 +52,7 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void updateUsername(final AccountUsernameUpdateDto dto) {
-        Account account = getExistAccount(dto.getBefore());
+        final Account account = findByUsername(dto.getBefore());
 
         checkUsernameAlreadyExist(dto.getAfter());
         account.updateUsername(dto.getAfter());
@@ -71,21 +61,36 @@ public class AccountServiceImpl implements AccountService {
 
     @Override
     public void updatePassword(final AccountRequestDto dto) {
-        Account account = getExistAccount(dto.getUsername());
+        final Account account = findByUsername(dto.getUsername());
 
         account.updatePassword(passwordEncoder.encode(dto.getPassword()));
     }
 
     @Override
     public void delete(final String username) {
-        Account account = getExistAccount(username);
+        final Account account = findByUsername(username);
 
         accountRepository.deleteById(account.getId());
         boardRepository.deleteByWriter(username);
     }
 
+    private Account findByUsername(final String username) {
+        return accountRepository.findByUsername(username)
+                .orElseThrow(() -> new NoSuchElementException("해당 유저가 없습니다"));
+    }
+
+    private List<AccountResponseDto> toResponseDto(final List<Account> accounts) {
+        List<AccountResponseDto> results = new ArrayList<>();
+
+        accounts.stream().forEach(u -> {
+            results.add(u.toResponseDto());
+        });
+
+        return results;
+    }
+
     private void checkUsernameAlreadyExist(final String username) {
-        boolean check = accountRepository.findByUsername(username).isPresent();
+        final boolean check = accountRepository.existsByUsername(username);
 
         if (check) {
             throw new IllegalStateException("이미 있는 계정입니다");
@@ -98,10 +103,5 @@ public class AccountServiceImpl implements AccountService {
         boards.stream().forEach(board -> {
             board.updateWriter(dto.getAfter());
         });
-    }
-
-    private Account getExistAccount(final String username) {
-        return accountRepository.findByUsername(username)
-                .orElseThrow(() -> new IllegalArgumentException("존재하지 않는 username입니다"));
     }
 }

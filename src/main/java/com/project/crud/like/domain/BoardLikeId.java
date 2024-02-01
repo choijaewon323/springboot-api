@@ -9,12 +9,12 @@ import java.io.Serializable;
 @EqualsAndHashCode
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class BoardLikeId implements Serializable {
-    private Board board;
-    private Account account;
+    private Long boardId;
+    private Long accountId;
 
     @Builder
-    public BoardLikeId(final Board board, final Account account) {
-        this.board = board;
-        this.account = account;
+    public BoardLikeId(final Long boardId, final Long accountId) {
+        this.boardId = boardId;
+        this.accountId = accountId;
     }
 }

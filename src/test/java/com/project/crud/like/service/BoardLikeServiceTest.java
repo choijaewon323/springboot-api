@@ -146,13 +146,13 @@ public class BoardLikeServiceTest {
 
     private BoardLike makeBoardLike() {
         return BoardLike.builder()
-                .account(account)
-                .board(board)
+                .accountId(account.getId())
+                .boardId(board.getId())
                 .build();
     }
 
     private void commonGiven() {
-        given(boardRepository.pessimisticFindById(any())).willReturn(Optional.of(board));
+        given(boardRepository.findById(any())).willReturn(Optional.of(board));
         given(accountRepository.findByUsername("유저 이름")).willReturn(Optional.of(account));
     }
 

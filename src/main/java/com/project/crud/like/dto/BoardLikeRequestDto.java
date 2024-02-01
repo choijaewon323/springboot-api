@@ -21,10 +21,10 @@ public class BoardLikeRequestDto {
         this.username = username;
     }
 
-    public BoardLike toEntity(final Account account, final Board board) {
+    public BoardLike toEntity(final Long accountId) {
         return BoardLike.builder()
-                .account(account)
-                .board(board)
+                .accountId(accountId)
+                .boardId(boardId)
                 .build();
     }
 }

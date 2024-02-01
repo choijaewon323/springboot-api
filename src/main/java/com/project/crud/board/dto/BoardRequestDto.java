@@ -1,5 +1,6 @@
 package com.project.crud.board.dto;
 
+import com.project.crud.account.domain.Account;
 import com.project.crud.board.domain.Board;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;

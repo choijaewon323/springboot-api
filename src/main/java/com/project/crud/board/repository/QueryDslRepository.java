@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.List;
 
 public interface QueryDslRepository {
-    List<Board> readAllPagingDesc(final int pageIndex, final int pageSize);
+    List<Board> findAllByPaging(final int pageIndex, final int pageSize);
 }

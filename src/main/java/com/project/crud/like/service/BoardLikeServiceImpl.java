@@ -30,66 +30,57 @@ public class BoardLikeServiceImpl implements BoardLikeService {
 
     @Override
     public void up(final BoardLikeRequestDto request) {
-        Board board = findExistBoardPessimistic(request.getBoardId());
-        Account account = findExistAccountByUsername(request.getUsername());
+        final Board board = boardRepository.findById(request.getBoardId())
+                .orElseThrow(() -> new NoSuchElementException("해당 게시물이 없습니다"));
+        final Account account = accountRepository.findByUsername(request.getUsername())
+                        .orElseThrow(() -> new NoSuchElementException("해당 유저가 없습니다"));
 
         checkExists(board, account);
 
-        boardLikeRepository.save(request.toEntity(account, board));
+        boardLikeRepository.save(request.toEntity(account.getId()));
         board.likeUp();
     }
 
     @Override
     public void down(final BoardLikeRequestDto request) {
-        Board board = findExistBoardPessimistic(request.getBoardId());
-        Account account = findExistAccountByUsername(request.getUsername());
+        final Board board = boardRepository.findById(request.getBoardId())
+                .orElseThrow(() -> new NoSuchElementException("해당 게시물이 없습니다"));
+        final Account account = accountRepository.findByUsername(request.getUsername())
+                .orElseThrow(() -> new NoSuchElementException("해당 유저가 없습니다"));
 
         checkNotExists(board, account);
 
         boardLikeRepository.deleteById(BoardLikeId.builder()
-                .board(board)
-                .account(account)
+                .boardId(board.getId())
+                .accountId(account.getId())
                 .build());
+
         board.likeDown();
     }
 
     private void checkExists(final Board board, final Account account) {
-        BoardLikeId id = BoardLikeId.builder()
-                .board(board)
-                .account(account)
+        final BoardLikeId id = BoardLikeId.builder()
+                .boardId(board.getId())
+                .accountId(account.getId())
                 .build();
 
-        Boolean test = boardLikeRepository.findById(id).isPresent();
+        final boolean result = boardLikeRepository.findById(id).isPresent();
 
-        if (test) {
+        if (result) {
             throw new IllegalStateException("이미 존재하는 좋아요입니다");
         }
     }
 
     private void checkNotExists(final Board board, final Account account) {
-        BoardLikeId id = BoardLikeId.builder()
-                .board(board)
-                .account(account)
+        final BoardLikeId id = BoardLikeId.builder()
+                .boardId(board.getId())
+                .accountId(account.getId())
                 .build();
 
-        Boolean test = boardLikeRepository.findById(id).isPresent();
+        final boolean result = boardLikeRepository.findById(id).isPresent();
 
-        if (!test) {
+        if (!result) {
             throw new IllegalStateException("존재하지 않는 좋아요입니다");
         }
-    }
-
-    private Board findExistBoardPessimistic(final Long boardId) {
-        Board board = boardRepository.pessimisticFindById(boardId)
-                .orElseThrow(() -> new NoSuchElementException("해당 board를 찾을 수 없습니다"));
-
-        return board;
-    }
-
-    private Account findExistAccountByUsername(final String username) {
-        Account account = accountRepository.findByUsername(username)
-                .orElseThrow(() -> new NoSuchElementException("해당 username을 찾을 수 없습니다"));
-
-        return account;
     }
 }

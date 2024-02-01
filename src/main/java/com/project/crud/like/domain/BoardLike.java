@@ -13,18 +13,16 @@ import lombok.*;
 @IdClass(BoardLikeId.class)
 public class BoardLike {
     @Id
-    @JoinColumn(name = "BOARD_ID", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Board board;
+    @Column(name = "BOARD_ID", nullable = false)
+    private Long boardId;
 
     @Id
-    @JoinColumn(name = "ACCOUNT_ID", nullable = false)
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Account account;
+    @Column(name = "ACCOUNT_ID", nullable = false)
+    private Long accountId;
 
     @Builder
-    public BoardLike(final Board board, final Account account) {
-        this.board = board;
-        this.account = account;
+    public BoardLike(final Long boardId, final Long accountId) {
+        this.boardId = boardId;
+        this.accountId = accountId;
     }
 }

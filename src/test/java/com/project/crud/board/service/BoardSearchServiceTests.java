@@ -42,7 +42,7 @@ public class BoardSearchServiceTests {
         given(boardRepository.findByTitleContaining(anyString())).willReturn(givenBoards);
 
         // when
-        List<BoardResponseDto> results = boardSearchService.searchByTitle("제목");
+        List<BoardResponseDto> results = boardSearchService.searchInTitle("제목");
 
         // then
         assertThat(results.size()).isEqualTo(givenBoards.size());
@@ -52,16 +52,16 @@ public class BoardSearchServiceTests {
     @Test
     void searchByContentTest() {
         // given
-        given(boardRepository.searchByContent(anyString())).willReturn(givenBoards);
+        given(boardRepository.findByContentContaining(anyString())).willReturn(givenBoards);
 
         // when
-        List<BoardResponseDto> results = boardSearchService.searchByContent("내용");
+        List<BoardResponseDto> results = boardSearchService.searchInContent("내용");
 
         // then
         assertThat(results.size()).isEqualTo(givenBoards.size());
     }
 
-    @DisplayName("제목 기반 검색 테스트")
+    @DisplayName("작성자 기반 검색 테스트")
     @Test
     void searchByWriterTest() {
         // given
@@ -69,7 +69,7 @@ public class BoardSearchServiceTests {
         given(boardRepository.findByWriterContaining(anyString())).willReturn(givenBoards);
 
         // when
-        List<BoardResponseDto> results = boardSearchService.searchByWriter("제목");
+        List<BoardResponseDto> results = boardSearchService.searchInWriter("제목");
 
         // then
         assertThat(results.size()).isEqualTo(givenBoards.size());

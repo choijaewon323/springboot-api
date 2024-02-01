@@ -38,16 +38,7 @@ public class ReplyServiceTests {
     @Mock
     BoardRepository boardRepository;
 
-    static Board board;
-
-    @BeforeAll
-    static void init() {
-        board = Board.builder()
-                .title("제목")
-                .content("내용")
-                .writer("작성자")
-                .build();
-    }
+    final Long boardId = 0L;
 
     @DisplayName("댓글 생성 작동 테스트")
     @Test
@@ -58,7 +49,7 @@ public class ReplyServiceTests {
                 .writer("작성자")
                 .build();
 
-        given(boardRepository.findById(anyLong())).willReturn(Optional.of(board));
+        given(boardRepository.findById(anyLong())).willReturn(Optional.of(any()));
         given(replyRepository.save(any())).willReturn(makeOrdinaryReply());
 
         // when
@@ -75,7 +66,7 @@ public class ReplyServiceTests {
         // given
         final int SIZE = 2;
 
-        given(replyRepository.findAllByBoard(0L)).willReturn(makeRepliesWithSameWriter(SIZE));
+        given(replyRepository.findByBoardId(0L)).willReturn(makeRepliesWithSameWriter(SIZE));
 
         // when
         final List<ReplyResponseDto> results = replyService.readAll(0L);
@@ -158,7 +149,7 @@ public class ReplyServiceTests {
         return Reply.builder()
                 .content("내용" + number)
                 .writer("작성자")
-                .board(board)
+                .boardId(boardId)
                 .build();
     }
 
@@ -166,7 +157,7 @@ public class ReplyServiceTests {
         return Reply.builder()
                 .content("내용")
                 .writer("작성자")
-                .board(board)
+                .boardId(boardId)
                 .build();
     }
 }
