@@ -1,6 +1,8 @@
 # springboot-api
 
 ## DB Table
+![DB table](https://github.com/choijaewon323/springboot-api/assets/46291115/70d6c855-06e4-4744-8d1d-d62c4ae3aa7f)
+
 
 ## 기능 요구사항
 ### Security
