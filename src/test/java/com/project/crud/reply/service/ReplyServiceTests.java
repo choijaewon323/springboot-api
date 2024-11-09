@@ -1,12 +1,10 @@
 package com.project.crud.reply.service;
 
-import com.project.crud.board.domain.Board;
 import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.reply.domain.Reply;
 import com.project.crud.reply.dto.ReplyRequestDto;
 import com.project.crud.reply.dto.ReplyResponseDto;
 import com.project.crud.reply.repository.ReplyRepository;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,7 +29,7 @@ import static org.mockito.Mockito.verify;
 public class ReplyServiceTests {
 
     @InjectMocks
-    ReplyServiceImpl replyService;
+    ReplyService replyService;
 
     @Mock
     ReplyRepository replyRepository;

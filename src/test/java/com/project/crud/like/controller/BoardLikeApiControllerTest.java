@@ -2,10 +2,7 @@ package com.project.crud.like.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.crud.like.dto.BoardLikeRequestDto;
-import com.project.crud.like.service.BoardLikeService;
 import com.project.crud.like.service.BoardLikeServiceImpl;
-import com.project.crud.reply.controller.ReplyApiController;
-import com.project.crud.reply.service.ReplyService;
 import com.project.crud.security.config.WebMvcConfig;
 import com.project.crud.security.config.WebSecurityConfig;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,7 +22,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.filter.CharacterEncodingFilter;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;

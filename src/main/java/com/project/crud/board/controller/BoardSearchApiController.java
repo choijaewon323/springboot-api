@@ -26,7 +26,7 @@ public class BoardSearchApiController {
 
     @GetMapping("/content")
     public ResponseEntity<List<BoardResponseDto>> searchByContent(@RequestParam @NotNull String keyword) {
-        List<BoardResponseDto> boards = boardSearchService.searchByContent(keyword);
+        List<BoardResponseDto> boards = boardSearchService.searchInContent(keyword);
 
 
         return okWithBody(boards);
@@ -34,7 +34,7 @@ public class BoardSearchApiController {
 
     @GetMapping("/content/fulltext")
     public ResponseEntity<List<BoardResponseDto>> searchByContentFullText(@RequestParam @NotNull String keyword) {
-        List<BoardResponseDto> boards = boardSearchService.searchByContentFullText(keyword);
+        List<BoardResponseDto> boards = boardSearchService.searchInContent(keyword);
 
         return okWithBody(boards);
     }
@@ -42,7 +42,7 @@ public class BoardSearchApiController {
     @GetMapping("/writer")
     public ResponseEntity<List<BoardResponseDto>> searchByWriter(@RequestParam @NotNull(message = "작성자는 null이 될 수 없습니다")
                                                                          String keyword) {
-        List<BoardResponseDto> boards = boardSearchService.searchByWriter(keyword);
+        List<BoardResponseDto> boards = boardSearchService.searchInWriter(keyword);
 
         return okWithBody(boards);
     }
@@ -50,7 +50,7 @@ public class BoardSearchApiController {
     @GetMapping("/title")
     public ResponseEntity<List<BoardResponseDto>> searchByTitle(@RequestParam @NotNull(message = "제목은 null이 될 수 없습니다")
                                                                         String keyword) {
-        List<BoardResponseDto> boards = boardSearchService.searchByTitle(keyword);
+        List<BoardResponseDto> boards = boardSearchService.searchInTitle(keyword);
 
         return okWithBody(boards);
     }

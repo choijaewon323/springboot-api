@@ -40,12 +40,4 @@ public class Reply extends TimeEntity {
     public void update(final ReplyRequestDto dto) {
         this.content = dto.getContent();
     }
-
-    public ReplyResponseDto toDto() {
-        return ReplyResponseDto.builder()
-                .id(id)
-                .content(content)
-                .writer(writer)
-                .build();
-    }
 }

@@ -22,6 +22,8 @@ import org.springframework.web.filter.CharacterEncodingFilter;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
@@ -39,7 +41,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
         })
 @ActiveProfiles("test")
 @WithMockUser
-public class ReplyApiControllerTests {
+class ReplyApiControllerTests {
     @MockBean
     ReplyService replyService;
 
@@ -155,13 +157,10 @@ public class ReplyApiControllerTests {
     }
 
     private List<ReplyResponseDto> makeResponseDtoList(final int count) {
-        List<ReplyResponseDto> results = new ArrayList<>();
-
-        for (long i = 1; i <= count; i++) {
-            results.add(makeResponseDto(i));
-        }
-
-        return results;
+        return Stream.iterate(0, i -> i + 1)
+                .map(this::makeResponseDto)
+                .limit(count)
+                .toList();
     }
 
     private ReplyResponseDto makeResponseDto(final long number) {
