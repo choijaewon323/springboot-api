@@ -28,25 +28,26 @@ public class Account extends TimeEntity {
 
     @Builder
     public Account(final String username, final String password, final AccountRole role) {
+        checkUsernameUnder30(username);
+
         this.username = username;
         this.password = password;
         this.role = role;
     }
 
     public void updateUsername(final String username) {
+        checkUsernameUnder30(username);
+
         this.username = username;
+    }
+
+    private void checkUsernameUnder30(String username) {
+        if (username.length() > 30) {
+            throw new IllegalStateException("username은 30글자 이하여야 합니다");
+        }
     }
 
     public void updatePassword(final String password) {
         this.password = password;
-    }
-
-    public AccountResponseDto toResponseDto() {
-        return AccountResponseDto.builder()
-                .id(id)
-                .username(username)
-                .password(password)
-                .role(role)
-                .build();
     }
 }

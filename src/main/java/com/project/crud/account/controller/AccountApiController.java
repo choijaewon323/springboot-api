@@ -2,11 +2,8 @@ package com.project.crud.account.controller;
 
 import com.project.crud.account.dto.AccountRequestDto;
 import com.project.crud.account.dto.AccountUsernameUpdateDto;
-import com.project.crud.security.dto.UserTokenRequest;
-import com.project.crud.account.service.AccountService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
