@@ -5,6 +5,7 @@ import com.project.crud.board.dto.BoardResponseDto;
 import com.project.crud.board.service.BoardService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -15,15 +16,12 @@ import static com.project.crud.common.ApiResponse.ok;
 import static com.project.crud.common.ApiResponse.okWithBody;
 
 @Slf4j
+@RequiredArgsConstructor
 @RestController
 @RequestMapping("/api/v1/board")
 public class BoardApiController {
-    private final int PAGING_SIZE = 20;
+    private static final int PAGING_SIZE = 20;
     private final BoardService boardService;
-
-    public BoardApiController(BoardService boardService) {
-        this.boardService = boardService;
-    }
 
     @GetMapping("/{boardId}")
     public ResponseEntity<BoardResponseDto> findOne(@NotNull(message = "boardId는 null이 될 수 없습니다") @PathVariable Long boardId) {

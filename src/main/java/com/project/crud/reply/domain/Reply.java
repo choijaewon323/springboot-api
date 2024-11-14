@@ -1,10 +1,7 @@
 package com.project.crud.reply.domain;
 
-import com.project.crud.account.domain.Account;
-import com.project.crud.board.domain.Board;
 import com.project.crud.common.TimeEntity;
 import com.project.crud.reply.dto.ReplyRequestDto;
-import com.project.crud.reply.dto.ReplyResponseDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -32,9 +29,24 @@ public class Reply extends TimeEntity {
 
     @Builder
     public Reply(final String content, final String writer, final Long boardId) {
+        checkContentUnder300(content);
+        checkBoardIdNull(boardId);
+
         this.content = content;
         this.writer = writer;
         this.boardId = boardId;
+    }
+
+    private void checkContentUnder300(String content) {
+        if (content.length() > 300) {
+            throw new IllegalStateException("댓글의 내용은 300자 이하여야 합니다");
+        }
+    }
+
+    private void checkBoardIdNull(Long boardId) {
+        if (boardId == null) {
+            throw new IllegalStateException("댓글의 boardId가 null입니다");
+        }
     }
 
     public void update(final ReplyRequestDto dto) {

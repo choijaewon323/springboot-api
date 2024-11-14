@@ -24,6 +24,13 @@ public class BoardSearchApiController {
         this.boardSearchService = boardSearchService;
     }
 
+    @GetMapping("/search")
+    public List<BoardResponseDto> searchByOption(@RequestParam String title,
+                                                 @RequestParam String content,
+                                                 @RequestParam String writer) {
+        return boardSearchService.searchByOption(title, content, writer);
+    }
+
     @GetMapping("/content")
     public ResponseEntity<List<BoardResponseDto>> searchByContent(@RequestParam @NotNull String keyword) {
         List<BoardResponseDto> boards = boardSearchService.searchInContent(keyword);
