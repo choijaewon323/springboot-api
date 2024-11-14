@@ -25,20 +25,20 @@ public class QueryDslRepositoryImpl implements QueryDslRepository {
         List<Long> ids = factory
                 .select(board.id)
                 .from(board)
-                //.orderBy(board.id.desc())
+                .orderBy(board.id.desc())
                 .limit(pageSize)
-                .offset(pageIndex * pageSize)
+                .offset((long) pageIndex * pageSize)
                 .fetch();
 
         if (CollectionUtils.isEmpty(ids)) {
-            return new ArrayList<>();
+            return List.of();
         }
 
         return factory
                 .select(board)
                 .from(board)
                 .where(board.id.in(ids))
-                //.orderBy(board.id.desc())
+                .orderBy(board.id.desc())
                 .fetch();
     }
 
