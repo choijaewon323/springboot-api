@@ -2,12 +2,8 @@ package com.project.crud.board.controller;
 
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
-import com.project.crud.board.service.BoardSearchService;
 import com.project.crud.board.service.BoardService;
-import com.project.crud.common.ApiResponse;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

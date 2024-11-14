@@ -41,8 +41,16 @@ public class Board extends TimeEntity {
     }
 
     public void update(final BoardRequestDto dto) {
+        checkTitleUnder100(dto.getTitle());
+
         this.title = dto.getTitle();
         this.content = dto.getContent();
+    }
+
+    private void checkTitleUnder100(String title) {
+        if (title.length() > 100) {
+            throw new IllegalStateException("제목은 100글자 이하여야합니다.");
+        }
     }
 
     public void updateWriter(final String writer) {

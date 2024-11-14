@@ -18,7 +18,6 @@ public class BoardResponseDto {
     private String createdDate;
     private String modifiedDate;
 
-
     @Builder
     BoardResponseDto(Long id, String title, String content, String writer, long likeCount, long cnt, String createdDate, String modifiedDate) {
         this.id = id;
@@ -31,10 +30,16 @@ public class BoardResponseDto {
         this.modifiedDate = modifiedDate;
     }
 
-    public static List<BoardResponseDto> toDtoList(List<Board> boards) {
-        List<BoardResponseDto> results = new ArrayList<>();
-
-        boards.stream().forEach(e -> results.add(e.toDto()));
-        return results;
+    public static BoardResponseDto toDto(Board board) {
+        return BoardResponseDto.builder()
+                .id(board.getId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .writer(board.getWriter())
+                .likeCount(board.getLikeCount())
+                .cnt(board.getCnt())
+                .createdDate(board.getCreatedDate())
+                .modifiedDate(board.getModifiedDate())
+                .build();
     }
 }
