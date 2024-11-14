@@ -4,43 +4,34 @@ import com.project.crud.board.domain.Board;
 import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
+import com.project.crud.board.repository.BoardSearchRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@RequiredArgsConstructor
 @Service
 @Transactional
 public class BoardService {
     private final BoardRepository boardRepository;
-
-    public BoardService(BoardRepository boardRepository) {
-        this.boardRepository = boardRepository;
-    }
+    private final BoardSearchRepository boardSearchRepository;
 
     public void create(final BoardRequestDto dto) {
         boardRepository.save(dto.toEntity());
     }
 
+    @Transactional(readOnly = true)
+    public List<BoardResponseDto> searchByOption(Integer pageSize, Integer pageIndex, String title, String content, String writer) {
+        return boardSearchRepository.findAllByOptionsAndPaging(pageSize, pageIndex, title, content, writer).stream()
+                .map(BoardResponseDto::toDto)
+                .toList();
+    }
+
     public List<BoardResponseDto> readAll() {
         final List<Board> boards = boardRepository.findAll();
-
-        return boards.stream()
-                .map(BoardResponseDto::toDto)
-                .toList();
-    }
-
-    public List<BoardResponseDto> readAllByPagingDesc(final int index, final int size) {
-        final List<Board> boards = boardRepository.findAllByPaging(index, size);
-
-        return boards.stream()
-                .map(BoardResponseDto::toDto)
-                .toList();
-    }
-
-    public List<BoardResponseDto> readAllByPagingCovering(final int index, final int size) {
-        final List<Board> boards = boardRepository.findAllByPaging(index, size);
 
         return boards.stream()
                 .map(BoardResponseDto::toDto)

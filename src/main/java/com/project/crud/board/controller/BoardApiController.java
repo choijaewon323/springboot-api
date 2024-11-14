@@ -37,24 +37,6 @@ public class BoardApiController {
         return okWithBody(boards);
     }
 
-    @GetMapping("/list/{pageIndex}")
-    public ResponseEntity<List<BoardResponseDto>> findAllByPaging(@PathVariable @NotNull Integer pageIndex, @RequestParam(value = "order", required = false) String order) {
-        checkInvalidIndex(pageIndex);
-
-        List<BoardResponseDto> boards = boardService.readAllByPagingDesc(pageIndex, PAGING_SIZE);
-
-        return okWithBody(boards);
-    }
-
-    @GetMapping("/list/covering/{pageIndex}")
-    public ResponseEntity<List<BoardResponseDto>> readAllByPaging(@PathVariable @NotNull Integer pageIndex, @RequestParam(value = "order", required = false) String order) {
-        checkInvalidIndex(pageIndex);
-
-        List<BoardResponseDto> boards = boardService.readAllByPagingCovering(pageIndex, PAGING_SIZE);
-
-        return okWithBody(boards);
-    }
-
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody BoardRequestDto dto) {
         boardService.create(dto);
@@ -78,7 +60,21 @@ public class BoardApiController {
         return ok();
     }
 
-    private void checkInvalidIndex(final int index) {
+    @GetMapping("/search")
+    public List<BoardResponseDto> searchByOption(@RequestParam(required = false) String title,
+                                                 @RequestParam(required = false) String content,
+                                                 @RequestParam(required = false) String writer,
+                                                 @RequestParam(required = false) Integer pageIndex) {
+        checkInvalidIndex(pageIndex);
+
+        return boardService.searchByOption(PAGING_SIZE, pageIndex, title, content, writer);
+    }
+
+    private void checkInvalidIndex(Integer index) {
+        if (index == null) {
+            return;
+        }
+
         if (isNegative(index)) {
             throw new IllegalArgumentException("페이지 번호는 음수가 될 수 없습니다");
         }

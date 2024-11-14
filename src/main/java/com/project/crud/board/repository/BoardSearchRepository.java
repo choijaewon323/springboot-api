@@ -41,6 +41,21 @@ public class BoardSearchRepository {
                 .fetch();
     }
 
+    public List<Board> findAllByOptionsAndPaging(Integer pageSize, Integer pageIndex, String title, String content, String writer) {
+        if (pageIndex == null) {
+            pageIndex = 0;
+        }
+
+        return factory
+                .select(board)
+                .from(board)
+                .where(titleContains(title), contentContains(content), writerContains(writer))
+                .orderBy(board.id.desc())
+                .limit(pageSize)
+                .offset(pageSize * pageIndex)
+                .fetch();
+    }
+
     public List<Board> findAllByOptions(String title, String content, String writer) {
         return factory
                 .select(board)

@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 import java.util.Optional;
 
-public interface BoardRepository extends JpaRepository<Board, Long>, QueryDslRepository {
+public interface BoardRepository extends JpaRepository<Board, Long> {
     List<Board> findByContentContaining(String content);
 
     @Query(value = "select board_id, title, content, writer, like_count, cnt, created_date, modified_date " +
