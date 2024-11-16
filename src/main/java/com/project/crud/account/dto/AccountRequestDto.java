@@ -13,17 +13,8 @@ public class AccountRequestDto {
     @NotBlank
     private String password;
 
-    @Builder
     AccountRequestDto(final String username, final String password) {
         this.username = username;
         this.password = password;
-    }
-
-    public Account toEntity(final String encodedPassword) {
-        return Account.builder()
-                .username(username)
-                .password(encodedPassword)
-                .role(AccountRole.USER)
-                .build();
     }
 }

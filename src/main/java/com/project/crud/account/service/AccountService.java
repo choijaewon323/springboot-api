@@ -8,6 +8,7 @@ import com.project.crud.account.repository.AccountRepository;
 import com.project.crud.board.domain.Board;
 import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.account.domain.AccountRole;
+import com.project.crud.reply.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,12 +25,13 @@ public class AccountService {
     private final BCryptPasswordEncoder passwordEncoder;
     private final BoardRepository boardRepository;
     private final AccountRepository accountRepository;
+    private final ReplyRepository replyRepository;
 
     public void create(final AccountRequestDto request) {
         checkUsernameAlreadyExist(request.getUsername());
 
         final String encodedPassword = passwordEncoder.encode(request.getPassword());
-        accountRepository.save(request.toEntity(encodedPassword));
+        accountRepository.save(Account.makeUser(request.getUsername(), encodedPassword));
     }
 
     @Transactional(readOnly = true)
@@ -43,8 +45,7 @@ public class AccountService {
 
     public AccountResponseDto readOne(final Long accountId) {
         return accountRepository.findById(accountId).map(AccountResponseDto::toDto).orElseThrow(
-                () -> new IllegalArgumentException("해당 ID의 유저가 없습니다")
-        );
+                () -> new IllegalArgumentException("해당 ID의 유저가 없습니다"));
     }
 
     public void updateUsername(final AccountUsernameUpdateDto dto) {
@@ -53,6 +54,7 @@ public class AccountService {
         checkUsernameAlreadyExist(dto.getAfter());
         account.updateUsername(dto.getAfter());
         changeUsernameInBoard(dto);
+        changeUsernameInReply(dto);
     }
 
     public void updatePassword(final AccountRequestDto dto) {
@@ -85,5 +87,10 @@ public class AccountService {
         List<Board> boards = boardRepository.findByWriter(dto.getBefore());
 
         boards.forEach(board -> board.updateWriter(dto.getAfter()));
+    }
+
+    private void changeUsernameInReply(AccountUsernameUpdateDto dto) {
+        replyRepository.findByWriter(dto.getBefore())
+                .forEach(reply -> reply.updateWriter(dto.getAfter()));
     }
 }

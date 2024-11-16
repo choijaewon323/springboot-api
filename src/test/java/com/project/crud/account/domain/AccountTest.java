@@ -3,6 +3,8 @@ package com.project.crud.account.domain;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -12,11 +14,7 @@ class AccountTest {
     @Test
     void updateUsernameTest() {
         // given
-        Account account = Account.builder()
-                .username("유저네임")
-                .password("1234")
-                .role(AccountRole.USER)
-                .build();
+        Account account = Account.makeUser("acc", "pass");
 
         // when
         ThrowingCallable when = () -> account.updateUsername("1234567890123456789012345678901234567890");
@@ -30,13 +28,30 @@ class AccountTest {
     void checkUsernameLengthWhenCreated() {
         // given
         // when
-        ThrowingCallable when = () -> {
-            Account.builder()
-                    .username("1234567890123456789012345678901234567890")
-                    .password("1234")
-                    .role(AccountRole.USER)
-                    .build();
-        };
+        ThrowingCallable when = () -> Account.makeUser("1234567890123456789012345678901234567890", "1234");
+
+        // then
+        assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
+    }
+
+    @DisplayName("account 객체 생성 테스트 - username이 null일 시 IllegalStateException")
+    @Test
+    void ifWriterNullThrowsIllegalState() {
+        // given
+        // when
+        ThrowingCallable when = () -> Account.makeUser(null, "password");
+
+        // then
+        assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
+    }
+
+    @DisplayName("account 객체 생성 테스트 - account가 blank일 시 IllegalStateException")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "   ", "\t", "\n\n"})
+    void ifWriterBlankThrowsIllegalState(String username) {
+        // given
+        // when
+        ThrowingCallable when = () -> Account.makeUser(username, "password");
 
         // then
         assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
