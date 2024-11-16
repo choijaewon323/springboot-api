@@ -7,6 +7,8 @@ import com.project.crud.common.TimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.util.Objects;
+
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
 @Entity
@@ -35,6 +37,9 @@ public class Board extends TimeEntity {
 
     @Builder
     public Board(final String title, final String content, final String writer) {
+        checkTitleUnder100(title);
+        checkWriterIsNotBlank(writer);
+
         this.title = title;
         this.content = content;
         this.writer = writer;
@@ -53,7 +58,19 @@ public class Board extends TimeEntity {
         }
     }
 
+    private void checkWriterIsNotBlank(String writer) {
+        if (writer == null) {
+            throw new IllegalStateException("작성자를 입력해주세요");
+        }
+
+        if (writer.isBlank()) {
+            throw new IllegalStateException("작성자를 입력해주세요");
+        }
+    }
+
     public void updateWriter(final String writer) {
+        checkWriterIsNotBlank(writer);
+
         this.writer = writer;
     }
 
@@ -71,18 +88,5 @@ public class Board extends TimeEntity {
 
     public void cntUp() {
         cnt++;
-    }
-
-    public BoardResponseDto toDto() {
-        return BoardResponseDto.builder()
-                .id(id)
-                .title(title)
-                .content(content)
-                .writer(writer)
-                .likeCount(likeCount)
-                .cnt(cnt)
-                .createdDate(getCreatedDate())
-                .modifiedDate(getModifiedDate())
-                .build();
     }
 }

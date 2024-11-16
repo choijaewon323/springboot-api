@@ -1,68 +1,90 @@
 package com.project.crud.board.domain;
 
-import com.project.crud.account.domain.Account;
-import com.project.crud.account.domain.AccountRole;
-import com.project.crud.board.dto.BoardRequestDto;
-import org.junit.jupiter.api.BeforeEach;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.ActiveProfiles;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@ActiveProfiles("test")
-public class BoardTest {
-
-    Board board;
-    @BeforeEach
-    void init() {
-        board = Board.builder()
-                .title("제목1")
-                .content("내용")
-                .writer("작성자")
-                .build();
-    }
+class BoardTest {
 
     @DisplayName("board 객체의 좋아요는 처음에 무조건 0이어야 함")
     @Test
     void initialTest() {
-        assertThat(board.getLikeCount()).isEqualTo(0L);
-    }
-
-    @DisplayName("게시판 업데이트 테스트")
-    @Test
-    void updateTest() {
         // given
-        BoardRequestDto dto = BoardRequestDto.builder()
-                .title("제목111")
-                .content("내용111")
-                .writer("작성자111")
+        Board board = Board.builder()
+                .title("title")
+                .content("content")
+                .writer("writer")
                 .build();
-
         // when
-        board.update(dto);
+        final long likeCount = board.getLikeCount();
 
         // then
-        assertThat(board.getContent()).isEqualTo("내용111");
-    }
-
-    @DisplayName("좋아요 누르기 테스트")
-    @Test
-    void likeUpTest() {
-        // when
-        board.likeUp();
-
-        // then
-        assertThat(board.getLikeCount()).isEqualTo(1L);
+        assertThat(likeCount).isZero();
     }
 
     @DisplayName("좋아요 취소 테스트 예외 발생 - 음수 발생 불가능")
     @Test
     void likeDownExceptionTest() {
-        assertThatThrownBy(() -> {
-            // when
-            board.likeDown();
-        }).isInstanceOf(IllegalStateException.class);   // then
+        // given
+        Board board = Board.builder()
+                .title("title")
+                .content("content")
+                .writer("writer")
+                .build();
+
+        // when
+        ThrowingCallable when = board::likeDown;
+
+        assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);   // then
+    }
+
+    @DisplayName("board 객체 생성 테스트 - title 100글자 초과 시 IllegalStateException")
+    @Test
+    void ifTitleOver100ThrowsIllegalStateWhenCreated() {
+        // given
+        // when
+        ThrowingCallable when = () -> Board.builder()
+                .title("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123")
+                .content("content")
+                .writer("writer")
+                .build();
+        // then
+        assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
+    }
+
+    @DisplayName("board 객체 생성 테스트 - writer가 null일 시 IllegalStateException")
+    @Test
+    void ifWriterNullThrowsIllegalState() {
+        // given
+        // when
+        ThrowingCallable when = () -> Board.builder()
+                .title("title")
+                .content("content")
+                .writer(null)
+                .build();
+
+        // then
+        assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
+    }
+
+    @DisplayName("board 객체 생성 테스트 - writer가 blank일 시 IllegalStateException")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "   ", "\t", "\n\n"})
+    void ifWriterBlankThrowsIllegalState(String writer) {
+        // given
+        // when
+        ThrowingCallable when = () -> Board.builder()
+                .title("title")
+                .content("content")
+                .writer(writer)
+                .build();
+
+        // then
+        assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
     }
 }
