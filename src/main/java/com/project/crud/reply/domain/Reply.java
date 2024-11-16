@@ -1,7 +1,6 @@
 package com.project.crud.reply.domain;
 
 import com.project.crud.common.TimeEntity;
-import com.project.crud.reply.dto.ReplyRequestDto;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -37,6 +36,16 @@ public class Reply extends TimeEntity {
         this.boardId = boardId;
     }
 
+    public void updateContent(String content) {
+        checkContentUnder300(content);
+
+        this.content = content;
+    }
+
+    public void updateWriter(String writer) {
+        this.writer = writer;
+    }
+
     private void checkContentUnder300(String content) {
         if (content.length() > 300) {
             throw new IllegalStateException("댓글의 내용은 300자 이하여야 합니다");
@@ -47,9 +56,5 @@ public class Reply extends TimeEntity {
         if (boardId == null) {
             throw new IllegalStateException("댓글의 boardId가 null입니다");
         }
-    }
-
-    public void update(final ReplyRequestDto dto) {
-        this.content = dto.getContent();
     }
 }

@@ -42,7 +42,7 @@ public class ReplyService {
         final Reply reply = replyRepository.findById(replyId)
                 .orElseThrow(() -> new NoSuchElementException("해당 reply이 존재하지 않습니다"));
 
-        reply.update(dto);
+        reply.updateContent(dto.getContent());
     }
 
     public void delete(final Long replyId) {
