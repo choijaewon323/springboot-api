@@ -30,6 +30,7 @@ public class BoardService {
                 .toList();
     }
 
+    @Transactional(readOnly = true)
     public List<BoardResponseDto> readAll() {
         final List<Board> boards = boardRepository.findAll();
 
@@ -43,7 +44,7 @@ public class BoardService {
 
         board.cntUp();
 
-        return board.toDto();
+        return BoardResponseDto.toDto(board);
     }
 
     public void update(Long boardId, BoardRequestDto dto) {

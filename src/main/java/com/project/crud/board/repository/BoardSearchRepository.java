@@ -20,6 +20,10 @@ public class BoardSearchRepository {
 
     QBoard board = QBoard.board;
 
+    /*
+    * 커버링 인덱스 학습하기
+    *
+    * */
     public List<Board> findAllByPaging(final int pageIndex, final int pageSize) {
         List<Long> ids = factory
                 .select(board.id)
@@ -52,16 +56,7 @@ public class BoardSearchRepository {
                 .where(titleContains(title), contentContains(content), writerContains(writer))
                 .orderBy(board.id.desc())
                 .limit(pageSize)
-                .offset(pageSize * pageIndex)
-                .fetch();
-    }
-
-    public List<Board> findAllByOptions(String title, String content, String writer) {
-        return factory
-                .select(board)
-                .from(board)
-                .where(titleContains(title), contentContains(content), writerContains(writer))
-                .orderBy(board.id.desc())
+                .offset((long) pageSize * pageIndex)
                 .fetch();
     }
 

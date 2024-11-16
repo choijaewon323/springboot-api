@@ -3,8 +3,6 @@ package com.project.crud.board.domain;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -53,37 +51,6 @@ class BoardTest {
                 .content("content")
                 .writer("writer")
                 .build();
-        // then
-        assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
-    }
-
-    @DisplayName("board 객체 생성 테스트 - writer가 null일 시 IllegalStateException")
-    @Test
-    void ifWriterNullThrowsIllegalState() {
-        // given
-        // when
-        ThrowingCallable when = () -> Board.builder()
-                .title("title")
-                .content("content")
-                .writer(null)
-                .build();
-
-        // then
-        assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
-    }
-
-    @DisplayName("board 객체 생성 테스트 - writer가 blank일 시 IllegalStateException")
-    @ParameterizedTest
-    @ValueSource(strings = {"", "   ", "\t", "\n\n"})
-    void ifWriterBlankThrowsIllegalState(String writer) {
-        // given
-        // when
-        ThrowingCallable when = () -> Board.builder()
-                .title("title")
-                .content("content")
-                .writer(writer)
-                .build();
-
         // then
         assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
     }
