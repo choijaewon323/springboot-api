@@ -43,11 +43,6 @@ public class AccountService {
                 .toList();
     }
 
-    public AccountResponseDto readOne(final Long accountId) {
-        return accountRepository.findById(accountId).map(AccountResponseDto::toDto).orElseThrow(
-                () -> new IllegalArgumentException("해당 ID의 유저가 없습니다"));
-    }
-
     public void updateUsername(final AccountUsernameUpdateDto dto) {
         final Account account = findByUsername(dto.getBefore());
 
@@ -84,9 +79,8 @@ public class AccountService {
     }
 
     private void changeUsernameInBoard(final AccountUsernameUpdateDto dto) {
-        List<Board> boards = boardRepository.findByWriter(dto.getBefore());
-
-        boards.forEach(board -> board.updateWriter(dto.getAfter()));
+        boardRepository.findByWriter(dto.getBefore())
+                        .forEach(board -> board.updateWriter(dto.getAfter()));
     }
 
     private void changeUsernameInReply(AccountUsernameUpdateDto dto) {
