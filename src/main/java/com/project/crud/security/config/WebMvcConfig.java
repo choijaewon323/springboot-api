@@ -24,10 +24,11 @@ public class WebMvcConfig implements WebMvcConfigurer {
         registry.addInterceptor(jwtTokenInterceptor())
                 .addPathPatterns("/api/**")
                 .excludePathPatterns("/api/v1/account")
-                .excludePathPatterns("/api/v1/login");
+                .excludePathPatterns("/api/v1/login")
+                .excludePathPatterns("/swagger-ui/**");
     }
-    */
 
+     */
 
     @Bean
     public JwtTokenInterceptor jwtTokenInterceptor() {

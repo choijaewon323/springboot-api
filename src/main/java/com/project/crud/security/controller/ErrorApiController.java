@@ -8,10 +8,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class ErrorApiController {
 
+    /*
     @GetMapping("/error/unauthorized")
     public ResponseEntity<String> unauthorized() {
         return ResponseEntity
                 .status(HttpStatus.UNAUTHORIZED)
                 .body("unauthorized request");
     }
+
+     */
 }
