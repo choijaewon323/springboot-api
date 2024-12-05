@@ -6,6 +6,7 @@ import com.project.crud.account.service.AccountService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import static com.project.crud.common.ApiResponse.ok;
@@ -27,6 +28,7 @@ public class AccountApiController {
         return ok();
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PutMapping("/username")
     public ResponseEntity<Void> updateUsername(@RequestBody @Valid AccountUsernameUpdateDto dto) {
         accountService.updateUsername(dto);

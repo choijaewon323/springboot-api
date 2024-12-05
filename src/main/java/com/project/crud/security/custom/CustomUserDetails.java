@@ -1,6 +1,5 @@
 package com.project.crud.security.custom;
 
-import com.project.crud.security.dto.UserTokenRequest;
 import com.project.crud.security.dto.UserTokenResponse;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,7 +9,7 @@ import java.util.Collection;
 
 @Getter
 public class CustomUserDetails implements UserDetails {
-    private final UserTokenResponse userToken;
+    private final transient UserTokenResponse userToken;
     private final Collection<? extends GrantedAuthority> authorities;
 
     public CustomUserDetails(final UserTokenResponse userToken, final Collection<? extends GrantedAuthority> authorities) {
