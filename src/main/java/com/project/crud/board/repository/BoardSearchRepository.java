@@ -2,12 +2,16 @@ package com.project.crud.board.repository;
 
 import com.project.crud.board.domain.Board;
 import com.project.crud.board.domain.QBoard;
+import com.project.crud.board.dto.BoardListAndCountDto;
+import com.project.crud.board.dto.BoardListDto;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Objects;
 
 @Repository
 public class BoardSearchRepository {
@@ -45,19 +49,39 @@ public class BoardSearchRepository {
                 .fetch();
     }
 
-    public List<Board> findAllByOptionsAndPaging(Integer pageSize, Integer pageIndex, String title, String content, String writer) {
+    public BoardListAndCountDto findBoardListByPaging(Integer pageSize,
+                                                      Integer pageIndex,
+                                                      String title,
+                                                      String content,
+                                                      String writer) {
         if (pageIndex == null) {
             pageIndex = 0;
+        } else {
+            pageIndex--;
         }
 
-        return factory
-                .select(board)
+        List<BoardListDto> boardList = factory
+                .select(Projections.constructor(BoardListDto.class,
+                        board.id,
+                        board.title))
                 .from(board)
                 .where(titleContains(title), contentContains(content), writerContains(writer))
                 .orderBy(board.id.desc())
                 .limit(pageSize)
                 .offset((long) pageSize * pageIndex)
                 .fetch();
+
+        Long count = factory
+                .select(board.count())
+                .from(board)
+                .where(titleContains(title), contentContains(content), writerContains(writer))
+                .fetchOne();
+
+        Objects.requireNonNull(count, "board의 count가 null입니다");
+
+        return new BoardListAndCountDto(
+                count, pageSize, boardList
+        );
     }
 
     private BooleanExpression titleContains(String title) {

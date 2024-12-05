@@ -1,6 +1,8 @@
 package com.project.crud.board.service;
 
 import com.project.crud.board.domain.Board;
+import com.project.crud.board.dto.BoardListAndCountDto;
+import com.project.crud.board.dto.BoardListDto;
 import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
@@ -24,10 +26,8 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public List<BoardResponseDto> searchByOption(Integer pageSize, Integer pageIndex, String title, String content, String writer) {
-        return boardSearchRepository.findAllByOptionsAndPaging(pageSize, pageIndex, title, content, writer).stream()
-                .map(BoardResponseDto::toDto)
-                .toList();
+    public BoardListAndCountDto searchByOption(Integer pageSize, Integer pageIndex, String title, String content, String writer) {
+        return boardSearchRepository.findBoardListByPaging(pageSize, pageIndex, title, content, writer);
     }
 
     @Transactional(readOnly = true)

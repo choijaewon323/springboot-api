@@ -1,5 +1,7 @@
 package com.project.crud.board.controller;
 
+import com.project.crud.board.dto.BoardListAndCountDto;
+import com.project.crud.board.dto.BoardListDto;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
 import com.project.crud.board.service.BoardService;
@@ -61,13 +63,17 @@ public class BoardApiController {
     }
 
     @GetMapping("/search")
-    public List<BoardResponseDto> searchByOption(@RequestParam(required = false) String title,
-                                                 @RequestParam(required = false) String content,
-                                                 @RequestParam(required = false) String writer,
-                                                 @RequestParam(required = false) Integer pageIndex) {
+    public BoardListAndCountDto searchByOption(@RequestParam(required = false) String title,
+                                               @RequestParam(required = false) String content,
+                                               @RequestParam(required = false) String writer,
+                                               @RequestParam(required = false) Integer pageIndex) {
         checkInvalidIndex(pageIndex);
 
-        return boardService.searchByOption(PAGING_SIZE, pageIndex, title, content, writer);
+        return boardService.searchByOption(PAGING_SIZE,
+                pageIndex,
+                ifBlankReturnNull(title),
+                ifBlankReturnNull(content),
+                ifBlankReturnNull(writer));
     }
 
     private void checkInvalidIndex(Integer index) {
@@ -82,5 +88,12 @@ public class BoardApiController {
 
     private boolean isNegative(final int number) {
         return number < 0;
+    }
+
+    private String ifBlankReturnNull(String str) {
+        if (str.isBlank()) {
+            return null;
+        }
+        return str;
     }
 }
