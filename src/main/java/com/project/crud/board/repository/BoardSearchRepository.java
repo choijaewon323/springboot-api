@@ -4,6 +4,7 @@ import com.project.crud.board.domain.QBoard;
 import com.project.crud.board.dto.BoardListAndCountDto;
 import com.project.crud.board.dto.BoardListDto;
 import com.project.crud.tag.QTag;
+import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -39,9 +40,9 @@ public class BoardSearchRepository {
                         board.title,
                         board.likeCount))
                 .from(board)
-                .join(tag)
+                .leftJoin(tag)
                 .on(board.id.eq(tag.boardId))
-                .where(titleContains(keyword), contentContains(keyword), writerContains(keyword), tagContains(keyword))
+                .where(searchConditions(keyword))
                 .orderBy(board.id.desc())
                 .limit(pageSize)
                 .offset((long) pageSize * pageIndex)
@@ -50,9 +51,9 @@ public class BoardSearchRepository {
         Long count = factory
                 .select(board.count())
                 .from(board)
-                .join(tag)
+                .leftJoin(tag)
                 .on(board.id.eq(tag.boardId))
-                .where(titleContains(keyword), contentContains(keyword), writerContains(keyword), tagContains(keyword))
+                .where(searchConditions(keyword))
                 .fetchOne();
 
         Objects.requireNonNull(count, "board의 count가 null입니다");
@@ -60,6 +61,21 @@ public class BoardSearchRepository {
         return new BoardListAndCountDto(
                 count, pageSize, boardList
         );
+    }
+
+    private BooleanBuilder searchConditions(String keyword) {
+        BooleanBuilder booleanBuilder = new BooleanBuilder();
+
+        if (keyword == null) {
+            return booleanBuilder;
+        }
+
+        booleanBuilder.or(titleContains(keyword));
+        booleanBuilder.or(contentContains(keyword));
+        booleanBuilder.or(writerContains(keyword));
+        booleanBuilder.or(tagContains(keyword));
+
+        return booleanBuilder;
     }
 
     private BooleanExpression titleContains(String title) {
@@ -93,4 +109,6 @@ public class BoardSearchRepository {
 
         return tag.name.contains(tagName);
     }
+
+
 }
