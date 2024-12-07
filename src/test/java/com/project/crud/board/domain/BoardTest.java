@@ -13,11 +13,8 @@ class BoardTest {
     @Test
     void initialTest() {
         // given
-        Board board = Board.builder()
-                .title("title")
-                .content("content")
-                .writer("writer")
-                .build();
+        Board board = Board.of("title", "content", "writer");
+
         // when
         final long likeCount = board.getLikeCount();
 
@@ -29,11 +26,7 @@ class BoardTest {
     @Test
     void likeDownExceptionTest() {
         // given
-        Board board = Board.builder()
-                .title("title")
-                .content("content")
-                .writer("writer")
-                .build();
+        Board board = Board.of("title", "content", "writer");
 
         // when
         ThrowingCallable when = board::likeDown;
@@ -46,11 +39,11 @@ class BoardTest {
     void ifTitleOver100ThrowsIllegalStateWhenCreated() {
         // given
         // when
-        ThrowingCallable when = () -> Board.builder()
-                .title("1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123")
-                .content("content")
-                .writer("writer")
-                .build();
+        ThrowingCallable when = () -> Board.of(
+                "1234567890123456789012345678901234567890123456789012345678901234567890123456789012345678901234567890123",
+                "content",
+                "writer"
+                );
         // then
         assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
     }

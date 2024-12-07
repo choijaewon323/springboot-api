@@ -31,11 +31,7 @@ public class CrudApplication {
 		accountRepository.save(Account.makeAdmin("admin", "1234"));
 
 		Stream.iterate(1, i -> i + 1)
-				.map(i -> Board.builder()
-						.title("title" + i)
-						.content("content" + i)
-						.writer("writer" + i)
-						.build())
+				.map(i -> Board.of("title" + i, "content" + i, "writer" + i))
 				.limit(50)
 				.forEach(boardRepository::save);
 	}

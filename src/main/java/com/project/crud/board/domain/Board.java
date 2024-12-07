@@ -31,13 +31,16 @@ public class Board extends TimeEntity {
     @Column(name = "CNT")
     private long cnt = 0L;
 
-    @Builder
-    public Board(final String title, final String content, final String writer) {
+    private Board(final String title, final String content, final String writer) {
         checkTitleUnder100(title);
 
         this.title = title;
         this.content = content;
         this.writer = writer;
+    }
+
+    public static Board of(String title, String content, String writer) {
+        return new Board(title, content, writer);
     }
 
     public void update(final BoardRequestDto dto) {
