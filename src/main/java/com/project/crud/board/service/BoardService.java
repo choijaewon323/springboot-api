@@ -2,10 +2,9 @@ package com.project.crud.board.service;
 
 import com.project.crud.board.domain.Board;
 import com.project.crud.board.dto.BoardListAndCountDto;
-import com.project.crud.board.dto.BoardListDto;
-import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
+import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.repository.BoardSearchRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,8 +25,8 @@ public class BoardService {
     }
 
     @Transactional(readOnly = true)
-    public BoardListAndCountDto searchByOption(Integer pageSize, Integer pageIndex, String title, String content, String writer) {
-        return boardSearchRepository.findBoardListByPaging(pageSize, pageIndex, title, content, writer);
+    public BoardListAndCountDto searchByOption(Integer pageSize, Integer pageIndex, String keyword) {
+        return boardSearchRepository.findBoardListByPaging(pageSize, pageIndex, keyword);
     }
 
     @Transactional(readOnly = true)

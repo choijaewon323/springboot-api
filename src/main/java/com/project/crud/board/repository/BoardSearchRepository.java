@@ -3,6 +3,7 @@ package com.project.crud.board.repository;
 import com.project.crud.board.domain.QBoard;
 import com.project.crud.board.dto.BoardListAndCountDto;
 import com.project.crud.board.dto.BoardListDto;
+import com.project.crud.tag.QTag;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -20,13 +21,12 @@ public class BoardSearchRepository {
         this.factory = factory;
     }
 
-    QBoard board = QBoard.board;
+    private static final QBoard board = QBoard.board;
+    private static final QTag tag = QTag.tag;
 
     public BoardListAndCountDto findBoardListByPaging(Integer pageSize,
                                                       Integer pageIndex,
-                                                      String title,
-                                                      String content,
-                                                      String writer) {
+                                                      String keyword) {
         if (pageIndex == null) {
             pageIndex = 0;
         } else {
@@ -39,7 +39,9 @@ public class BoardSearchRepository {
                         board.title,
                         board.likeCount))
                 .from(board)
-                .where(titleContains(title), contentContains(content), writerContains(writer))
+                .join(tag)
+                .on(board.id.eq(tag.boardId))
+                .where(titleContains(keyword), contentContains(keyword), writerContains(keyword), tagContains(keyword))
                 .orderBy(board.id.desc())
                 .limit(pageSize)
                 .offset((long) pageSize * pageIndex)
@@ -48,7 +50,9 @@ public class BoardSearchRepository {
         Long count = factory
                 .select(board.count())
                 .from(board)
-                .where(titleContains(title), contentContains(content), writerContains(writer))
+                .join(tag)
+                .on(board.id.eq(tag.boardId))
+                .where(titleContains(keyword), contentContains(keyword), writerContains(keyword), tagContains(keyword))
                 .fetchOne();
 
         Objects.requireNonNull(count, "board의 count가 null입니다");
@@ -80,5 +84,13 @@ public class BoardSearchRepository {
         }
 
         return board.writer.contains(writer);
+    }
+
+    private BooleanExpression tagContains(String tagName) {
+        if (tagName == null) {
+            return null;
+        }
+
+        return tag.name.contains(tagName);
     }
 }
