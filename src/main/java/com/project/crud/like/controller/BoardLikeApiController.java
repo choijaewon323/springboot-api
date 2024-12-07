@@ -23,14 +23,14 @@ public class BoardLikeApiController {
         return boardLikeService.isLikePushed(new BoardLikeRequestDto(boardId, username));
     }
 
-    @PostMapping
+    @PutMapping("/push")
     public ResponseEntity<Void> likeUp(@Valid @RequestBody BoardLikeRequestDto dto) {
         boardLikeService.up(dto);
 
         return ok();
     }
 
-    @DeleteMapping
+    @PutMapping("/cancel")
     public ResponseEntity<Void> likeDown(@Valid @RequestBody BoardLikeRequestDto dto) {
         boardLikeService.down(dto);
 
