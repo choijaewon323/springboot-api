@@ -6,7 +6,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Objects;
 
 @RequiredArgsConstructor
 @RestController
@@ -21,23 +20,31 @@ public class TagApiController {
 
     @GetMapping("/{boardId}")
     public List<TagReadByBoardDto> readByBoard(@PathVariable Long boardId) {
-        Objects.requireNonNull(boardId, "tag: boardId가 null입니다");
+        checkId(boardId, "boardId");
 
         return tagService.readByBoardId(boardId);
     }
 
     @PutMapping("/{tagId}")
     public void update(@PathVariable Long tagId, String name) {
-        Objects.requireNonNull(tagId, "tag: id가 null입니다");
+        checkId(tagId, "tagId");
         checkTagName(name);
 
         tagService.update(tagId, name);
     }
 
-    private void checkTagName(String name) {
-        Objects.requireNonNull(name, "tag: 태그명이 없습니다");
+    private void checkId(Long id, String idName) {
+        if (id == null) {
+            throw new IllegalArgumentException("tag: " + idName + "가 null입니다");
+        }
 
-        if (name.isBlank()) {
+        if (id < 0) {
+            throw new IllegalArgumentException("tag: " + idName + "는 음수일 수 없습니다");
+        }
+    }
+
+    private void checkTagName(String name) {
+        if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("tag: 태그명이 없습니다");
         }
     }

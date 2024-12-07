@@ -8,8 +8,6 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.util.Objects;
-
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -39,14 +37,18 @@ public class Tag {
     }
 
     private void checkName(String name) {
-        Objects.requireNonNull(name, "tag: name이 없습니다");
-
-        if (name.isBlank()) {
+        if (name == null || name.isBlank()) {
             throw new IllegalArgumentException("tag: name이 없습니다");
         }
     }
 
     private void checkBoardId(Long boardId) {
-        Objects.requireNonNull(boardId, "tag: boardId가 null입니다");
+        if (boardId == null) {
+            throw new IllegalArgumentException("tag: boardId가 null입니다");
+        }
+
+        if (boardId < 0) {
+            throw new IllegalArgumentException("tag: boardId는 음수일 수 없습니다");
+        }
     }
 }
