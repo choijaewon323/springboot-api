@@ -1,9 +1,10 @@
 package com.project.crud.like.domain;
 
-import com.project.crud.account.domain.Account;
-import com.project.crud.board.domain.Board;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 
 @Getter
