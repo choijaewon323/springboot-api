@@ -1,11 +1,14 @@
 package com.project.crud.board.service;
 
 import com.project.crud.board.domain.Board;
+import com.project.crud.board.dto.BoardCreateWithTagDto;
 import com.project.crud.board.dto.BoardListAndCountDto;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
 import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.repository.BoardSearchRepository;
+import com.project.crud.tag.Tag;
+import com.project.crud.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +22,15 @@ import java.util.NoSuchElementException;
 public class BoardService {
     private final BoardRepository boardRepository;
     private final BoardSearchRepository boardSearchRepository;
+    private final TagRepository tagRepository;
 
-    public void create(final BoardRequestDto dto) {
-        boardRepository.save(dto.toEntity());
+    public void create(BoardCreateWithTagDto dto) {
+        Board board = boardRepository.save(Board.of(dto.title(), dto.content(), dto.writer()));
+
+        tagRepository.saveAll(dto.tags().stream()
+                .map(t -> Tag.of(t, board.getId()))
+                .toList()
+        );
     }
 
     @Transactional(readOnly = true)

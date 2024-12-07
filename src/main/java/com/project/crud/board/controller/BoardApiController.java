@@ -1,5 +1,6 @@
 package com.project.crud.board.controller;
 
+import com.project.crud.board.dto.BoardCreateWithTagDto;
 import com.project.crud.board.dto.BoardListAndCountDto;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
@@ -39,7 +40,7 @@ public class BoardApiController {
     }
 
     @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody BoardRequestDto dto) {
+    public ResponseEntity<Void> create(@Valid @RequestBody BoardCreateWithTagDto dto) {
         boardService.create(dto);
 
         return ok();
