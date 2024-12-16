@@ -31,6 +31,9 @@ public class Board extends TimeEntity {
     @Column(name = "CNT")
     private long cnt = 0L;
 
+    @Column(name = "report_cnt")
+    private int reportCnt = 0;
+
     private Board(final String title, final String content, final String writer) {
         checkTitleUnder100(title);
 
@@ -48,12 +51,6 @@ public class Board extends TimeEntity {
 
         this.title = dto.getTitle();
         this.content = dto.getContent();
-    }
-
-    private void checkTitleUnder100(String title) {
-        if (title.length() > 100) {
-            throw new IllegalStateException("제목은 100글자 이하여야합니다.");
-        }
     }
 
     public void updateWriter(final String writer) {
@@ -74,5 +71,19 @@ public class Board extends TimeEntity {
 
     public void cntUp() {
         cnt++;
+    }
+
+    public boolean isBanned() {
+        return (reportCnt >= 20);
+    }
+
+    public void report() {
+        reportCnt++;
+    }
+
+    private void checkTitleUnder100(String title) {
+        if (title.length() > 100) {
+            throw new IllegalStateException("제목은 100글자 이하여야합니다.");
+        }
     }
 }

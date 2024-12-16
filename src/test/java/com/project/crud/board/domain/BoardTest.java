@@ -47,4 +47,20 @@ class BoardTest {
         // then
         assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
     }
+
+    @DisplayName("board 신고 20번 이상 받으면 IsBanned true 리턴")
+    @Test
+    void isBannedReturnTrueIfReportOver20() {
+        // given
+        Board board = Board.of("", "", "");
+        int REPORT_LIMIT = 20;
+
+        // when
+        for (int i = 0; i < REPORT_LIMIT; i++) {
+            board.report();
+        }
+
+        // then
+        assertThat(board.isBanned()).isTrue();
+    }
 }

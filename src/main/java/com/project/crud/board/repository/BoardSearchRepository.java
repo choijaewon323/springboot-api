@@ -1,11 +1,10 @@
 package com.project.crud.board.repository;
 
+import com.project.crud.board.domain.Board;
 import com.project.crud.board.domain.QBoard;
-import com.project.crud.board.dto.BoardListAndCountDto;
-import com.project.crud.board.dto.BoardListDto;
+import com.project.crud.board.dto.BoardListAndCountQueryDto;
 import com.project.crud.tag.QTag;
 import com.querydsl.core.BooleanBuilder;
-import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import org.springframework.stereotype.Repository;
@@ -25,20 +24,17 @@ public class BoardSearchRepository {
     private static final QBoard board = QBoard.board;
     private static final QTag tag = QTag.tag;
 
-    public BoardListAndCountDto findBoardListByPaging(Integer pageSize,
-                                                      Integer pageIndex,
-                                                      String keyword) {
+    public BoardListAndCountQueryDto findBoardListByPaging(Integer pageSize,
+                                                           Integer pageIndex,
+                                                           String keyword) {
         if (pageIndex == null) {
             pageIndex = 0;
         } else {
             pageIndex--;
         }
 
-        List<BoardListDto> boardList = factory
-                .select(Projections.constructor(BoardListDto.class,
-                        board.id,
-                        board.title,
-                        board.likeCount))
+        List<Board> boards = factory
+                .select(board)
                 .from(board)
                 .leftJoin(tag)
                 .on(board.id.eq(tag.boardId))
@@ -58,9 +54,7 @@ public class BoardSearchRepository {
 
         Objects.requireNonNull(count, "board의 count가 null입니다");
 
-        return new BoardListAndCountDto(
-                count, pageSize, boardList
-        );
+        return new BoardListAndCountQueryDto(count, boards);
     }
 
     private BooleanBuilder searchConditions(String keyword) {

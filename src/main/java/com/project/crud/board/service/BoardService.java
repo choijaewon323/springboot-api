@@ -1,10 +1,7 @@
 package com.project.crud.board.service;
 
 import com.project.crud.board.domain.Board;
-import com.project.crud.board.dto.BoardCreateWithTagDto;
-import com.project.crud.board.dto.BoardListAndCountDto;
-import com.project.crud.board.dto.BoardRequestDto;
-import com.project.crud.board.dto.BoardResponseDto;
+import com.project.crud.board.dto.*;
 import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.repository.BoardSearchRepository;
 import com.project.crud.tag.Tag;
@@ -35,7 +32,17 @@ public class BoardService {
 
     @Transactional(readOnly = true)
     public BoardListAndCountDto searchByOption(Integer pageSize, Integer pageIndex, String keyword) {
-        return boardSearchRepository.findBoardListByPaging(pageSize, pageIndex, keyword);
+        BoardListAndCountQueryDto result = boardSearchRepository.findBoardListByPaging(pageSize, pageIndex, keyword);
+
+        List<BoardListDto> list = result.boards().stream()
+                .map(b -> {
+                    if (b.isBanned()) {
+                        return BoardListDto.ofBanned(b);
+                    }
+                    return BoardListDto.of(b);
+                })
+                .toList();
+        return new BoardListAndCountDto(result.count(), pageSize, list);
     }
 
     @Transactional(readOnly = true)
