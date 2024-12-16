@@ -3,6 +3,8 @@ package com.project.crud.board.domain;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
@@ -52,7 +54,7 @@ class BoardTest {
     @Test
     void isBannedReturnTrueIfReportOver20() {
         // given
-        Board board = Board.of("", "", "");
+        Board board = Board.of("title", "content", "writer");
         int REPORT_LIMIT = 20;
 
         // when
@@ -62,5 +64,35 @@ class BoardTest {
 
         // then
         assertThat(board.isBanned()).isTrue();
+    }
+
+    @DisplayName("board에 제목 blank이면 IllegalArgumentException 예외 발생")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "  ", "\t", "\n"})
+    void throwIllegalArgumentIfTitleIsBlank(String title) {
+
+        ThrowingCallable when = () -> Board.of(title, "content", "writer");
+
+        assertThatThrownBy(when).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("board에 제목 blank이면 IllegalArgumentException 예외 발생")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "  ", "\t", "\n"})
+    void throwIllegalArgumentIfContentIsBlank(String content) {
+
+        ThrowingCallable when = () -> Board.of("title", content, "writer");
+
+        assertThatThrownBy(when).isInstanceOf(IllegalArgumentException.class);
+    }
+
+    @DisplayName("board에 제목 blank이면 IllegalArgumentException 예외 발생")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "  ", "\t", "\n"})
+    void throwIllegalArgumentIfWriterIsBlank(String writer) {
+
+        ThrowingCallable when = () -> Board.of("title", "content", writer);
+
+        assertThatThrownBy(when).isInstanceOf(IllegalArgumentException.class);
     }
 }

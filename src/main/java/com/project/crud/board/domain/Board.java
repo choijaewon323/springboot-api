@@ -1,6 +1,7 @@
 package com.project.crud.board.domain;
 
 import com.project.crud.board.dto.BoardRequestDto;
+import com.project.crud.common.StringValidator;
 import com.project.crud.common.TimeEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,6 +36,10 @@ public class Board extends TimeEntity {
     private int reportCnt = 0;
 
     private Board(final String title, final String content, final String writer) {
+        StringValidator.checkNotBlankAndNotNull(title, "board : 제목이 없습니다");
+        StringValidator.checkNotBlankAndNotNull(content, "board : 내용이 없습니다");
+        StringValidator.checkNotBlankAndNotNull(writer, "board : 작성자가 없습니다");
+
         checkTitleUnder100(title);
 
         this.title = title;
@@ -47,6 +52,9 @@ public class Board extends TimeEntity {
     }
 
     public void update(final BoardRequestDto dto) {
+        StringValidator.checkNotBlankAndNotNull(dto.getTitle(), "board : 제목이 없습니다");
+        StringValidator.checkNotBlankAndNotNull(dto.getContent(), "board : 내용이 없습니다");
+        StringValidator.checkNotBlankAndNotNull(dto.getWriter(), "board : 작성자가 없습니다");
         checkTitleUnder100(dto.getTitle());
 
         this.title = dto.getTitle();
