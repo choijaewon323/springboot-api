@@ -7,6 +7,8 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.project.crud.common.StringValidator.checkNotBlankAndNotNull;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -28,6 +30,8 @@ public class Reply extends TimeEntity {
 
     @Builder
     public Reply(final String content, final String writer, final Long boardId) {
+        checkNotBlankAndNotNull(content, "reply : 내용이 없습니다");
+        checkNotBlankAndNotNull(writer, "reply : 작성자가 없습니다");
         checkContentUnder300(content);
         checkBoardIdNull(boardId);
 
@@ -37,6 +41,7 @@ public class Reply extends TimeEntity {
     }
 
     public void updateContent(String content) {
+        checkNotBlankAndNotNull(content, "reply : 내용이 없습니다");
         checkContentUnder300(content);
 
         this.content = content;

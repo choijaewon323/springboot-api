@@ -8,6 +8,8 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import static com.project.crud.common.StringValidator.checkNotBlankAndNotNull;
+
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Entity
@@ -21,7 +23,7 @@ public class Tag {
     private Long boardId;
 
     private Tag(String name, Long boardId) {
-        checkName(name);
+        checkNotBlankAndNotNull(name, "tag: name이 없습니다");
         checkBoardId(boardId);
 
         this.name = name;
@@ -34,12 +36,6 @@ public class Tag {
 
     public void updateName(String name) {
         this.name = name;
-    }
-
-    private void checkName(String name) {
-        if (name == null || name.isBlank()) {
-            throw new IllegalArgumentException("tag: name이 없습니다");
-        }
     }
 
     private void checkBoardId(Long boardId) {
