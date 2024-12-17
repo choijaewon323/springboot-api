@@ -5,6 +5,7 @@ import com.project.crud.board.dto.BoardListAndCountDto;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
 import com.project.crud.board.service.BoardService;
+import com.project.crud.login.ForUser;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,7 @@ public class BoardApiController {
         return okWithBody(boards);
     }
 
+    @ForUser
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody BoardCreateWithTagDto dto) {
         boardService.create(dto);
