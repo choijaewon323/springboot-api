@@ -1,20 +1,17 @@
 package com.project.crud.account.service;
 
 import com.project.crud.account.domain.Account;
+import com.project.crud.account.domain.AccountRole;
 import com.project.crud.account.dto.AccountRequestDto;
 import com.project.crud.account.dto.AccountResponseDto;
 import com.project.crud.account.dto.AccountUsernameUpdateDto;
 import com.project.crud.account.repository.AccountRepository;
-import com.project.crud.board.domain.Board;
 import com.project.crud.board.repository.BoardRepository;
-import com.project.crud.account.domain.AccountRole;
 import com.project.crud.reply.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -22,7 +19,6 @@ import java.util.NoSuchElementException;
 @Service
 @Transactional
 public class AccountService {
-    private final BCryptPasswordEncoder passwordEncoder;
     private final BoardRepository boardRepository;
     private final AccountRepository accountRepository;
     private final ReplyRepository replyRepository;
@@ -30,8 +26,8 @@ public class AccountService {
     public void create(final AccountRequestDto request) {
         checkUsernameAlreadyExist(request.getUsername());
 
-        final String encodedPassword = passwordEncoder.encode(request.getPassword());
-        accountRepository.save(Account.makeUser(request.getUsername(), encodedPassword));
+
+        accountRepository.save(Account.makeUser(request.getUsername(), request.getPassword()));
     }
 
     @Transactional(readOnly = true)
@@ -55,7 +51,7 @@ public class AccountService {
     public void updatePassword(final AccountRequestDto dto) {
         final Account account = findByUsername(dto.getUsername());
 
-        account.updatePassword(passwordEncoder.encode(dto.getPassword()));
+        account.updatePassword(dto.getPassword());
     }
 
     public void delete(final String username) {
