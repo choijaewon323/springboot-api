@@ -3,8 +3,13 @@ package com.project.crud.board.domain;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.common.StringValidator;
 import com.project.crud.common.TimeEntity;
+import com.project.crud.exception.CustomException;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+
+import static com.project.crud.exception.ErrorCode.INVALID_BOARD_OPERATION;
 
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Getter
@@ -71,7 +76,7 @@ public class Board extends TimeEntity {
 
     public void likeDown() {
         if (likeCount == 0L) {
-            throw new IllegalStateException("좋아요 개수는 음수가 될 수 없습니다");
+            throw new CustomException(INVALID_BOARD_OPERATION, "좋아요 개수는 음수가 될 수 없습니다");
         }
 
         likeCount--;
@@ -91,7 +96,7 @@ public class Board extends TimeEntity {
 
     private void checkTitleUnder100(String title) {
         if (title.length() > 100) {
-            throw new IllegalStateException("제목은 100글자 이하여야합니다.");
+            throw new CustomException(INVALID_BOARD_OPERATION, "제목은 100글자 이하여야합니다.");
         }
     }
 }

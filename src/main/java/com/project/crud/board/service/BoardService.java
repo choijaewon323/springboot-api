@@ -4,6 +4,7 @@ import com.project.crud.board.domain.Board;
 import com.project.crud.board.dto.*;
 import com.project.crud.board.repository.BoardRepository;
 import com.project.crud.board.repository.BoardSearchRepository;
+import com.project.crud.exception.CustomException;
 import com.project.crud.tag.Tag;
 import com.project.crud.tag.TagRepository;
 import lombok.RequiredArgsConstructor;
@@ -11,7 +12,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+
+import static com.project.crud.exception.ErrorCode.BOARD_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service
@@ -74,6 +76,6 @@ public class BoardService {
 
     private Board findById(final Long boardId) {
         return boardRepository.findById(boardId)
-                .orElseThrow(() -> new NoSuchElementException("해당 게시물이 없습니다"));
+                .orElseThrow(() -> new CustomException(BOARD_NOT_FOUND, "해당 게시물이 없습니다"));
     }
 }

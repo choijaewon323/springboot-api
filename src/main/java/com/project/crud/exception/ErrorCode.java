@@ -6,6 +6,8 @@ public enum ErrorCode {
     ACCOUNT_ALREADY_EXIST("E003"),
     INTERNAL_SERVER_ERROR("E004"),
     ACCOUNT_CREATION_ERROR("E005"),
+    INVALID_INPUT("E006"),
+    INVALID_BOARD_OPERATION("E007")
     ;
 
     private final String code;
