@@ -1,5 +1,6 @@
 package com.project.crud.report;
 
+import com.project.crud.common.StringValidator;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -26,7 +27,7 @@ public class Report {
     private Report(Long boardId, Long accountId, String content) {
         checkId(boardId);
         checkId(accountId);
-        checkContent(content);
+        StringValidator.checkNotBlankAndNotNull(content, "report : 신고 내용이 없습니다");
 
         this.boardId = boardId;
         this.accountId = accountId;
