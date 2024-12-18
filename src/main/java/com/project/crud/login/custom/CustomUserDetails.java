@@ -19,12 +19,12 @@ public class CustomUserDetails implements UserDetails {
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (account.getRole() == AccountRole.NONE) {
-            return List.of(new SimpleGrantedAuthority("ROLE_NONE"));
+            return List.of(new SimpleGrantedAuthority("NONE"));
         } else if (account.getRole() == AccountRole.ADMIN) {
-            return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"));
+            return List.of(new SimpleGrantedAuthority("ADMIN"));
         }
 
-        return List.of(new SimpleGrantedAuthority("ROLE_USER"));
+        return List.of(new SimpleGrantedAuthority("USER"));
     }
 
     @Override
