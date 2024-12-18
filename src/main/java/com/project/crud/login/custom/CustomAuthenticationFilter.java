@@ -10,6 +10,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import java.io.IOException;
+
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -21,12 +23,23 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
         try {
             LoginRequestDto requestDto = objectMapper.readValue(request.getInputStream(), LoginRequestDto.class);
-
-            UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(requestDto.username(), requestDto.password());
-
+            UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(requestDto.username(), requestDto.password());
+            setDetails(request, token);
             return this.getAuthenticationManager().authenticate(token);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            exceptionHandler(response, e);
+
+            return null;
+        }
+    }
+
+    private void exceptionHandler(HttpServletResponse response, Exception e) {
+        try {
+            response.setCharacterEncoding("utf-8");
+            response.setStatus(401);
+            response.getWriter().write("실패 : " + e.getMessage());
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
         }
     }
 }
