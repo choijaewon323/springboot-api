@@ -5,12 +5,10 @@ import com.project.crud.reply.dto.ReplyResponseDto;
 import com.project.crud.reply.service.ReplyService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 
 import static com.project.crud.common.ApiResponse.ok;
 import static com.project.crud.common.ApiResponse.okWithBody;
@@ -57,12 +55,5 @@ public class ReplyApiController {
         replyService.delete(replyId);
 
         return ok();
-    }
-
-    @ExceptionHandler(NoSuchElementException.class)
-    public ResponseEntity<String> handleNoSuchElementException(NoSuchElementException exception) {
-        return ResponseEntity
-                .status(HttpStatus.NOT_FOUND)
-                .body(exception.getMessage());
     }
 }

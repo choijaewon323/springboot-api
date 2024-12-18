@@ -1,6 +1,7 @@
 package com.project.crud.reply.domain;
 
 import com.project.crud.common.TimeEntity;
+import com.project.crud.exception.CustomException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Builder;
@@ -8,6 +9,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import static com.project.crud.common.StringValidator.checkNotBlankAndNotNull;
+import static com.project.crud.exception.ErrorCode.BOARD_NOT_FOUND;
+import static com.project.crud.exception.ErrorCode.REPLY_CREATION_ERROR;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -53,13 +56,13 @@ public class Reply extends TimeEntity {
 
     private void checkContentUnder300(String content) {
         if (content.length() > 300) {
-            throw new IllegalStateException("댓글의 내용은 300자 이하여야 합니다");
+            throw new CustomException(REPLY_CREATION_ERROR, "댓글의 내용은 300자 이하여야 합니다");
         }
     }
 
     private void checkBoardIdNull(Long boardId) {
         if (boardId == null) {
-            throw new IllegalStateException("댓글의 boardId가 null입니다");
+            throw new CustomException(BOARD_NOT_FOUND, "댓글의 boardId가 null입니다");
         }
     }
 }

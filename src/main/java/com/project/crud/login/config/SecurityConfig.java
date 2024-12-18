@@ -45,9 +45,7 @@ public class SecurityConfig {
                 .formLogin(AbstractHttpConfigurer::disable)
                 .logout(c -> c
                         .logoutUrl("/api/v1/logout")
-                        .logoutSuccessHandler((request, response, authentication) -> {
-                            response.getWriter().write("logout success");
-                        }))
+                        .logoutSuccessHandler((request, response, authentication) -> response.getWriter().write("logout success")))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
@@ -61,7 +59,7 @@ public class SecurityConfig {
 
     @Bean
     UsernamePasswordAuthenticationFilter customAuthenticationFilter() {
-        CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManager());
+        CustomAuthenticationFilter filter = new CustomAuthenticationFilter(authenticationManager(), objectMapper);
 
         filter.setFilterProcessesUrl(PROCESS_URL);
         filter.setAuthenticationSuccessHandler(customSuccessHandler());
