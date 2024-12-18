@@ -5,6 +5,7 @@ import com.project.crud.board.dto.BoardListAndCountDto;
 import com.project.crud.board.dto.BoardRequestDto;
 import com.project.crud.board.dto.BoardResponseDto;
 import com.project.crud.board.service.BoardService;
+import com.project.crud.exception.CustomException;
 import com.project.crud.login.ForUser;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
@@ -17,6 +18,7 @@ import java.util.List;
 
 import static com.project.crud.common.ApiResponse.ok;
 import static com.project.crud.common.ApiResponse.okWithBody;
+import static com.project.crud.exception.ErrorCode.INVALID_PAGE_NUMBER;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -80,7 +82,7 @@ public class BoardApiController {
         }
 
         if (isNegative(index)) {
-            throw new IllegalArgumentException("페이지 번호는 음수가 될 수 없습니다");
+            throw new CustomException(INVALID_PAGE_NUMBER, "페이지 번호는 음수가 될 수 없습니다");
         }
     }
 
