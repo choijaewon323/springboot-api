@@ -1,30 +1,23 @@
 package com.project.crud.like.dto;
 
-import com.project.crud.account.domain.Account;
-import com.project.crud.board.domain.Board;
 import com.project.crud.like.domain.BoardLike;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
 public class BoardLikeRequestDto {
     @NotNull
     private Long boardId;
     @NotBlank
     private String username;
 
-    @Builder
-    BoardLikeRequestDto(final Long boardId, final String username) {
-        this.boardId = boardId;
-        this.username = username;
-    }
-
     public BoardLike toEntity(final Long accountId) {
-        return BoardLike.builder()
-                .accountId(accountId)
-                .boardId(boardId)
-                .build();
+        return BoardLike.of(boardId, accountId);
     }
 }

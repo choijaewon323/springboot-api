@@ -1,5 +1,6 @@
 package com.project.crud.reply.dto;
 
+import com.project.crud.reply.domain.Reply;
 import lombok.*;
 
 @Getter
@@ -18,5 +19,15 @@ public class ReplyResponseDto {
         this.writer = writer;
         this.createdDate = createdDate;
         this.modifiedDate = modifiedDate;
+    }
+
+    public static ReplyResponseDto of(Reply reply) {
+        return ReplyResponseDto.builder()
+                .id(reply.getId())
+                .content(reply.getContent())
+                .writer(reply.getWriter())
+                .createdDate(reply.getCreatedDate())
+                .modifiedDate(reply.getModifiedDate())
+                .build();
     }
 }

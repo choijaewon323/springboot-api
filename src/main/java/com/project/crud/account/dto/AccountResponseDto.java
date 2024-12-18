@@ -1,5 +1,6 @@
 package com.project.crud.account.dto;
 
+import com.project.crud.account.domain.Account;
 import com.project.crud.account.domain.AccountRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -23,5 +24,14 @@ public class AccountResponseDto {
         this.username = username;
         this.password = password;
         this.role = role;
+    }
+
+    public static AccountResponseDto toDto(Account account) {
+        return AccountResponseDto.builder()
+                .id(account.getId())
+                .username(account.getUsername())
+                .password(account.getPassword())
+                .role(account.getRole())
+                .build();
     }
 }

@@ -1,14 +1,17 @@
 package com.project.crud.account.controller;
 
 import com.project.crud.account.dto.AccountRequestDto;
+import com.project.crud.account.dto.AccountResponseDto;
 import com.project.crud.account.dto.AccountUsernameUpdateDto;
-import com.project.crud.security.dto.UserTokenRequest;
 import com.project.crud.account.service.AccountService;
+import com.project.crud.login.ForAdmin;
+import com.project.crud.login.ForUser;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 import static com.project.crud.common.ApiResponse.ok;
 
@@ -22,6 +25,13 @@ public class AccountApiController {
         this.accountService = accountService;
     }
 
+    @GetMapping("/list")
+    @ForAdmin
+    public List<AccountResponseDto> getAllAccounts() {
+        return accountService.readAll();
+    }
+
+    @ForAdmin
     @PostMapping
     public ResponseEntity<Void> create(@Valid @RequestBody AccountRequestDto request) {
         accountService.create(request);
@@ -29,6 +39,7 @@ public class AccountApiController {
         return ok();
     }
 
+    @ForUser
     @PutMapping("/username")
     public ResponseEntity<Void> updateUsername(@RequestBody @Valid AccountUsernameUpdateDto dto) {
         accountService.updateUsername(dto);
@@ -36,6 +47,7 @@ public class AccountApiController {
         return ok();
     }
 
+    @ForUser
     @PutMapping("/password")
     public ResponseEntity<Void> updatePassword(@RequestBody @Valid AccountRequestDto dto) {
         accountService.updatePassword(dto);
@@ -43,6 +55,7 @@ public class AccountApiController {
         return ok();
     }
 
+    @ForUser
     @DeleteMapping("/{username}")
     public ResponseEntity<Void> delete(@NotBlank @PathVariable String username) {
         accountService.delete(username);

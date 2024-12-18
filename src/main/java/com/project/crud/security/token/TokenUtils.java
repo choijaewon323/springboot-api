@@ -4,7 +4,6 @@ import com.project.crud.security.dto.UserTokenResponse;
 import com.project.crud.account.domain.AccountRole;
 import com.project.crud.security.enums.KeyInfo;
 import io.jsonwebtoken.*;
-import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.crypto.spec.SecretKeySpec;
@@ -33,9 +32,9 @@ public final class TokenUtils {
     public static boolean isValidToken(final String token) {
         try {
             Claims claims = getClaimsFormToken(token);
-            log.info("expireTime :" + claims.getExpiration());
-            log.info("username :" + claims.get("username"));
-            log.info("role :" + claims.get("role"));
+            log.info("expireTime : {}", claims.getExpiration());
+            log.info("username : {}", claims.get("username"));
+            log.info("role : {}", claims.get("role"));
             return true;
 
         } catch (ExpiredJwtException exception) {
@@ -56,7 +55,7 @@ public final class TokenUtils {
 
     private static Date createExpireDateForOneMonth() {
         Calendar c = Calendar.getInstance();
-        c.add(Calendar.MINUTE, 1);
+        c.add(Calendar.MINUTE, 30);
         return c.getTime();
     }
 

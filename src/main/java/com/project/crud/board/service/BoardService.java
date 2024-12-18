@@ -1,22 +1,81 @@
 package com.project.crud.board.service;
 
-import com.project.crud.board.dto.BoardRequestDto;
-import com.project.crud.board.dto.BoardResponseDto;
+import com.project.crud.board.domain.Board;
+import com.project.crud.board.dto.*;
+import com.project.crud.board.repository.BoardRepository;
+import com.project.crud.board.repository.BoardSearchRepository;
+import com.project.crud.exception.CustomException;
+import com.project.crud.tag.Tag;
+import com.project.crud.tag.TagRepository;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface BoardService {
-    void create(BoardRequestDto dto);
+import static com.project.crud.exception.ErrorCode.BOARD_NOT_FOUND;
 
-    List<BoardResponseDto> readAll();
+@RequiredArgsConstructor
+@Service
+@Transactional
+public class BoardService {
+    private final BoardRepository boardRepository;
+    private final BoardSearchRepository boardSearchRepository;
+    private final TagRepository tagRepository;
 
-    List<BoardResponseDto> readAllByPagingDesc(final int index, final int size);
+    public void create(BoardCreateWithTagDto dto) {
+        Board board = boardRepository.save(Board.of(dto.title(), dto.content(), dto.writer()));
 
-    List<BoardResponseDto> readAllByPagingCovering(final int index, final int size);
+        tagRepository.saveAll(dto.tags().stream()
+                .map(t -> Tag.of(t, board.getId()))
+                .toList()
+        );
+    }
 
-    BoardResponseDto readOne(Long boardId);
+    @Transactional(readOnly = true)
+    public BoardListAndCountDto searchByOption(Integer pageSize, Integer pageIndex, String keyword) {
+        BoardListAndCountQueryDto result = boardSearchRepository.findBoardListByPaging(pageSize, pageIndex, keyword);
 
-    void update(Long boardId, BoardRequestDto dto);
+        List<BoardListDto> list = result.boards().stream()
+                .map(b -> {
+                    if (b.isBanned()) {
+                        return BoardListDto.ofBanned(b);
+                    }
+                    return BoardListDto.of(b);
+                })
+                .toList();
+        return new BoardListAndCountDto(result.count(), pageSize, list);
+    }
 
-    void delete(Long boardId);
+    @Transactional(readOnly = true)
+    public List<BoardResponseDto> readAll() {
+        final List<Board> boards = boardRepository.findAll();
+
+        return boards.stream()
+                .map(BoardResponseDto::toDto)
+                .toList();
+    }
+
+    public BoardResponseDto readOne(final Long boardId) {
+        final Board board = findById(boardId);
+
+        board.cntUp();
+
+        return BoardResponseDto.toDto(board);
+    }
+
+    public void update(Long boardId, BoardRequestDto dto) {
+        final Board existBoard = findById(boardId);
+
+        existBoard.update(dto);
+    }
+
+    public void delete(Long boardId) {
+        boardRepository.deleteById(boardId);
+    }
+
+    private Board findById(final Long boardId) {
+        return boardRepository.findById(boardId)
+                .orElseThrow(() -> new CustomException(BOARD_NOT_FOUND, "해당 게시물이 없습니다"));
+    }
 }

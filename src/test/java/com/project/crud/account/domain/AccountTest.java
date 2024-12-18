@@ -1,43 +1,60 @@
 package com.project.crud.account.domain;
 
-import org.junit.jupiter.api.BeforeEach;
+import com.project.crud.exception.CustomException;
+import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.test.context.ActiveProfiles;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.ValueSource;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@ActiveProfiles("test")
-public class AccountTest {
+class AccountTest {
 
-    Account account;
-
-    @BeforeEach
-    void init() {
-        account = Account.builder()
-                .username("유저네임")
-                .password("비밀번호")
-                .role(AccountRole.USER)
-                .build();
-    }
-
-    @DisplayName("유저네임 변경 테스트")
+    @DisplayName("account 유저네임 변경 시 username 글자 수 30글자 이상이면 CustomException")
     @Test
     void updateUsernameTest() {
+        // given
+        Account account = Account.makeUser("acc", "pass");
+
         // when
-        account.updateUsername("유저네임23");
+        ThrowingCallable when = () -> account.updateUsername("1234567890123456789012345678901234567890");
 
         // then
-        assertThat(account.getUsername()).isEqualTo("유저네임23");
+        assertThatThrownBy(when).isInstanceOf(CustomException.class);
     }
 
-    @DisplayName("비밀번호 변경 테스트")
+    @DisplayName("account 생성 시 username이 30자 이상인 경우 CustomException")
     @Test
-    void updatePasswordTest() {
+    void checkUsernameLengthWhenCreated() {
+        // given
         // when
-        account.updatePassword("비밀번호321");
+        ThrowingCallable when = () -> Account.makeUser("1234567890123456789012345678901234567890", "1234");
 
         // then
-        assertThat(account.getPassword()).isEqualTo("비밀번호321");
+        assertThatThrownBy(when).isInstanceOf(CustomException.class);
+    }
+
+    @DisplayName("account 객체 생성 테스트 - username이 null일 시 CustomException")
+    @Test
+    void ifWriterNullThrowsIllegalState() {
+        // given
+        // when
+        ThrowingCallable when = () -> Account.makeUser(null, "password");
+
+        // then
+        assertThatThrownBy(when).isInstanceOf(CustomException.class);
+    }
+
+    @DisplayName("account 객체 생성 테스트 - account가 blank일 시 CustomException")
+    @ParameterizedTest
+    @ValueSource(strings = {"", "   ", "\t", "\n\n"})
+    void ifWriterBlankThrowsIllegalState(String username) {
+        // given
+        // when
+        ThrowingCallable when = () -> Account.makeUser(username, "password");
+
+        // then
+        assertThatThrownBy(when).isInstanceOf(CustomException.class);
     }
 }
