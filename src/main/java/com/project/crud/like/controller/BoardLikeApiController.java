@@ -5,7 +5,6 @@ import com.project.crud.like.dto.BoardLikeRequestDto;
 import com.project.crud.like.service.BoardLikeService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,12 +34,5 @@ public class BoardLikeApiController {
         boardLikeService.down(dto);
 
         return ok();
-    }
-
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<String> exceptionHandle(final Exception e) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(e.getMessage());
     }
 }

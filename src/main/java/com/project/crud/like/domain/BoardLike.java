@@ -1,9 +1,12 @@
 package com.project.crud.like.domain;
 
+import com.project.crud.exception.CustomException;
 import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import static com.project.crud.exception.ErrorCode.INVALID_LIKE_OPERATION;
 
 
 @Getter
@@ -35,14 +38,14 @@ public class BoardLike {
 
     public void like() {
         if (isLiked) {
-            throw new IllegalStateException("이미 좋아요를 눌렀습니다");
+            throw new CustomException(INVALID_LIKE_OPERATION, "이미 좋아요를 눌렀습니다");
         }
         isLiked = true;
     }
 
     public void cancel() {
         if (!isLiked) {
-            throw new IllegalStateException("이미 취소된 좋아요입니다");
+            throw new CustomException(INVALID_LIKE_OPERATION, "이미 취소된 좋아요입니다");
         }
         isLiked = false;
     }

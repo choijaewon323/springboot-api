@@ -4,6 +4,8 @@ import com.project.crud.account.domain.Account;
 import com.project.crud.account.repository.AccountRepository;
 import com.project.crud.board.domain.Board;
 import com.project.crud.board.repository.BoardRepository;
+import com.project.crud.exception.CustomException;
+import com.project.crud.exception.ErrorCode;
 import com.project.crud.like.domain.BoardLike;
 import com.project.crud.like.dto.BoardLikePresentDto;
 import com.project.crud.like.dto.BoardLikeRequestDto;
@@ -14,6 +16,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
+
+import static com.project.crud.exception.ErrorCode.ACCOUNT_NOT_FOUND;
+import static com.project.crud.exception.ErrorCode.BOARD_NOT_FOUND;
 
 @RequiredArgsConstructor
 @Service
@@ -27,7 +32,7 @@ public class BoardLikeService {
     @Transactional(readOnly = true)
     public BoardLikePresentDto isLikePushed(BoardLikeRequestDto request) {
         Account account = accountRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다"));
+                .orElseThrow(() -> new CustomException(ACCOUNT_NOT_FOUND, "해당 유저가 없습니다"));
 
         Optional<BoardLike> nullableBoardLike = boardLikeQueryRepository.findBoardLikeIfPresent(request.getBoardId(), account.getId());
 
@@ -45,9 +50,9 @@ public class BoardLikeService {
 
     public void up(BoardLikeRequestDto request) {
         Board board = boardRepository.findById(request.getBoardId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시글이 없습니다"));
+                .orElseThrow(() -> new CustomException(BOARD_NOT_FOUND, "해당 게시글이 없습니다"));
         Account account = accountRepository.findByUsername(request.getUsername())
-                        .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다"));
+                        .orElseThrow(() -> new CustomException(ACCOUNT_NOT_FOUND, "해당 유저가 없습니다"));
 
         Optional<BoardLike> nullableBoardLike = boardLikeQueryRepository.findBoardLikeIfPresent(request.getBoardId(), account.getId());
 
@@ -69,14 +74,14 @@ public class BoardLikeService {
 
     public void down(BoardLikeRequestDto request) {
         Board board = boardRepository.findById(request.getBoardId())
-                .orElseThrow(() -> new IllegalArgumentException("해당 게시물이 없습니다"));
+                .orElseThrow(() -> new CustomException(BOARD_NOT_FOUND, "해당 게시물이 없습니다"));
         Account account = accountRepository.findByUsername(request.getUsername())
-                .orElseThrow(() -> new IllegalArgumentException("해당 유저가 없습니다"));
+                .orElseThrow(() -> new CustomException(ACCOUNT_NOT_FOUND, "해당 유저가 없습니다"));
 
         Optional<BoardLike> nullableBoardLike = boardLikeQueryRepository.findBoardLikeIfPresent(request.getBoardId(), account.getId());
 
         if (nullableBoardLike.isEmpty()) {
-            throw new IllegalStateException("좋아요를 취소할 수 없습니다");
+            throw new CustomException(ErrorCode.INVALID_LIKE_OPERATION, "좋아요를 취소할 수 없습니다");
         }
 
         BoardLike boardLike = nullableBoardLike.get();
