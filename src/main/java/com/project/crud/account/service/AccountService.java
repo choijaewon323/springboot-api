@@ -1,7 +1,6 @@
 package com.project.crud.account.service;
 
 import com.project.crud.account.domain.Account;
-import com.project.crud.account.domain.AccountRole;
 import com.project.crud.account.dto.AccountRequestDto;
 import com.project.crud.account.dto.AccountResponseDto;
 import com.project.crud.account.dto.AccountUsernameUpdateDto;
@@ -32,7 +31,7 @@ public class AccountService {
 
     @Transactional(readOnly = true)
     public List<AccountResponseDto> readAll() {
-        final List<Account> accounts = accountRepository.findByRole(AccountRole.USER);
+        final List<Account> accounts = accountRepository.findAll();
 
         return accounts.stream()
                 .map(AccountResponseDto::toDto)
