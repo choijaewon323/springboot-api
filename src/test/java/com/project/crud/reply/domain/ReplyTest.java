@@ -1,5 +1,6 @@
 package com.project.crud.reply.domain;
 
+import com.project.crud.exception.CustomException;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,7 +22,7 @@ class ReplyTest {
                 .build();
 
         // then
-        assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(when).isInstanceOf(CustomException.class);
     }
 
     private String makeContentOver300() {

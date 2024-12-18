@@ -1,5 +1,6 @@
 package com.project.crud.board.domain;
 
+import com.project.crud.exception.CustomException;
 import org.assertj.core.api.ThrowableAssert.ThrowingCallable;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,10 +34,10 @@ class BoardTest {
         // when
         ThrowingCallable when = board::likeDown;
 
-        assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);   // then
+        assertThatThrownBy(when).isInstanceOf(CustomException.class);   // then
     }
 
-    @DisplayName("board 객체 생성 테스트 - title 100글자 초과 시 IllegalStateException")
+    @DisplayName("board 객체 생성 테스트 - title 100글자 초과 시 CustomException")
     @Test
     void ifTitleOver100ThrowsIllegalStateWhenCreated() {
         // given
@@ -47,7 +48,7 @@ class BoardTest {
                 "writer"
                 );
         // then
-        assertThatThrownBy(when).isInstanceOf(IllegalStateException.class);
+        assertThatThrownBy(when).isInstanceOf(CustomException.class);
     }
 
     @DisplayName("board 신고 20번 이상 받으면 IsBanned true 리턴")
@@ -66,33 +67,33 @@ class BoardTest {
         assertThat(board.isBanned()).isTrue();
     }
 
-    @DisplayName("board에 제목 blank이면 IllegalArgumentException 예외 발생")
+    @DisplayName("board에 제목 blank이면 CustomException 예외 발생")
     @ParameterizedTest
     @ValueSource(strings = {"", "  ", "\t", "\n"})
-    void throwIllegalArgumentIfTitleIsBlank(String title) {
+    void throwIfTitleIsBlank(String title) {
 
         ThrowingCallable when = () -> Board.of(title, "content", "writer");
 
-        assertThatThrownBy(when).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(when).isInstanceOf(CustomException.class);
     }
 
-    @DisplayName("board에 제목 blank이면 IllegalArgumentException 예외 발생")
+    @DisplayName("board에 제목 blank이면 CustomException 예외 발생")
     @ParameterizedTest
     @ValueSource(strings = {"", "  ", "\t", "\n"})
-    void throwIllegalArgumentIfContentIsBlank(String content) {
+    void throwIfContentIsBlank(String content) {
 
         ThrowingCallable when = () -> Board.of("title", content, "writer");
 
-        assertThatThrownBy(when).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(when).isInstanceOf(CustomException.class);
     }
 
-    @DisplayName("board에 제목 blank이면 IllegalArgumentException 예외 발생")
+    @DisplayName("board에 제목 blank이면 CustomException 예외 발생")
     @ParameterizedTest
     @ValueSource(strings = {"", "  ", "\t", "\n"})
     void throwIllegalArgumentIfWriterIsBlank(String writer) {
 
         ThrowingCallable when = () -> Board.of("title", "content", writer);
 
-        assertThatThrownBy(when).isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(when).isInstanceOf(CustomException.class);
     }
 }
