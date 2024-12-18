@@ -1,6 +1,8 @@
 package com.project.crud.login.custom;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.project.crud.exception.CustomException;
+import com.project.crud.exception.ErrorResponseDto;
 import com.project.crud.login.dto.LoginRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -13,10 +15,11 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 import java.io.IOException;
 
 public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
-    private final ObjectMapper objectMapper = new ObjectMapper();
+    private final ObjectMapper objectMapper;
 
-    public CustomAuthenticationFilter(AuthenticationManager manager) {
+    public CustomAuthenticationFilter(AuthenticationManager manager, ObjectMapper objectMapper) {
         super.setAuthenticationManager(manager);
+        this.objectMapper = objectMapper;
     }
 
     @Override
@@ -26,20 +29,22 @@ public class CustomAuthenticationFilter extends UsernamePasswordAuthenticationFi
             UsernamePasswordAuthenticationToken token = UsernamePasswordAuthenticationToken.unauthenticated(requestDto.username(), requestDto.password());
             setDetails(request, token);
             return this.getAuthenticationManager().authenticate(token);
-        } catch (Exception e) {
+        } catch (CustomException e) {
             exceptionHandler(response, e);
-
             return null;
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
         }
     }
 
-    private void exceptionHandler(HttpServletResponse response, Exception e) {
+    private void exceptionHandler(HttpServletResponse response, CustomException e) {
         try {
+            String message = objectMapper.writeValueAsString(ErrorResponseDto.of(e));
             response.setCharacterEncoding("utf-8");
             response.setStatus(401);
-            response.getWriter().write("실패 : " + e.getMessage());
+            response.getWriter().write(message);
         } catch (IOException ex) {
-            throw new RuntimeException(ex);
+            throw new IllegalStateException(ex);
         }
     }
 }

@@ -10,7 +10,7 @@ import java.util.Collection;
 import java.util.List;
 
 public class CustomUserDetails implements UserDetails {
-    private final Account account;
+    private final transient Account account;
 
     public CustomUserDetails(Account account) {
         this.account = account;

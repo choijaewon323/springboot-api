@@ -2,11 +2,14 @@ package com.project.crud.login.custom;
 
 import com.project.crud.account.domain.Account;
 import com.project.crud.account.repository.AccountRepository;
+import com.project.crud.exception.CustomException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
+
+import static com.project.crud.exception.ErrorCode.ACCOUNT_NOT_FOUND;
 
 public class CustomUserDetailsService implements UserDetailsService {
     private final AccountRepository accountRepository;
@@ -20,7 +23,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         Optional<Account> account = accountRepository.findByUsername(username);
 
         if (account.isEmpty()) {
-            throw new IllegalStateException("해당 유저가 없습니다");
+            throw new CustomException(ACCOUNT_NOT_FOUND, "해당 유저가 없습니다");
         }
 
         return new CustomUserDetails(account.get());

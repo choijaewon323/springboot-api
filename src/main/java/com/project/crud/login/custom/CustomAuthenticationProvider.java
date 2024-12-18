@@ -1,11 +1,14 @@
 package com.project.crud.login.custom;
 
+import com.project.crud.exception.CustomException;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+
+import static com.project.crud.exception.ErrorCode.PASSWORD_NOT_MATCH;
 
 public class CustomAuthenticationProvider implements AuthenticationProvider {
 
@@ -26,7 +29,7 @@ public class CustomAuthenticationProvider implements AuthenticationProvider {
             return new UsernamePasswordAuthenticationToken(user, username, user.getAuthorities());
         }
 
-        throw new IllegalArgumentException("비밀번호가 다릅니다");
+        throw new CustomException(PASSWORD_NOT_MATCH, "비밀번호가 다릅니다");
     }
 
     @Override
