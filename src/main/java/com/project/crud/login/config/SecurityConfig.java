@@ -2,10 +2,7 @@ package com.project.crud.login.config;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.project.crud.account.repository.AccountRepository;
-import com.project.crud.login.custom.CustomAuthenticationFilter;
-import com.project.crud.login.custom.CustomAuthenticationProvider;
-import com.project.crud.login.custom.CustomSuccessHandler;
-import com.project.crud.login.custom.CustomUserDetailsService;
+import com.project.crud.login.custom.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -18,6 +15,7 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -39,10 +37,17 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
         http
+                .anonymous(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(requests -> requests
                         .anyRequest().permitAll()
                 )
+                .formLogin(AbstractHttpConfigurer::disable)
+                .logout(c -> c
+                        .logoutUrl("/api/v1/logout")
+                        .logoutSuccessHandler((request, response, authentication) -> {
+                            response.getWriter().write("logout success");
+                        }))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED))
                 .addFilterBefore(customAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class);
 
@@ -60,7 +65,13 @@ public class SecurityConfig {
 
         filter.setFilterProcessesUrl(PROCESS_URL);
         filter.setAuthenticationSuccessHandler(customSuccessHandler());
+        filter.setAuthenticationFailureHandler(customFailureHandler());
         return filter;
+    }
+
+    @Bean
+    AuthenticationFailureHandler customFailureHandler() {
+        return new CustomFailureHandler();
     }
 
     @Bean
