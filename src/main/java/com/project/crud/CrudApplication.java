@@ -32,7 +32,7 @@ public class CrudApplication {
 
 		Stream.iterate(1, i -> i + 1)
 				.map(i -> Board.of("title" + i, "content" + i, "writer" + i))
-				.limit(50)
+				.limit(500)
 				.forEach(boardRepository::save);
 	}
 
