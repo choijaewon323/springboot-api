@@ -6,13 +6,15 @@ import com.project.crud.account.dto.AccountResponseDto;
 import com.project.crud.account.dto.AccountUsernameUpdateDto;
 import com.project.crud.account.repository.AccountRepository;
 import com.project.crud.board.repository.BoardRepository;
+import com.project.crud.exception.CustomException;
 import com.project.crud.reply.repository.ReplyRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.NoSuchElementException;
+
+import static com.project.crud.exception.ErrorCode.*;
 
 @RequiredArgsConstructor
 @Service
@@ -24,7 +26,6 @@ public class AccountService {
 
     public void create(final AccountRequestDto request) {
         checkUsernameAlreadyExist(request.getUsername());
-
 
         accountRepository.save(Account.makeUser(request.getUsername(), request.getPassword()));
     }
@@ -62,14 +63,14 @@ public class AccountService {
 
     private Account findByUsername(final String username) {
         return accountRepository.findByUsername(username)
-                .orElseThrow(() -> new NoSuchElementException("해당 유저가 없습니다"));
+                .orElseThrow(() -> new CustomException(ACCOUNT_NOT_FOUND, "해당 유저가 없습니다"));
     }
 
     private void checkUsernameAlreadyExist(final String username) {
         final boolean check = accountRepository.existsByUsername(username);
 
         if (check) {
-            throw new IllegalStateException("이미 있는 계정입니다");
+            throw new CustomException(ACCOUNT_ALREADY_EXIST, "이미 있는 계정입니다");
         }
     }
 

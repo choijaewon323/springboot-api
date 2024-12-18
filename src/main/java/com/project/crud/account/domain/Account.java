@@ -1,10 +1,15 @@
 package com.project.crud.account.domain;
 
 import com.project.crud.common.TimeEntity;
+import com.project.crud.exception.CustomException;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
-import static com.project.crud.account.domain.AccountRole.*;
+import static com.project.crud.account.domain.AccountRole.ADMIN;
+import static com.project.crud.account.domain.AccountRole.USER;
+import static com.project.crud.exception.ErrorCode.ACCOUNT_CREATION_ERROR;
 
 
 @Entity
@@ -52,17 +57,17 @@ public class Account extends TimeEntity {
 
     private void checkUsernameUnder30(String username) {
         if (username.length() > 30) {
-            throw new IllegalStateException("username은 30글자 이하여야 합니다");
+            throw new CustomException(ACCOUNT_CREATION_ERROR, "username은 30글자 이하여야 합니다");
         }
     }
 
     private void checkUsernameIsNotBlank(String username) {
         if (username == null) {
-            throw new IllegalStateException("작성자를 입력해주세요");
+            throw new CustomException(ACCOUNT_CREATION_ERROR, "작성자를 입력해주세요");
         }
 
         if (username.isBlank()) {
-            throw new IllegalStateException("작성자를 입력해주세요");
+            throw new CustomException(ACCOUNT_CREATION_ERROR, "작성자를 입력해주세요");
         }
     }
 
