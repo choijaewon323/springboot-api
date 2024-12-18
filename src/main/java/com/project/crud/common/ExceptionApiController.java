@@ -29,6 +29,6 @@ public class ExceptionApiController {
                 .body(new ErrorResponseDto(
                         ErrorCode.INTERNAL_SERVER_ERROR.getCode(),
                         "internal server error",
-                        LocalDateTime.now()));
+                        LocalDateTime.now().toString()));
     }
 }
